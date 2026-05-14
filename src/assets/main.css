@@ -1,0 +1,47 @@
+:root {
+  --color-dark: #0b0814;
+  --color-purple: #1e1739;
+  --color-yellow: #f2f55e;
+  --color-white: #ffffff;
+  --color-muted: rgba(255, 255, 255, 0.72);
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-dark);
+  color: var(--color-white);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea,
+select,
+a {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
