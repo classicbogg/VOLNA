@@ -3,6 +3,8 @@ import SiteHeader from './components/SiteHeader.vue'
 import CountdownSection from './components/CountdownSection.vue'
 import AudienceSection from './components/AudienceSection.vue'
 import HeroSection from './components/HeroSection.vue'
+import ProgramSection from './components/ProgramSection.vue'
+import SiteFooter from './components/SiteFooter.vue'
 </script>
 
 
@@ -13,7 +15,9 @@ import HeroSection from './components/HeroSection.vue'
    
     <HeroSection />
     <CountdownSection />
+    <ProgramSection />
     <AudienceSection />
+    <SiteFooter />
   </div>
 </template>
 
