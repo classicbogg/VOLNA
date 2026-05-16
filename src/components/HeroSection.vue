@@ -47,7 +47,12 @@ const handleRegistrationSubmit = (data) => {
           27 мая 2026
         </div>
 
-        <button class="hero-button" type="button" @click="openRegistration">
+        <button
+          class="hero-button"
+          type="button"
+          aria-haspopup="dialog"
+          @click="openRegistration"
+        >
           зарегистрироваться
         </button>
       </div>
@@ -109,7 +114,7 @@ const handleRegistrationSubmit = (data) => {
   max-width: calc(100vw - 32px);
   margin: 0 auto 44px;
   padding: 20px 40px 18px;
-  border: 3px solid var(--color-yellow, #f2f55e);
+  border: 3px solid var(--color-yellow);
   border-radius: 8px;
   background: transparent;
 
@@ -143,13 +148,14 @@ const handleRegistrationSubmit = (data) => {
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
 
   box-shadow:
-    8px 8px 0 rgba(242, 245, 94, 0.12),
+    8px 8px 0 rgba(var(--color-accent-rgb), 0.12),
     0 18px 36px rgba(0, 0, 0, 0.24);
 }
 
 .hero-title {
   position: relative;
   margin: 0;
+  color: var(--color-hero-title);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -200,7 +206,7 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-title__line::before {
-  color: var(--color-yellow, #f2f55e);
+  color: var(--color-yellow);
   transform: translate(18px, 14px) skewX(-8deg);
   clip-path: inset(0 100% 0 0);
   animation: heroTitleStrike 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -222,7 +228,6 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-title__line--second {
   align-self: center;
-  color: var(--color-yellow, #f2f55e);
   --delay: 0.32s;
 }
 
@@ -245,6 +250,8 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-title__line--second span {
+  color: var(--color-yellow);
+  -webkit-text-fill-color: var(--color-yellow);
   text-shadow:
     6px 6px 0 var(--color-hero-line2-shadow, rgba(255, 255, 255, 0.12)),
     0 20px 46px var(--color-hero-title-shadow-strong, rgba(0, 0, 0, 0.24));
@@ -402,7 +409,7 @@ const handleRegistrationSubmit = (data) => {
   bottom: 0;
   z-index: 4;
   height: 54px;
-  background: var(--color-yellow, #f2f55e);
+  background: var(--color-yellow);
   color: var(--color-purple, #1e1739);
   display: flex;
   align-items: center;
@@ -451,14 +458,14 @@ const handleRegistrationSubmit = (data) => {
     background-position: 0 0;
     filter:
       drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 12px rgba(242, 245, 94, 0.28));
+      drop-shadow(0 0 12px rgba(var(--color-accent-rgb), 0.28));
   }
 
   100% {
     background-position: 0 0;
     filter:
       drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 6px rgba(242, 245, 94, 0.18));
+      drop-shadow(0 0 6px rgba(var(--color-accent-rgb), 0.18));
   }
 }
 
@@ -566,6 +573,19 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
+:global(html[data-theme='light']) .hero-section {
+  --color-yellow: var(--color-registration-lavender, #cdb2ff);
+  --color-accent-rgb: 205, 178, 255;
+  --color-hero-line-accent: var(--color-registration-lavender, #cdb2ff);
+  --color-hero-line2-before: var(--color-registration-lavender, #cdb2ff);
+  --color-hero-decor-student: rgba(205, 178, 255, 0.42);
+  --color-hero-decor-student-shadow: rgba(205, 178, 255, 0.22);
+  --color-hero-decor-pixel: rgba(205, 178, 255, 0.38);
+  --color-hero-decor-pixel-shadow: rgba(205, 178, 255, 0.2);
+  --color-hero-decor-square: rgba(205, 178, 255, 0.26);
+  --color-hero-line2-shadow: rgba(205, 178, 255, 0.28);
+}
+
 @media (max-width: 980px) {
   .hero-section {
     min-height: 780px;
@@ -659,7 +679,9 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-button {
-    min-height: 58px;
+    min-height: 64px;
+    padding: 0 28px;
+    font-size: clamp(19px, 5.2vw, 24px);
   }
 
   .hero-decor--student {
@@ -682,6 +704,30 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
+@media (max-width: 420px) {
+  .hero-title__line span,
+  .hero-title__line::before,
+  .hero-title__line::after {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-kicker {
+    font-size: clamp(26px, 8.5vw, 40px);
+    padding: 12px 18px 10px;
+  }
+
+  .hero-date {
+    font-size: clamp(20px, 6vw, 28px);
+    padding: 14px 22px 12px;
+  }
+
+  .hero-button {
+    min-height: 60px;
+    font-size: 18px;
+  }
+}
+
 @media (max-width: 380px) {
   .hero-title__line--third {
     --line-scale-x: 0.86;
@@ -694,12 +740,21 @@ const handleRegistrationSubmit = (data) => {
 }
 
 @media (max-width: 340px) {
+  .hero-section {
+    padding: 82px 12px 86px;
+  }
+
   .hero-title__line--third {
     --line-scale-x: 0.84;
   }
 
   .hero-title__line--third span {
     font-size: 20px;
+  }
+
+  .hero-button {
+    min-height: 56px;
+    font-size: 17px;
   }
 }
 </style>

@@ -502,7 +502,7 @@ const programItems = ref([
   }
 
   .program-heading {
-    padding: 14px 28px 18px;
+    padding: 12px 16px 16px;
     margin-bottom: 28px;
   }
 
