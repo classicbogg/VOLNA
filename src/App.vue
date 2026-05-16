@@ -18,15 +18,21 @@ import LocationSection from './components/LocationSection.vue'
     <CountdownSection />
     <AudienceSection />
     <ProgramSection />
+    <LocationSection />
     <SiteFooter />
   </div>
 </template>
 
 <style scoped>
 .site {
+  width: 100%;
   min-height: 100vh;
-  background: #050505;
-  color: #ffffff;
+  overflow-x: clip;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
 }
 
 

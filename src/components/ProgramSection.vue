@@ -17,13 +17,13 @@
         >
           <path
             d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
-            stroke="#f2f55e"
+            stroke="currentColor"
             stroke-width="8"
             stroke-linecap="round"
           />
           <path
             d="M420 166C487 165 551 158 596 146"
-            stroke="#f2f55e"
+            stroke="currentColor"
             stroke-width="8"
             stroke-linecap="round"
           />
@@ -145,8 +145,11 @@ const programItems = ref([
   position: relative;
   width: 100%;
   padding: 90px 40px 110px;
-  background: #0b0814;
-  color: #ffffff;
+  background: var(--color-program-section-bg, var(--color-bg-soft));
+  color: var(--color-program-heading, var(--color-text));
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
   overflow: hidden;
 }
 
@@ -162,15 +165,15 @@ const programItems = ref([
   top: 200px;
   width: 48px;
   height: 48px;
-  background: rgba(242, 245, 94, 0.15);
+  background: rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.15);
   box-shadow:
-    48px 0 0 rgba(242, 245, 94, 0.12),
-    96px 0 0 rgba(242, 245, 94, 0.08),
-    0 48px 0 rgba(242, 245, 94, 0.10),
-    48px 48px 0 rgba(242, 245, 94, 0.08),
-    96px 48px 0 rgba(242, 245, 94, 0.06),
-    0 96px 0 rgba(242, 245, 94, 0.08),
-    48px 96px 0 rgba(242, 245, 94, 0.06);
+    48px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.12),
+    96px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
+    0 48px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.10),
+    48px 48px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
+    96px 48px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.06),
+    0 96px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
+    48px 96px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.06);
   transform: rotate(-10deg);
   animation: pixelFloatLeft 7s ease-in-out infinite;
 }
@@ -180,15 +183,15 @@ const programItems = ref([
   bottom: 150px;
   width: 56px;
   height: 56px;
-  background: rgba(242, 245, 94, 0.12);
+  background: rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.12);
   box-shadow:
-    -56px 0 0 rgba(242, 245, 94, 0.10),
-    -112px 0 0 rgba(242, 245, 94, 0.07),
-    0 -56px 0 rgba(242, 245, 94, 0.09),
-    -56px -56px 0 rgba(242, 245, 94, 0.07),
-    -112px -56px 0 rgba(242, 245, 94, 0.05),
-    0 -112px 0 rgba(242, 245, 94, 0.07),
-    -56px -112px 0 rgba(242, 245, 94, 0.05);
+    -56px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.10),
+    -112px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
+    0 -56px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.09),
+    -56px -56px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
+    -112px -56px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.05),
+    0 -112px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
+    -56px -112px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.05);
   transform: rotate(8deg);
   animation: pixelFloatRight 9s ease-in-out infinite;
 }
@@ -198,13 +201,13 @@ const programItems = ref([
   top: 80px;
   width: 32px;
   height: 32px;
-  background: rgba(242, 245, 94, 0.10);
+  background: rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.10);
   box-shadow:
-    32px 0 0 rgba(242, 245, 94, 0.08),
-    64px 0 0 rgba(242, 245, 94, 0.05),
-    0 32px 0 rgba(242, 245, 94, 0.07),
-    32px 32px 0 rgba(242, 245, 94, 0.06),
-    64px 32px 0 rgba(242, 245, 94, 0.04);
+    32px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
+    64px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.05),
+    0 32px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
+    32px 32px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.06),
+    64px 32px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.04);
   transform: rotate(12deg);
   animation: pixelFloatTop 6s ease-in-out infinite;
 }
@@ -248,7 +251,7 @@ const programItems = ref([
   text-align: center;
   text-transform: lowercase;
   letter-spacing: -0.08em;
-  color: #f2f55e;
+  color: var(--color-program-heading, var(--color-text));
 }
 
 .program-marker {
@@ -260,6 +263,7 @@ const programItems = ref([
   height: 155%;
   transform: translate(-50%, -50%) rotate(-2deg);
   pointer-events: none;
+  color: var(--color-program-marker, var(--color-yellow));
 }
 
 .program-timeline {
@@ -273,8 +277,8 @@ const programItems = ref([
   grid-template-columns: 120px 1fr;
   gap: 30px;
   padding: 28px 32px;
-  background: rgba(30, 23, 57, 0.4);
-  border: 1px solid rgba(242, 245, 94, 0.15);
+  background: var(--color-program-card-bg, var(--color-surface-card));
+  border: 1px solid var(--color-program-card-border, var(--color-border));
   border-radius: 28px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -282,21 +286,21 @@ const programItems = ref([
 }
 
 .program-card:hover {
-  background: rgba(30, 23, 57, 0.6);
-  border-color: rgba(242, 245, 94, 0.3);
+  background: var(--color-program-card-bg-hover, var(--color-surface-card-hover));
+  border-color: var(--color-program-card-border-hover, rgba(30, 23, 57, 0.22));
   transform: translateX(8px);
 }
 
 .program-card--expanded {
-  background: rgba(30, 23, 57, 0.7);
-  border-color: #f2f55e;
-  box-shadow: 0 8px 32px rgba(242, 245, 94, 0.1);
+  background: var(--color-program-card-bg-expanded, var(--color-surface-expanded));
+  border-color: var(--color-program-accent);
+  box-shadow: 0 8px 32px var(--color-shadow-strong);
 }
 
 .program-card__time {
   font-size: 28px;
   font-weight: 900;
-  color: #f2f55e;
+  color: var(--color-program-time, var(--color-program-accent));
   letter-spacing: -0.05em;
   line-height: 1;
   padding-top: 4px;
@@ -312,13 +316,17 @@ const programItems = ref([
   line-height: 1.3;
   letter-spacing: -0.03em;
   margin: 0 0 12px;
-  color: #ffffff;
+  color: var(--color-program-card-text, var(--color-text));
+}
+
+.program-card--expanded .program-card__title {
+  color: var(--color-program-card-text, var(--color-text));
 }
 
 .program-card__description {
   font-size: 16px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-program-card-text-muted, var(--color-text-muted));
   margin-bottom: 16px;
 }
 
@@ -336,13 +344,13 @@ const programItems = ref([
 .program-card__speakers-label,
 .program-card__theme-label {
   font-weight: 700;
-  color: #f2f55e;
+  color: var(--color-program-accent);
   margin-right: 8px;
 }
 
 .program-card__speakers-list,
 .program-card__theme-text {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-program-card-text-muted, var(--color-text-muted));
 }
 
 .program-card__more {
@@ -353,7 +361,7 @@ const programItems = ref([
   padding: 8px 0;
   background: none;
   border: none;
-  color: #f2f55e;
+  color: var(--color-program-accent);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -371,7 +379,7 @@ const programItems = ref([
 
 .program-card__more:hover {
   gap: 12px;
-  color: #ffffff;
+  color: var(--color-program-card-text, var(--color-text));
 }
 
 .program-note {
@@ -379,12 +387,12 @@ const programItems = ref([
   padding: 20px 24px;
   text-align: center;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
-  border-top: 1px solid rgba(242, 245, 94, 0.1);
+  color: var(--color-program-note, var(--color-text-muted));
+  border-top: 1px solid var(--color-program-card-border, var(--color-border));
 }
 
 .program-note span {
-  color: #f2f55e;
+  color: var(--color-program-accent);
   margin-right: 6px;
 }
 
@@ -449,7 +457,7 @@ const programItems = ref([
   .program-card__time {
     font-size: 20px;
     padding-bottom: 6px;
-    border-bottom: 1px solid rgba(242, 245, 94, 0.2);
+    border-bottom: 1px solid rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.2);
   }
 
   .program-card__title {
@@ -483,6 +491,30 @@ const programItems = ref([
 
   .program-card__description {
     font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .program-section {
+    padding: 48px 12px 64px;
+  }
+
+  .program-heading {
+    padding: 12px 16px 16px;
+    margin-bottom: 28px;
+  }
+
+  .program-heading h2 {
+    font-size: clamp(32px, 11vw, 42px);
+  }
+
+  .program-card__time {
+    font-size: 18px;
+  }
+
+  .program-note {
+    font-size: 10px;
+    padding: 14px 12px;
   }
 }
 </style>

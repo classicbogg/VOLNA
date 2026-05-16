@@ -73,8 +73,8 @@
           <div class="footer-partners__logos">
             <div class="footer-partner-placeholder">
               <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
-                <rect x="0.5" y="0.5" width="119" height="39" rx="5" fill="rgba(242,245,94,0.05)" stroke="rgba(242,245,94,0.15)" stroke-width="1"/>
-                <text x="60" y="25" text-anchor="middle" fill="rgba(242,245,94,0.4)" font-size="12" font-weight="700">ОРГАНИЗАТОР</text>
+                <rect x="0.5" y="0.5" width="119" height="39" rx="5" stroke-width="1"/>
+                <text x="60" y="25" text-anchor="middle" font-size="12" font-weight="700">ОРГАНИЗАТОР</text>
               </svg>
             </div>
           </div>
@@ -85,8 +85,8 @@
           <div class="footer-partners__logos">
             <div class="footer-partner-placeholder">
               <svg width="160" height="50" viewBox="0 0 160 50" fill="none">
-                <rect x="0.5" y="0.5" width="159" height="49" rx="5" fill="rgba(242,245,94,0.05)" stroke="rgba(242,245,94,0.15)" stroke-width="1"/>
-                <text x="80" y="30" text-anchor="middle" fill="rgba(242,245,94,0.4)" font-size="13" font-weight="700">ГЕНЕРАЛЬНЫЙ ПАРТНЕР</text>
+                <rect x="0.5" y="0.5" width="159" height="49" rx="5" stroke-width="1"/>
+                <text x="80" y="30" text-anchor="middle" font-size="13" font-weight="700">ГЕНЕРАЛЬНЫЙ ПАРТНЕР</text>
               </svg>
             </div>
           </div>
@@ -97,20 +97,20 @@
           <div class="footer-partners__logos footer-partners__logos--multi">
             <div class="footer-partner-placeholder">
               <svg width="130" height="45" viewBox="0 0 130 45" fill="none">
-                <rect x="0.5" y="0.5" width="129" height="44" rx="5" fill="rgba(242,245,94,0.05)" stroke="rgba(242,245,94,0.15)" stroke-width="1"/>
-                <text x="65" y="27" text-anchor="middle" fill="rgba(242,245,94,0.4)" font-size="11" font-weight="700">ПАРТНЕР 1</text>
+                <rect x="0.5" y="0.5" width="129" height="44" rx="5" stroke-width="1"/>
+                <text x="65" y="27" text-anchor="middle" font-size="11" font-weight="700">ПАРТНЕР 1</text>
               </svg>
             </div>
             <div class="footer-partner-placeholder">
               <svg width="130" height="45" viewBox="0 0 130 45" fill="none">
-                <rect x="0.5" y="0.5" width="129" height="44" rx="5" fill="rgba(242,245,94,0.05)" stroke="rgba(242,245,94,0.15)" stroke-width="1"/>
-                <text x="65" y="27" text-anchor="middle" fill="rgba(242,245,94,0.4)" font-size="11" font-weight="700">ПАРТНЕР 2</text>
+                <rect x="0.5" y="0.5" width="129" height="44" rx="5" stroke-width="1"/>
+                <text x="65" y="27" text-anchor="middle" font-size="11" font-weight="700">ПАРТНЕР 2</text>
               </svg>
             </div>
             <div class="footer-partner-placeholder">
               <svg width="130" height="45" viewBox="0 0 130 45" fill="none">
-                <rect x="0.5" y="0.5" width="129" height="44" rx="5" fill="rgba(242,245,94,0.05)" stroke="rgba(242,245,94,0.15)" stroke-width="1"/>
-                <text x="65" y="27" text-anchor="middle" fill="rgba(242,245,94,0.4)" font-size="11" font-weight="700">ПАРТНЕР 3</text>
+                <rect x="0.5" y="0.5" width="129" height="44" rx="5" stroke-width="1"/>
+                <text x="65" y="27" text-anchor="middle" font-size="11" font-weight="700">ПАРТНЕР 3</text>
               </svg>
             </div>
           </div>
@@ -139,10 +139,13 @@
 .footer {
   position: relative;
   width: 100%;
-  background: #0b0814;
-  color: #ffffff;
+  background: var(--color-footer-bg, var(--color-bg));
+  color: var(--color-footer-text, var(--color-text));
   overflow: hidden;
-  border-top: 1px solid rgba(242, 245, 94, 0.1);
+  border-top: 1px solid var(--color-footer-border, var(--color-border));
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
 }
 
 .footer-pixels {
@@ -157,13 +160,13 @@
   top: 120px;
   width: 40px;
   height: 40px;
-  background: rgba(242, 245, 94, 0.12);
+  background: rgba(var(--color-accent-rgb), 0.12);
   box-shadow:
-    40px 0 0 rgba(242, 245, 94, 0.10),
-    80px 0 0 rgba(242, 245, 94, 0.06),
-    0 40px 0 rgba(242, 245, 94, 0.08),
-    40px 40px 0 rgba(242, 245, 94, 0.06),
-    0 80px 0 rgba(242, 245, 94, 0.05);
+    40px 0 0 rgba(var(--color-accent-rgb), 0.10),
+    80px 0 0 rgba(var(--color-accent-rgb), 0.06),
+    0 40px 0 rgba(var(--color-accent-rgb), 0.08),
+    40px 40px 0 rgba(var(--color-accent-rgb), 0.06),
+    0 80px 0 rgba(var(--color-accent-rgb), 0.05);
   transform: rotate(-8deg);
   animation: footerPixelFloatLeft 10s ease-in-out infinite;
 }
@@ -173,12 +176,12 @@
   bottom: 100px;
   width: 48px;
   height: 48px;
-  background: rgba(242, 245, 94, 0.10);
+  background: rgba(var(--color-accent-rgb), 0.10);
   box-shadow:
-    -48px 0 0 rgba(242, 245, 94, 0.08),
-    -96px 0 0 rgba(242, 245, 94, 0.05),
-    0 -48px 0 rgba(242, 245, 94, 0.07),
-    -48px -48px 0 rgba(242, 245, 94, 0.05);
+    -48px 0 0 rgba(var(--color-accent-rgb), 0.08),
+    -96px 0 0 rgba(var(--color-accent-rgb), 0.05),
+    0 -48px 0 rgba(var(--color-accent-rgb), 0.07),
+    -48px -48px 0 rgba(var(--color-accent-rgb), 0.05);
   transform: rotate(6deg);
   animation: footerPixelFloatRight 12s ease-in-out infinite;
 }
@@ -188,10 +191,10 @@
   bottom: -30px;
   width: 56px;
   height: 56px;
-  background: rgba(242, 245, 94, 0.08);
+  background: rgba(var(--color-accent-rgb), 0.08);
   box-shadow:
-    56px 0 0 rgba(242, 245, 94, 0.06),
-    0 56px 0 rgba(242, 245, 94, 0.05);
+    56px 0 0 rgba(var(--color-accent-rgb), 0.06),
+    0 56px 0 rgba(var(--color-accent-rgb), 0.05);
   transform: rotate(15deg);
   animation: footerPixelFloatBottom 8s ease-in-out infinite;
 }
@@ -235,13 +238,16 @@
 .footer-logo {
   width: 240px;
   height: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.95;
+  filter: var(--color-logo-filter);
+  opacity: var(--color-logo-opacity, 0.92);
+  transition:
+    filter 0.35s ease,
+    opacity 0.35s ease;
 }
 
 .footer-tagline {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-footer-text-muted, var(--color-text-muted));
   letter-spacing: -0.02em;
   margin: 0;
 }
@@ -255,20 +261,20 @@
 .footer-social {
   width: 40px;
   height: 40px;
-  background: rgba(242, 245, 94, 0.08);
-  border: 1px solid rgba(242, 245, 94, 0.15);
+  background: var(--color-icon-bg);
+  border: 1px solid var(--color-icon-border);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #f2f55e;
+  color: var(--color-icon-fg);
   transition: all 0.2s ease;
   text-decoration: none;
 }
 
 .footer-social:hover {
-  background: #f2f55e;
-  color: #0b0814;
+  background: var(--color-yellow);
+  color: var(--color-icon-fg-hover, var(--color-purple));
   transform: translateY(-3px);
   border-color: transparent;
 }
@@ -282,7 +288,7 @@
 .footer-links-column h4 {
   font-size: 16px;
   font-weight: 800;
-  color: #f2f55e;
+  color: var(--color-accent-heading);
   letter-spacing: -0.03em;
   margin: 0 0 20px;
   text-transform: lowercase;
@@ -302,7 +308,7 @@
 }
 
 .footer-links-column a {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-footer-text-muted, var(--color-text-muted));
   text-decoration: none;
   font-size: 14px;
   transition: all 0.2s ease;
@@ -310,13 +316,13 @@
 }
 
 .footer-links-column a:hover {
-  color: #f2f55e;
+  color: var(--color-accent-link);
   transform: translateX(4px);
   display: inline-block;
 }
 
 .footer-address {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-footer-text-muted, var(--color-text-muted));
   font-size: 14px;
   line-height: 1.4;
   font-style: normal;
@@ -324,8 +330,8 @@
 
 .footer-partners {
   padding: 40px 0;
-  border-top: 1px solid rgba(242, 245, 94, 0.1);
-  border-bottom: 1px solid rgba(242, 245, 94, 0.1);
+  border-top: 1px solid var(--color-footer-border, var(--color-border));
+  border-bottom: 1px solid var(--color-footer-border, var(--color-border));
   margin-bottom: 40px;
 }
 
@@ -345,7 +351,7 @@
   min-width: 200px;
   font-size: 13px;
   font-weight: 700;
-  color: rgba(242, 245, 94, 0.7);
+  color: var(--color-footer-label);
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
@@ -366,9 +372,18 @@
   transition: all 0.2s ease;
 }
 
+.footer-partner-placeholder :deep(rect) {
+  fill: var(--color-partner-box-fill);
+  stroke: var(--color-partner-box-stroke);
+}
+
+.footer-partner-placeholder :deep(text) {
+  fill: var(--color-partner-box-text);
+}
+
 .footer-partner-placeholder:hover {
   transform: translateY(-2px);
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .footer-bottom {
@@ -378,7 +393,7 @@
   flex-wrap: wrap;
   gap: 20px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-footer-bottom, var(--color-text-muted));
 }
 
 .footer-copyright {
@@ -393,17 +408,17 @@
 }
 
 .footer-legal a {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-footer-bottom, var(--color-text-muted));
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-legal a:hover {
-  color: #f2f55e;
+  color: var(--color-accent-link);
 }
 
 .footer-legal-separator {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-footer-separator, rgba(30, 23, 57, 0.25));
 }
 
 .footer-made {
@@ -411,7 +426,7 @@
 }
 
 .footer-heart {
-  color: #f2f55e;
+  color: var(--color-accent-link, var(--color-yellow));
   display: inline-block;
   animation: heartBeat 1.5s ease-in-out infinite;
 }
@@ -513,6 +528,35 @@
 
   .footer-logo {
     width: 160px;
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-container {
+    padding: 28px 12px 24px;
+  }
+
+  .footer-logo {
+    width: 140px;
+  }
+
+  .footer-bottom {
+    font-size: 11px;
+    gap: 12px;
+  }
+
+  .footer-legal {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-legal-separator {
+    display: none;
+  }
+
+  .footer-made {
+    max-width: 260px;
+    line-height: 1.35;
   }
 }
 </style>

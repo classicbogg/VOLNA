@@ -165,15 +165,18 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   padding: 96px 40px 104px;
-  background: var(--color-purple);
-  color: var(--color-yellow);
+  background: var(--color-countdown-bg);
+  color: var(--color-countdown-text);
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
   overflow: hidden;
 }
 
 .countdown-decor {
   position: absolute;
   top: 50%;
-  color: rgba(196, 160, 255, 0.18);
+  color: var(--color-countdown-decor);
   pointer-events: none;
   user-select: none;
   z-index: 1;
@@ -183,7 +186,7 @@ onUnmounted(() => {
   display: block;
   width: 220px;
   height: 220px;
-  filter: drop-shadow(0 12px 20px rgba(196, 160, 255, 0.12));
+  filter: drop-shadow(0 12px 20px rgba(var(--color-accent-rgb), 0.12));
 }
 
 .countdown-decor--left {
@@ -213,13 +216,13 @@ onUnmounted(() => {
 }
 
 .countdown-spark--yellow {
-  background: rgba(242, 245, 94, 0.72);
-  box-shadow: 0 0 8px rgba(242, 245, 94, 0.28);
+  background: rgba(var(--color-accent-rgb), 0.72);
+  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.28);
 }
 
 .countdown-spark--purple {
-  background: rgba(196, 160, 255, 0.62);
-  box-shadow: 0 0 8px rgba(196, 160, 255, 0.24);
+  background: rgba(var(--color-accent-rgb), 0.62);
+  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.24);
 }
 
 .countdown-container {
@@ -234,8 +237,8 @@ onUnmounted(() => {
   margin: 0 0 52px;
   padding: 16px 30px 14px;
   border-radius: 999px;
-  background: var(--color-yellow);
-  color: var(--color-purple);
+  background: var(--color-countdown-label-bg, var(--color-yellow));
+  color: var(--color-countdown-label-text, var(--color-purple));
   font-size: clamp(22px, 3vw, 44px);
   line-height: 0.9;
   font-weight: 900;
@@ -258,7 +261,7 @@ onUnmounted(() => {
 
 .countdown-number {
   display: block;
-  color: var(--color-yellow);
+  color: var(--color-countdown-text);
   font-size: clamp(72px, 14vw, 210px);
   line-height: 0.78;
   font-weight: 900;
@@ -267,7 +270,7 @@ onUnmounted(() => {
 
 .countdown-text {
   margin-top: 22px;
-  color: var(--color-yellow);
+  color: var(--color-countdown-text);
   font-size: clamp(18px, 2vw, 34px);
   line-height: 1;
   font-weight: 900;
@@ -276,7 +279,8 @@ onUnmounted(() => {
 }
 
 .countdown-separator {
-  color: var(--color-yellow);
+  color: var(--color-countdown-separator, var(--color-yellow));
+  opacity: 0.85;
   font-size: clamp(58px, 11vw, 165px);
   line-height: 0.72;
   font-weight: 900;
@@ -363,6 +367,28 @@ onUnmounted(() => {
   .countdown-text {
     margin-top: 14px;
     font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .countdown-section {
+    padding: 48px 12px 56px;
+  }
+
+  .countdown-label {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 16px 10px;
+    font-size: clamp(18px, 5.5vw, 24px);
+    text-align: center;
+  }
+
+  .countdown-number {
+    font-size: clamp(48px, 20vw, 72px);
+  }
+
+  .countdown-text {
+    font-size: 14px;
   }
 }
 </style>
