@@ -191,23 +191,25 @@ onUnmounted(() => {
     0 34px 80px rgba(0, 0, 0, 0.36);
 }
 
-.registration-head {
-  width: min(360px, 72%);
-  min-height: 100px;
-  padding: 28px 28px 30px;
-  border-radius: 0 0 28px 0;
-  background: #cdb2ff;
-  display: flex;
-  align-items: center;
-}
+  .registration-head {
+    width: min(560px, calc(100% - 140px));
+    min-height: 122px;
+    padding: 32px 44px 34px;
+    border-radius: 0 0 34px 0;
+    background: #cdb2ff;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
 
-.registration-head h2 {
-  margin: 0;
-  font-size: clamp(38px, 5vw, 64px);
-  line-height: 0.9;
-  font-weight: 900;
-  letter-spacing: -0.06em;
-}
+  .registration-head h2 {
+    margin: 0;
+    font-size: clamp(42px, 4.6vw, 68px);
+    line-height: 0.9;
+    font-weight: 900;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+  }
 
 .registration-close {
   position: absolute;
@@ -431,7 +433,12 @@ onUnmounted(() => {
 
   .registration-head {
     width: calc(100% - 96px);
-    min-height: 84px;
+    min-height: 96px;
+    padding: 26px 30px 28px;
+  }
+
+    .registration-head h2 {
+    font-size: clamp(36px, 8vw, 54px);
   }
 
   .registration-close {
@@ -456,10 +463,17 @@ onUnmounted(() => {
     border-radius: 18px;
   }
 
-  .registration-head {
-    padding: 24px 22px;
-    border-radius: 0 0 22px 0;
-  }
+.registration-head {
+  width: calc(100% - 82px);
+  min-height: 82px;
+  padding: 22px 20px 24px;
+  border-radius: 0 0 22px 0;
+}
+
+.registration-head h2 {
+  font-size: clamp(31px, 9vw, 42px);
+  letter-spacing: -0.045em;
+}
 
   .registration-form {
     padding: 24px 18px 30px;

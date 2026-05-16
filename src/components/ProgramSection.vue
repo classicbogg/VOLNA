@@ -253,7 +253,7 @@ const programItems = ref([
 
 .program-marker {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   left: 50%;
   top: 50%;
   width: 115%;

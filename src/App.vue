@@ -15,8 +15,8 @@ import SiteFooter from './components/SiteFooter.vue'
    
     <HeroSection />
     <CountdownSection />
-    <ProgramSection />
     <AudienceSection />
+    <ProgramSection />
     <SiteFooter />
   </div>
 </template>

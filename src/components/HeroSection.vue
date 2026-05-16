@@ -25,22 +25,22 @@ const handleRegistrationSubmit = (data) => {
 
     <div class="hero-container">
       <h2 class="hero-kicker">
-        Третий форум
+        ТРЕТИЙ ФОРУМ
       </h2>
 
-        <h1 class="hero-title" aria-label="форум молодых предпринимателей">
+      <h1 class="hero-title" aria-label="форум молодых предпринимателей">
         <span class="hero-title__line hero-title__line--first" data-text="форум">
-            <span>форум</span>
+          <span>форум</span>
         </span>
 
         <span class="hero-title__line hero-title__line--second" data-text="молодых">
-            <span>молодых</span>
+          <span>молодых</span>
         </span>
 
         <span class="hero-title__line hero-title__line--third" data-text="предпринимателей">
-            <span>предпринимателей</span>
+          <span>предпринимателей</span>
         </span>
-        </h1>
+      </h1>
 
       <div class="hero-bottom">
         <div class="hero-date">
@@ -53,32 +53,33 @@ const handleRegistrationSubmit = (data) => {
       </div>
     </div>
 
-<div class="hero-marquee" aria-hidden="true">
-  <div class="hero-marquee__track">
-    <div class="hero-marquee__group">
-      <span>создай наше</span>
-      <span>27 мая 2026</span>
-      <span>форум молодых предпринимателей</span>
-      <span>создай наше</span>
-      <span>27 мая 2026</span>
-      <span>форум молодых предпринимателей</span>
+    <div class="hero-marquee" aria-hidden="true">
+      <div class="hero-marquee__track">
+        <div class="hero-marquee__group">
+          <span>создай наше</span>
+          <span>27 мая 2026</span>
+          <span>форум молодых предпринимателей</span>
+          <span>создай наше</span>
+          <span>27 мая 2026</span>
+          <span>форум молодых предпринимателей</span>
+        </div>
+
+        <div class="hero-marquee__group">
+          <span>создай наше</span>
+          <span>27 мая 2026</span>
+          <span>форум молодых предпринимателей</span>
+          <span>создай наше</span>
+          <span>27 мая 2026</span>
+          <span>форум молодых предпринимателей</span>
+        </div>
+      </div>
     </div>
 
-    <div class="hero-marquee__group">
-      <span>создай наше</span>
-      <span>27 мая 2026</span>
-      <span>форум молодых предпринимателей</span>
-      <span>создай наше</span>
-      <span>27 мая 2026</span>
-      <span>форум молодых предпринимателей</span>
-    </div>
-  </div>
-</div>
-<RegistrationModal
-  :is-open="isRegistrationOpen"
-  @close="closeRegistration"
-  @submit="handleRegistrationSubmit"
-/>
+    <RegistrationModal
+      :is-open="isRegistrationOpen"
+      @close="closeRegistration"
+      @submit="handleRegistrationSubmit"
+    />
   </section>
 </template>
 
@@ -86,7 +87,7 @@ const handleRegistrationSubmit = (data) => {
 .hero-section {
   position: relative;
   min-height: 100vh;
-  padding: 170px 40px 96px;
+  padding: 170px 40px 110px;
   background: #0b0814;
   color: var(--color-white, #ffffff);
   overflow: hidden;
@@ -99,35 +100,13 @@ const handleRegistrationSubmit = (data) => {
   z-index: 3;
   width: min(1440px, 100%);
   margin: 0 auto;
+  display: block;
 }
 
 .hero-kicker {
   position: relative;
   width: fit-content;
-  margin: 0 auto 44px;
-  padding: 20px 40px 18px;
-  border: 3px solid var(--color-yellow, #f2f55e);
-  border-radius: 8px;
-  color: var(--color-yellow, #f2f55e);
-  background: transparent;
-  font-size: clamp(36px, 4.2vw, 72px);
-  line-height: 0.9;
-  font-weight: 900;
-  text-transform: lowercase;
-  letter-spacing: 0.015em;
-  transform: rotate(-2deg);
-  overflow: hidden;
-  isolation: isolate;
-  animation: kickerTextFill 0.25s linear forwards;
-  animation-delay: 1.65s;
-  box-shadow:
-    8px 8px 0 rgba(242, 245, 94, 0.12),
-    0 18px 36px rgba(0, 0, 0, 0.24);
-}
-
-.hero-kicker {
-  position: relative;
-  width: fit-content;
+  max-width: calc(100vw - 32px);
   margin: 0 auto 44px;
   padding: 20px 40px 18px;
   border: 3px solid var(--color-yellow, #f2f55e);
@@ -137,8 +116,9 @@ const handleRegistrationSubmit = (data) => {
   font-size: clamp(36px, 4.2vw, 72px);
   line-height: 0.9;
   font-weight: 900;
-  text-transform: lowercase;
-  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
 
   color: transparent;
   background-image: linear-gradient(
@@ -157,7 +137,6 @@ const handleRegistrationSubmit = (data) => {
   transform: rotate(-2deg);
   overflow: hidden;
   isolation: isolate;
-
   animation: kickerLettersFill 0.9s steps(18, end) forwards;
   animation-delay: 1.75s;
 
@@ -166,27 +145,6 @@ const handleRegistrationSubmit = (data) => {
   box-shadow:
     8px 8px 0 rgba(242, 245, 94, 0.12),
     0 18px 36px rgba(0, 0, 0, 0.24);
-}
-
-@keyframes kickerLettersFill {
-  0% {
-    background-position: 100% 0;
-    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
-  }
-
-  70% {
-    background-position: 0 0;
-    filter:
-      drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 12px rgba(242, 245, 94, 0.28));
-  }
-
-  100% {
-    background-position: 0 0;
-    filter:
-      drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 6px rgba(242, 245, 94, 0.18));
-  }
 }
 
 .hero-title {
@@ -207,8 +165,10 @@ const handleRegistrationSubmit = (data) => {
   position: relative;
   display: block;
   width: fit-content;
+  max-width: 100%;
   overflow: visible;
   --delay: 0s;
+  --line-scale-x: 1;
 }
 
 .hero-title__line span {
@@ -216,8 +176,9 @@ const handleRegistrationSubmit = (data) => {
   z-index: 3;
   display: block;
   opacity: 0;
-  transform: translateY(120%) rotate(4deg) scaleY(0.72);
-  transform-origin: left bottom;
+  white-space: nowrap;
+  transform: translateY(120%) rotate(4deg) scaleX(var(--line-scale-x)) scaleY(0.72);
+  transform-origin: center bottom;
   animation:
     heroTitleReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards,
     heroTitleBreathe 5s ease-in-out infinite;
@@ -234,6 +195,7 @@ const handleRegistrationSubmit = (data) => {
   inset: 0;
   z-index: 1;
   opacity: 0;
+  white-space: nowrap;
   pointer-events: none;
 }
 
@@ -266,7 +228,16 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-title__line--third {
   align-self: flex-end;
+  max-width: 100%;
+  text-align: center;
   --delay: 0.54s;
+}
+
+.hero-title__line--third span,
+.hero-title__line--third::before,
+.hero-title__line--third::after {
+  font-size: 0.76em;
+  letter-spacing: -0.035em;
 }
 
 .hero-title__line--second::before {
@@ -279,110 +250,19 @@ const handleRegistrationSubmit = (data) => {
     0 20px 46px rgba(0, 0, 0, 0.32);
 }
 
-@keyframes heroTitleReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(120%) rotate(4deg) scaleY(0.72);
-    filter: blur(8px);
-  }
-
-  55% {
-    opacity: 1;
-    transform: translateY(-8%) rotate(-1deg) scaleY(1.08);
-    filter: blur(0);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) rotate(0) scaleY(1);
-    filter: blur(0);
-  }
-}
-
-@keyframes heroTitleStrike {
-  0% {
-    opacity: 0;
-    clip-path: inset(0 100% 0 0);
-    transform: translate(28px, 20px) skewX(-12deg);
-  }
-
-  35% {
-    opacity: 0.9;
-  }
-
-  70% {
-    opacity: 0.45;
-    clip-path: inset(0 0 0 0);
-    transform: translate(12px, 10px) skewX(-7deg);
-  }
-
-  100% {
-    opacity: 0.16;
-    clip-path: inset(0 0 0 0);
-    transform: translate(8px, 7px) skewX(-4deg);
-  }
-}
-
-@keyframes heroTitleGlitch {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0);
-    clip-path: inset(0 0 100% 0);
-  }
-
-  12% {
-    opacity: 0.85;
-    transform: translate(-8px, 4px);
-    clip-path: inset(8% 0 72% 0);
-  }
-
-  20% {
-    transform: translate(10px, -4px);
-    clip-path: inset(58% 0 22% 0);
-  }
-
-  30% {
-    transform: translate(-5px, 3px);
-    clip-path: inset(28% 0 45% 0);
-  }
-
-  42% {
-    opacity: 0.65;
-    transform: translate(7px, 0);
-    clip-path: inset(72% 0 8% 0);
-  }
-
-  56% {
-    opacity: 0;
-    transform: translate(0, 0);
-    clip-path: inset(0 0 100% 0);
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes heroTitleBreathe {
-  0%, 100% {
-    transform: translateY(0) rotate(0) scaleY(1);
-  }
-
-  50% {
-    transform: translateY(-3px) rotate(-0.25deg) scaleY(1.01);
-  }
-}
-
 .hero-bottom {
+  width: 100%;
   margin-top: 54px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  flex-wrap: wrap;
+  gap: 18px;
 }
 
 .hero-date {
+  width: fit-content;
+  max-width: calc(100vw - 32px);
   padding: 18px 30px 16px;
   border-radius: 999px;
   background: var(--color-yellow, #f2f55e);
@@ -390,6 +270,7 @@ const handleRegistrationSubmit = (data) => {
   font-size: clamp(24px, 3vw, 46px);
   line-height: 0.9;
   font-weight: 900;
+  text-align: center;
   text-transform: lowercase;
   letter-spacing: -0.07em;
   box-shadow:
@@ -398,7 +279,8 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-button {
-  min-height: 62px;
+  width: fit-content;
+  min-height: 54px;
   padding: 0 32px;
   border: 2px solid var(--color-yellow, #f2f55e);
   border-radius: 999px;
@@ -408,6 +290,9 @@ const handleRegistrationSubmit = (data) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
   font-size: clamp(18px, 1.6vw, 25px);
   line-height: 1;
   font-weight: 900;
@@ -529,6 +414,121 @@ const handleRegistrationSubmit = (data) => {
   margin-left: 30px;
 }
 
+@keyframes kickerLettersFill {
+  0% {
+    background-position: 100% 0;
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
+  }
+
+  70% {
+    background-position: 0 0;
+    filter:
+      drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
+      drop-shadow(0 0 12px rgba(242, 245, 94, 0.28));
+  }
+
+  100% {
+    background-position: 0 0;
+    filter:
+      drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
+      drop-shadow(0 0 6px rgba(242, 245, 94, 0.18));
+  }
+}
+
+@keyframes heroTitleReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(120%) rotate(4deg) scaleX(var(--line-scale-x)) scaleY(0.72);
+    filter: blur(8px);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translateY(-8%) rotate(-1deg) scaleX(var(--line-scale-x)) scaleY(1.08);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scaleX(var(--line-scale-x)) scaleY(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes heroTitleStrike {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translate(28px, 20px) skewX(-12deg);
+  }
+
+  35% {
+    opacity: 0.9;
+  }
+
+  70% {
+    opacity: 0.45;
+    clip-path: inset(0 0 0 0);
+    transform: translate(12px, 10px) skewX(-7deg);
+  }
+
+  100% {
+    opacity: 0.16;
+    clip-path: inset(0 0 0 0);
+    transform: translate(8px, 7px) skewX(-4deg);
+  }
+}
+
+@keyframes heroTitleGlitch {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 100% 0);
+  }
+
+  12% {
+    opacity: 0.85;
+    transform: translate(-8px, 4px);
+    clip-path: inset(8% 0 72% 0);
+  }
+
+  20% {
+    transform: translate(10px, -4px);
+    clip-path: inset(58% 0 22% 0);
+  }
+
+  30% {
+    transform: translate(-5px, 3px);
+    clip-path: inset(28% 0 45% 0);
+  }
+
+  42% {
+    opacity: 0.65;
+    transform: translate(7px, 0);
+    clip-path: inset(72% 0 8% 0);
+  }
+
+  56% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 100% 0);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes heroTitleBreathe {
+  0%, 100% {
+    transform: translateY(0) rotate(0) scaleX(var(--line-scale-x)) scaleY(1);
+  }
+
+  50% {
+    transform: translateY(-3px) rotate(-0.25deg) scaleX(var(--line-scale-x)) scaleY(1.01);
+  }
+}
+
 @keyframes marqueeMove {
   from {
     transform: translateX(0);
@@ -542,17 +542,31 @@ const handleRegistrationSubmit = (data) => {
 @media (max-width: 980px) {
   .hero-section {
     min-height: 780px;
-    padding: 110px 24px 90px;
+    padding: 110px 24px 98px;
   }
 
   .hero-title {
+    gap: 8px;
     font-size: clamp(52px, 13vw, 116px);
+    text-align: center;
   }
 
   .hero-title__line--first,
   .hero-title__line--second,
   .hero-title__line--third {
     align-self: center;
+  }
+
+  .hero-title__line--third {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hero-title__line--third span,
+  .hero-title__line--third::before,
+  .hero-title__line--third::after {
+    font-size: clamp(32px, 7.1vw, 58px);
+    letter-spacing: -0.032em;
   }
 
   .hero-decor--student {
@@ -565,22 +579,44 @@ const handleRegistrationSubmit = (data) => {
 @media (max-width: 620px) {
   .hero-section {
     min-height: 720px;
-    padding: 90px 16px 82px;
+    padding: 90px 16px 90px;
   }
 
-.hero-kicker {
-  margin-bottom: 30px;
-  padding: 14px 24px 12px;
-  border-radius: 6px;
-  font-size: clamp(30px, 10vw, 48px);
-  letter-spacing: 0.01em;
-}
+  .hero-kicker {
+    margin-bottom: 32px;
+    padding: 14px 24px 12px;
+    border-radius: 6px;
+    font-size: clamp(30px, 10vw, 48px);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
   .hero-title {
     gap: 8px;
     font-size: clamp(48px, 16vw, 82px);
     line-height: 0.82;
-    letter-spacing: -0.085em;
+    letter-spacing: -0.075em;
     text-align: center;
+  }
+
+  .hero-title__line {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .hero-title__line--third {
+    --line-scale-x: 0.89;
+  }
+
+  .hero-title__line--third span {
+    font-size: clamp(24px, 6.9vw, 38px);
+    letter-spacing: -0.015em;
+  }
+
+  .hero-title__line--third::before,
+  .hero-title__line--third::after {
+    display: none;
   }
 
   .hero-bottom {
@@ -590,7 +626,9 @@ const handleRegistrationSubmit = (data) => {
 
   .hero-date,
   .hero-button {
-    width: 100%;
+    width: min(100%, 360px);
+    justify-content: center;
+    text-align: center;
   }
 
   .hero-button {
@@ -612,8 +650,29 @@ const handleRegistrationSubmit = (data) => {
     height: 44px;
   }
 
-.hero-marquee__group span {
-  font-size: 18px;
+  .hero-marquee__group span {
+    font-size: 18px;
+  }
 }
+
+@media (max-width: 380px) {
+  .hero-title__line--third {
+    --line-scale-x: 0.86;
+  }
+
+  .hero-title__line--third span {
+    font-size: clamp(21px, 6.4vw, 26px);
+    letter-spacing: -0.01em;
+  }
+}
+
+@media (max-width: 340px) {
+  .hero-title__line--third {
+    --line-scale-x: 0.84;
+  }
+
+  .hero-title__line--third span {
+    font-size: 20px;
+  }
 }
 </style>
