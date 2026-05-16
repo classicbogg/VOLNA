@@ -1,11 +1,355 @@
+/* Brand colors (shared) */
 :root {
-  --color-dark: #0b0814;
-  --color-purple: #1e1739;
   --color-yellow: #f2f55e;
+  --color-accent-soft: #cfafff;
+  --color-accent-rgb: 242, 245, 94;
+  --color-purple: #1e1739;
+  --color-registration-lavender: #cdb2ff;
   --color-white: #ffffff;
-  --color-muted: rgba(255, 255, 255, 0.72);
+  --color-dark: #0b0814;
+
+  --color-lavender: #dbafff;
+
+  --hero-date-bg: #dbafff;
+  --hero-date-text: #1e1739;
+  --hero-date-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-date-shadow: rgba(30, 23, 57, 0.18);
+
+  --hero-button-bg: #f4d35e;
+  --hero-button-border: #f4d35e;
+  --hero-button-text: #1e1739;
+  --hero-button-bg-hover: #f7df7a;
+  --hero-button-border-hover: #f7df7a;
+  --hero-button-text-hover: #1e1739;
+  --hero-button-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-button-shadow: rgba(30, 23, 57, 0.18);
+  --hero-button-shadow-offset-hover: rgba(30, 23, 57, 0.12);
+  --hero-button-shadow-hover: rgba(30, 23, 57, 0.22);
+  --hero-focus-outline: #1e1739;
+
+  --color-header-accent: var(--color-yellow);
+  --color-header-accent-rgb: var(--color-accent-rgb);
+  --color-header-purple: var(--color-purple);
+  --color-header-deep: var(--color-dark);
+  --color-header-white: var(--color-white);
+
+  --color-footer-accent: var(--color-yellow);
+  --color-footer-accent-rgb: var(--color-accent-rgb);
+  --color-footer-purple: var(--color-purple);
+  --color-footer-deep: var(--color-dark);
+  --color-footer-white: var(--color-white);
+
+  --color-in-program-accent: var(--color-lavender);
+  --color-in-program-accent-rgb: 219, 175, 255;
 }
 
+
+/* Light theme — белый фон, золотистые акценты */
+[data-theme='light'] {
+  --color-yellow: #f4d35e;
+  --color-accent-soft: #f4d35e;
+  --color-accent-rgb: 244, 211, 94;
+
+  --color-bg: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-soft: #fdfbf3;
+  --color-bg-accent: #f4d35e;
+  --color-bg-yellow-strong: #f4d35e;
+
+  --color-text: #1e1739;
+  --color-text-muted: rgba(30, 23, 57, 0.82);
+  --color-muted: rgba(30, 23, 57, 0.82);
+
+  --color-accent-heading: #f4d35e;
+  --color-accent-link: #f4d35e;
+  --color-yellow-readable: #f4d35e;
+
+  --color-icon-fg: #f4d35e;
+  --color-icon-bg: rgba(244, 211, 94, 0.12);
+  --color-icon-border: rgba(244, 211, 94, 0.35);
+  --color-icon-fg-hover: #1e1739;
+
+  --color-border: rgba(30, 23, 57, 0.1);
+  --color-border-accent: rgba(244, 211, 94, 0.45);
+  --color-glass: #1e1739;
+  --color-glass-scrolled: #1e1739;
+  --color-glass-border: rgba(244, 211, 94, 0.28);
+  --color-glass-inset: rgba(255, 255, 255, 0.08);
+  --color-shadow: rgba(0, 0, 0, 0.2);
+  --color-shadow-strong: rgba(0, 0, 0, 0.35);
+
+  --color-surface-card: rgba(255, 255, 255, 0.95);
+  --color-surface-card-hover: #fdfbf3;
+  --color-surface-expanded: #fdfbf3;
+  --color-mobile-nav-bg: #1e1739;
+  --color-footer-bg: #1e1739;
+
+  --color-nav-link: rgba(255, 255, 255, 0.9);
+  --color-logo-filter: brightness(0) invert(1);
+  --color-logo-opacity: 0.95;
+
+  --color-hero-title: #1e1739;
+  --color-hero-kicker-end: #1e1739;
+  --color-hero-line-accent: #f4d35e;
+  --color-hero-button-text: #1e1739;
+
+  --hero-date-bg: #dbafff;
+  --hero-date-text: #1e1739;
+  --hero-date-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-date-shadow: rgba(30, 23, 57, 0.18);
+
+  --hero-button-bg: #f4d35e;
+  --hero-button-border: #f4d35e;
+  --hero-button-text: #1e1739;
+  --hero-button-bg-hover: #f7df7a;
+  --hero-button-border-hover: #f7df7a;
+  --hero-button-text-hover: #1e1739;
+  --hero-button-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-button-shadow: rgba(30, 23, 57, 0.18);
+  --hero-button-shadow-offset-hover: rgba(30, 23, 57, 0.12);
+  --hero-button-shadow-hover: rgba(30, 23, 57, 0.22);
+  --hero-focus-outline: #1e1739;
+
+  --color-hero-glitch: rgba(30, 23, 57, 0.35);
+  --hero-glitch-blend: multiply;
+  --color-hero-title-shadow: rgba(30, 23, 57, 0.1);
+  --color-hero-title-shadow-strong: rgba(30, 23, 57, 0.07);
+  --color-hero-line2-shadow: rgba(244, 211, 94, 0.25);
+  --color-hero-line2-before: #f4d35e;
+  --color-hero-decor-student: rgba(244, 211, 94, 0.35);
+  --color-hero-decor-student-shadow: rgba(244, 211, 94, 0.2);
+  --color-hero-decor-pixel: rgba(244, 211, 94, 0.3);
+  --color-hero-decor-pixel-shadow: rgba(244, 211, 94, 0.18);
+  --color-hero-decor-square: rgba(244, 211, 94, 0.22);
+
+  --color-audience-section-bg: #ffffff;
+  --color-audience-card-border: #dbafff;
+
+  --color-countdown-bg: #1e1739;
+  --color-countdown-text: #f4d35e;
+  --color-countdown-separator: #f4d35e;
+  --color-countdown-label-bg: rgba(244, 211, 94, 0.14);
+  --color-countdown-label-text: #f4d35e;
+  --color-countdown-decor: rgba(244, 211, 94, 0.14);
+
+  --color-footer-text: #ffffff;
+  --color-footer-text-muted: rgba(255, 255, 255, 0.78);
+  --color-footer-border: rgba(255, 255, 255, 0.12);
+  --color-footer-label: rgba(244, 211, 94, 0.75);
+  --color-footer-bottom: rgba(255, 255, 255, 0.82);
+  --color-footer-separator: rgba(255, 255, 255, 0.25);
+  --color-partner-box-fill: rgba(244, 211, 94, 0.08);
+  --color-partner-box-stroke: rgba(244, 211, 94, 0.35);
+  --color-partner-box-text: rgba(255, 255, 255, 0.55);
+
+  --color-overlay: rgba(30, 23, 57, 0.45);
+
+  --color-program-section-bg: #1e1739;
+  --color-program-heading: #ffffff;
+  --color-program-note: rgba(255, 255, 255, 0.72);
+  --color-program-card-bg: rgba(255, 255, 255, 0.06);
+  --color-program-card-bg-hover: rgba(255, 255, 255, 0.1);
+  --color-program-card-bg-expanded: rgba(255, 255, 255, 0.12);
+  --color-program-card-border: rgba(255, 255, 255, 0.12);
+  --color-program-card-border-hover: rgba(255, 255, 255, 0.22);
+  --color-program-card-text: #ffffff;
+  --color-program-card-text-muted: rgba(255, 255, 255, 0.78);
+  --color-program-time: #f4d35e;
+  --color-program-accent: #f4d35e;
+  --color-program-marker: #f4d35e;
+  --color-program-pixel-rgb: 244, 211, 94;
+
+  --color-header-bg: #1e1739;
+  --color-header-bg-2: #2a214d;
+  --color-header-text: #ffffff;
+  --color-header-muted: rgba(255, 255, 255, 0.76);
+  --color-header-border: rgba(244, 211, 94, 0.34);
+  --color-header-border-soft: rgba(244, 211, 94, 0.18);
+  --color-header-card: rgba(255, 255, 255, 0.055);
+  --color-header-shadow: rgba(30, 23, 57, 0.28);
+  --color-header-shadow-strong: rgba(30, 23, 57, 0.42);
+  --color-header-overlay: rgba(30, 23, 57, 0.58);
+  --color-header-mobile-bg: #1e1739;
+  --color-header-mobile-card: rgba(244, 211, 94, 0.08);
+
+  --color-footer-bg: #1e1739;
+  --color-footer-bg-2: #2a214d;
+  --color-footer-text: #ffffff;
+  --color-footer-text-muted: rgba(255, 255, 255, 0.78);
+  --color-footer-border: rgba(255, 255, 255, 0.12);
+  --color-footer-border-strong: rgba(244, 211, 94, 0.32);
+  --color-footer-card: rgba(255, 255, 255, 0.055);
+  --color-footer-card-hover: rgba(244, 211, 94, 0.095);
+  --color-footer-label: rgba(244, 211, 94, 0.75);
+  --color-footer-bottom: rgba(255, 255, 255, 0.82);
+  --color-footer-separator: rgba(255, 255, 255, 0.25);
+
+  --color-in-program-bg: #ffffff;
+  --color-in-program-text: #1e1739;
+  --color-in-program-muted: rgba(30, 23, 57, 0.56);
+  --color-in-program-card-bg: #ffffff;
+  --color-in-program-card-border: #dbafff;
+  --color-in-program-card-shadow: rgba(30, 23, 57, 0.08);
+  --color-in-program-marker: #dbafff;
+  --color-in-program-button-bg: #ffffff;
+  --color-in-program-button-text: #1e1739;
+  --color-in-program-button-border: #dbafff;
+  --color-in-program-spark-bg: #1e1739;
+  --color-in-program-spark-card-bg: #dbafff;
+}
+
+
+/* Dark theme */
+[data-theme='dark'] {
+  --color-bg: #0b0814;
+  --color-bg-elevated: #14101f;
+  --color-bg-soft: #0f0c18;
+  --color-bg-accent: #1e1739;
+  --color-bg-yellow-strong: #f2f55e;
+
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.78);
+  --color-muted: rgba(255, 255, 255, 0.72);
+
+  --color-border: rgba(242, 245, 94, 0.12);
+  --color-border-accent: rgba(242, 245, 94, 0.22);
+  --color-glass: rgba(11, 8, 20, 0.72);
+  --color-glass-scrolled: rgba(11, 8, 20, 0.9);
+  --color-glass-border: rgba(242, 245, 94, 0.15);
+  --color-glass-inset: rgba(242, 245, 94, 0.08);
+  --color-shadow: rgba(0, 0, 0, 0.25);
+  --color-shadow-strong: rgba(0, 0, 0, 0.4);
+
+  --color-surface-card: rgba(30, 23, 57, 0.55);
+  --color-surface-card-hover: rgba(30, 23, 57, 0.75);
+  --color-surface-expanded: rgba(40, 34, 68, 0.95);
+  --color-mobile-nav-bg: rgba(11, 8, 20, 0.97);
+
+  --color-nav-link: rgba(255, 255, 255, 0.88);
+  --color-logo-filter: brightness(0) invert(1);
+  --color-logo-opacity: 0.95;
+
+  --color-icon-fg: #f2f55e;
+  --color-icon-bg: rgba(242, 245, 94, 0.08);
+  --color-icon-border: rgba(242, 245, 94, 0.2);
+  --color-icon-fg-hover: #1e1739;
+
+  --color-hero-title: #ffffff;
+  --color-hero-kicker-end: #ffffff;
+  --color-hero-glitch: rgba(255, 255, 255, 0.9);
+  --hero-glitch-blend: difference;
+  --color-hero-title-shadow: rgba(0, 0, 0, 0.32);
+  --color-hero-title-shadow-strong: rgba(0, 0, 0, 0.24);
+  --color-hero-line2-shadow: rgba(255, 255, 255, 0.12);
+  --color-hero-line2-before: #ffffff;
+  --color-hero-line-accent: #f2f55e;
+  --color-hero-button-text: #1e1739;
+
+  --hero-date-bg: #f4d35e;
+  --hero-date-text: #1e1739;
+  --hero-date-shadow-offset: rgba(255, 255, 255, 0.08);
+  --hero-date-shadow: rgba(0, 0, 0, 0.28);
+
+  --hero-button-bg: #dbafff;
+  --hero-button-border: #dbafff;
+  --hero-button-text: #1e1739;
+  --hero-button-bg-hover: #e5c7ff;
+  --hero-button-border-hover: #e5c7ff;
+  --hero-button-text-hover: #1e1739;
+  --hero-button-shadow-offset: rgba(219, 175, 255, 0.14);
+  --hero-button-shadow: rgba(0, 0, 0, 0.32);
+  --hero-button-shadow-offset-hover: rgba(219, 175, 255, 0.2);
+  --hero-button-shadow-hover: rgba(0, 0, 0, 0.38);
+  --hero-focus-outline: #dbafff;
+
+  --color-hero-decor-student: rgba(242, 245, 94, 0.14);
+  --color-hero-decor-student-shadow: rgba(242, 245, 94, 0.08);
+  --color-hero-decor-pixel: rgba(242, 245, 94, 0.12);
+  --color-hero-decor-pixel-shadow: rgba(242, 245, 94, 0.08);
+  --color-hero-decor-square: rgba(255, 255, 255, 0.08);
+
+  --color-accent-heading: #f2f55e;
+  --color-accent-link: #f2f55e;
+  --color-yellow-readable: #f2f55e;
+
+  --color-footer-label: rgba(242, 245, 94, 0.75);
+  --color-partner-box-fill: rgba(242, 245, 94, 0.05);
+  --color-partner-box-stroke: rgba(242, 245, 94, 0.18);
+  --color-partner-box-text: rgba(242, 245, 94, 0.42);
+
+  --color-audience-section-bg: #0b0814;
+  --color-audience-card-border: #1e1739;
+
+  --color-countdown-bg: #1e1739;
+  --color-countdown-text: #f2f55e;
+  --color-countdown-separator: #f2f55e;
+  --color-countdown-label-bg: #f2f55e;
+  --color-countdown-label-text: #1e1739;
+  --color-countdown-decor: rgba(196, 160, 255, 0.18);
+
+  --color-overlay: rgba(11, 8, 20, 0.78);
+
+  --color-program-section-bg: var(--color-bg-soft);
+  --color-program-heading: var(--color-text);
+  --color-program-note: var(--color-text-muted);
+  --color-program-card-bg: var(--color-surface-card);
+  --color-program-card-bg-hover: var(--color-surface-card-hover);
+  --color-program-card-bg-expanded: var(--color-surface-expanded);
+  --color-program-card-border: var(--color-border);
+  --color-program-card-border-hover: var(--color-border-accent);
+  --color-program-card-text: var(--color-text);
+  --color-program-card-text-muted: var(--color-text-muted);
+  --color-program-time: var(--color-program-accent);
+  --color-program-accent: #e0e464;
+  --color-program-marker: var(--color-yellow);
+  --color-program-pixel-rgb: var(--color-accent-rgb);
+
+  --color-header-bg: #0b0814;
+  --color-header-bg-2: #151023;
+  --color-header-text: #ffffff;
+  --color-header-muted: rgba(255, 255, 255, 0.72);
+  --color-header-border: rgba(242, 245, 94, 0.28);
+  --color-header-border-soft: rgba(242, 245, 94, 0.14);
+  --color-header-card: rgba(255, 255, 255, 0.04);
+  --color-header-shadow: rgba(0, 0, 0, 0.3);
+  --color-header-shadow-strong: rgba(0, 0, 0, 0.46);
+  --color-header-overlay: rgba(11, 8, 20, 0.76);
+  --color-header-mobile-bg: #0b0814;
+  --color-header-mobile-card: rgba(242, 245, 94, 0.06);
+
+  --color-footer-bg: #0b0814;
+  --color-footer-bg-2: #151023;
+  --color-footer-text: #ffffff;
+  --color-footer-text-muted: rgba(255, 255, 255, 0.72);
+  --color-footer-border: rgba(242, 245, 94, 0.15);
+  --color-footer-border-strong: rgba(242, 245, 94, 0.3);
+  --color-footer-card: rgba(255, 255, 255, 0.04);
+  --color-footer-card-hover: rgba(242, 245, 94, 0.075);
+  --color-footer-label: rgba(242, 245, 94, 0.75);
+  --color-footer-bottom: rgba(255, 255, 255, 0.76);
+  --color-footer-separator: rgba(242, 245, 94, 0.36);
+
+  --color-in-program-bg: var(--color-bg);
+  --color-in-program-text: var(--color-text);
+  --color-in-program-muted: rgba(255, 255, 255, 0.68);
+  --color-in-program-card-bg: #14101f;
+  --color-in-program-card-border: rgba(219, 175, 255, 0.72);
+  --color-in-program-card-shadow: rgba(0, 0, 0, 0.32);
+  --color-in-program-marker: #dbafff;
+  --color-in-program-button-bg: #14101f;
+  --color-in-program-button-text: #ffffff;
+  --color-in-program-button-border: rgba(219, 175, 255, 0.78);
+  --color-in-program-spark-bg: #ffffff;
+  --color-in-program-spark-card-bg: #dbafff;
+}
+
+
+/* Audience block — акцентный фон секции, читаемые карточки в обеих темах */
+[data-theme='light'],
+[data-theme='dark'] {
+  --color-audience-scale-card: rgba(255, 255, 255, 0.78);
+  --color-audience-scale-text: #1e1739;
+}
 
 * {
   box-sizing: border-box;
@@ -13,15 +357,31 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
+  color-scheme: light dark;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--color-dark);
-  color: var(--color-white);
+  overflow-x: clip;
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
 }
 
 button,
@@ -30,6 +390,15 @@ textarea,
 select,
 a {
   font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--color-yellow, #f4d35e);
+  outline-offset: 3px;
 }
 
 a {
@@ -44,4 +413,3 @@ img {
   width: 100%;
   min-height: 100vh;
 }
-
