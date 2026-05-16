@@ -238,12 +238,13 @@ const programItems = ref([
   position: relative;
   width: fit-content;
   margin: 0 auto 60px;
-  padding: 30px 60px 34px;
+  padding: 34px 84px 42px;
+  isolation: isolate;
 }
 
 .program-heading h2 {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   margin: 0;
   font-size: clamp(44px, 6vw, 82px);
   line-height: 0.9;
@@ -256,11 +257,11 @@ const programItems = ref([
 
 .program-marker {
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   left: 50%;
-  top: 50%;
-  width: 115%;
-  height: 155%;
+  top: 54%;
+  width: 145%;
+  height: 190%;
   transform: translate(-50%, -50%) rotate(-2deg);
   pointer-events: none;
   color: var(--color-program-marker, var(--color-yellow));
@@ -404,7 +405,7 @@ const programItems = ref([
 
   .program-heading {
     margin-bottom: 45px;
-    padding: 20px 40px 24px;
+    padding: 24px 62px 30px;
   }
 
   .program-card {
@@ -438,13 +439,14 @@ const programItems = ref([
   }
 
   .program-heading {
-    padding: 16px 24px 20px;
+    padding: 18px 34px 24px;
     margin-bottom: 35px;
   }
 
   .program-marker {
-    width: 130%;
-    height: 170%;
+    top: 54%;
+    width: 155%;
+    height: 190%;
   }
 
   .program-card {
@@ -500,7 +502,7 @@ const programItems = ref([
   }
 
   .program-heading {
-    padding: 12px 16px 16px;
+    padding: 14px 28px 18px;
     margin-bottom: 28px;
   }
 

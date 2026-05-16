@@ -163,14 +163,23 @@ onUnmounted(() => {
 <style scoped>
 .countdown-section {
   position: relative;
-  width: 100%;
+  isolation: isolate;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   padding: 96px 40px 104px;
-  background: var(--color-countdown-bg);
-  color: var(--color-countdown-text);
+  background: var(--color-countdown-bg, #1e1739);
+  color: var(--color-countdown-text, #f4d35e);
   transition:
     background-color 0.35s ease,
     color 0.35s ease;
   overflow: hidden;
+}
+
+:global(html),
+:global(body) {
+  overflow-x: clip;
 }
 
 .countdown-decor {

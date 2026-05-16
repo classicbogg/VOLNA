@@ -7,7 +7,42 @@
   --color-registration-lavender: #cdb2ff;
   --color-white: #ffffff;
   --color-dark: #0b0814;
+
+  --color-lavender: #dbafff;
+
+  --hero-date-bg: #dbafff;
+  --hero-date-text: #1e1739;
+  --hero-date-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-date-shadow: rgba(30, 23, 57, 0.18);
+
+  --hero-button-bg: #f4d35e;
+  --hero-button-border: #f4d35e;
+  --hero-button-text: #1e1739;
+  --hero-button-bg-hover: #f7df7a;
+  --hero-button-border-hover: #f7df7a;
+  --hero-button-text-hover: #1e1739;
+  --hero-button-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-button-shadow: rgba(30, 23, 57, 0.18);
+  --hero-button-shadow-offset-hover: rgba(30, 23, 57, 0.12);
+  --hero-button-shadow-hover: rgba(30, 23, 57, 0.22);
+  --hero-focus-outline: #1e1739;
+
+  --color-header-accent: var(--color-yellow);
+  --color-header-accent-rgb: var(--color-accent-rgb);
+  --color-header-purple: var(--color-purple);
+  --color-header-deep: var(--color-dark);
+  --color-header-white: var(--color-white);
+
+  --color-footer-accent: var(--color-yellow);
+  --color-footer-accent-rgb: var(--color-accent-rgb);
+  --color-footer-purple: var(--color-purple);
+  --color-footer-deep: var(--color-dark);
+  --color-footer-white: var(--color-white);
+
+  --color-in-program-accent: var(--color-lavender);
+  --color-in-program-accent-rgb: 219, 175, 255;
 }
+
 
 /* Light theme — белый фон, золотистые акценты */
 [data-theme='light'] {
@@ -57,6 +92,24 @@
   --color-hero-kicker-end: #1e1739;
   --color-hero-line-accent: #f4d35e;
   --color-hero-button-text: #1e1739;
+
+  --hero-date-bg: #dbafff;
+  --hero-date-text: #1e1739;
+  --hero-date-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-date-shadow: rgba(30, 23, 57, 0.18);
+
+  --hero-button-bg: #f4d35e;
+  --hero-button-border: #f4d35e;
+  --hero-button-text: #1e1739;
+  --hero-button-bg-hover: #f7df7a;
+  --hero-button-border-hover: #f7df7a;
+  --hero-button-text-hover: #1e1739;
+  --hero-button-shadow-offset: rgba(30, 23, 57, 0.08);
+  --hero-button-shadow: rgba(30, 23, 57, 0.18);
+  --hero-button-shadow-offset-hover: rgba(30, 23, 57, 0.12);
+  --hero-button-shadow-hover: rgba(30, 23, 57, 0.22);
+  --hero-focus-outline: #1e1739;
+
   --color-hero-glitch: rgba(30, 23, 57, 0.35);
   --hero-glitch-blend: multiply;
   --color-hero-title-shadow: rgba(30, 23, 57, 0.1);
@@ -105,7 +158,46 @@
   --color-program-accent: #f4d35e;
   --color-program-marker: #f4d35e;
   --color-program-pixel-rgb: 244, 211, 94;
+
+  --color-header-bg: #1e1739;
+  --color-header-bg-2: #2a214d;
+  --color-header-text: #ffffff;
+  --color-header-muted: rgba(255, 255, 255, 0.76);
+  --color-header-border: rgba(244, 211, 94, 0.34);
+  --color-header-border-soft: rgba(244, 211, 94, 0.18);
+  --color-header-card: rgba(255, 255, 255, 0.055);
+  --color-header-shadow: rgba(30, 23, 57, 0.28);
+  --color-header-shadow-strong: rgba(30, 23, 57, 0.42);
+  --color-header-overlay: rgba(30, 23, 57, 0.58);
+  --color-header-mobile-bg: #1e1739;
+  --color-header-mobile-card: rgba(244, 211, 94, 0.08);
+
+  --color-footer-bg: #1e1739;
+  --color-footer-bg-2: #2a214d;
+  --color-footer-text: #ffffff;
+  --color-footer-text-muted: rgba(255, 255, 255, 0.78);
+  --color-footer-border: rgba(255, 255, 255, 0.12);
+  --color-footer-border-strong: rgba(244, 211, 94, 0.32);
+  --color-footer-card: rgba(255, 255, 255, 0.055);
+  --color-footer-card-hover: rgba(244, 211, 94, 0.095);
+  --color-footer-label: rgba(244, 211, 94, 0.75);
+  --color-footer-bottom: rgba(255, 255, 255, 0.82);
+  --color-footer-separator: rgba(255, 255, 255, 0.25);
+
+  --color-in-program-bg: #ffffff;
+  --color-in-program-text: #1e1739;
+  --color-in-program-muted: rgba(30, 23, 57, 0.56);
+  --color-in-program-card-bg: #ffffff;
+  --color-in-program-card-border: #dbafff;
+  --color-in-program-card-shadow: rgba(30, 23, 57, 0.08);
+  --color-in-program-marker: #dbafff;
+  --color-in-program-button-bg: #ffffff;
+  --color-in-program-button-text: #1e1739;
+  --color-in-program-button-border: #dbafff;
+  --color-in-program-spark-bg: #1e1739;
+  --color-in-program-spark-card-bg: #dbafff;
 }
+
 
 /* Dark theme */
 [data-theme='dark'] {
@@ -151,7 +243,25 @@
   --color-hero-line2-shadow: rgba(255, 255, 255, 0.12);
   --color-hero-line2-before: #ffffff;
   --color-hero-line-accent: #f2f55e;
-  --color-hero-button-text: #f2f55e;
+  --color-hero-button-text: #1e1739;
+
+  --hero-date-bg: #f4d35e;
+  --hero-date-text: #1e1739;
+  --hero-date-shadow-offset: rgba(255, 255, 255, 0.08);
+  --hero-date-shadow: rgba(0, 0, 0, 0.28);
+
+  --hero-button-bg: #dbafff;
+  --hero-button-border: #dbafff;
+  --hero-button-text: #1e1739;
+  --hero-button-bg-hover: #e5c7ff;
+  --hero-button-border-hover: #e5c7ff;
+  --hero-button-text-hover: #1e1739;
+  --hero-button-shadow-offset: rgba(219, 175, 255, 0.14);
+  --hero-button-shadow: rgba(0, 0, 0, 0.32);
+  --hero-button-shadow-offset-hover: rgba(219, 175, 255, 0.2);
+  --hero-button-shadow-hover: rgba(0, 0, 0, 0.38);
+  --hero-focus-outline: #dbafff;
+
   --color-hero-decor-student: rgba(242, 245, 94, 0.14);
   --color-hero-decor-student-shadow: rgba(242, 245, 94, 0.08);
   --color-hero-decor-pixel: rgba(242, 245, 94, 0.12);
@@ -167,7 +277,7 @@
   --color-partner-box-stroke: rgba(242, 245, 94, 0.18);
   --color-partner-box-text: rgba(242, 245, 94, 0.42);
 
-  --color-audience-section-bg: #f2f55e;
+  --color-audience-section-bg: #0b0814;
   --color-audience-card-border: #1e1739;
 
   --color-countdown-bg: #1e1739;
@@ -193,7 +303,46 @@
   --color-program-accent: #e0e464;
   --color-program-marker: var(--color-yellow);
   --color-program-pixel-rgb: var(--color-accent-rgb);
+
+  --color-header-bg: #0b0814;
+  --color-header-bg-2: #151023;
+  --color-header-text: #ffffff;
+  --color-header-muted: rgba(255, 255, 255, 0.72);
+  --color-header-border: rgba(242, 245, 94, 0.28);
+  --color-header-border-soft: rgba(242, 245, 94, 0.14);
+  --color-header-card: rgba(255, 255, 255, 0.04);
+  --color-header-shadow: rgba(0, 0, 0, 0.3);
+  --color-header-shadow-strong: rgba(0, 0, 0, 0.46);
+  --color-header-overlay: rgba(11, 8, 20, 0.76);
+  --color-header-mobile-bg: #0b0814;
+  --color-header-mobile-card: rgba(242, 245, 94, 0.06);
+
+  --color-footer-bg: #0b0814;
+  --color-footer-bg-2: #151023;
+  --color-footer-text: #ffffff;
+  --color-footer-text-muted: rgba(255, 255, 255, 0.72);
+  --color-footer-border: rgba(242, 245, 94, 0.15);
+  --color-footer-border-strong: rgba(242, 245, 94, 0.3);
+  --color-footer-card: rgba(255, 255, 255, 0.04);
+  --color-footer-card-hover: rgba(242, 245, 94, 0.075);
+  --color-footer-label: rgba(242, 245, 94, 0.75);
+  --color-footer-bottom: rgba(255, 255, 255, 0.76);
+  --color-footer-separator: rgba(242, 245, 94, 0.36);
+
+  --color-in-program-bg: var(--color-bg);
+  --color-in-program-text: var(--color-text);
+  --color-in-program-muted: rgba(255, 255, 255, 0.68);
+  --color-in-program-card-bg: #14101f;
+  --color-in-program-card-border: rgba(219, 175, 255, 0.72);
+  --color-in-program-card-shadow: rgba(0, 0, 0, 0.32);
+  --color-in-program-marker: #dbafff;
+  --color-in-program-button-bg: #14101f;
+  --color-in-program-button-text: #ffffff;
+  --color-in-program-button-border: rgba(219, 175, 255, 0.78);
+  --color-in-program-spark-bg: #ffffff;
+  --color-in-program-spark-card-bg: #dbafff;
 }
+
 
 /* Audience block — акцентный фон секции, читаемые карточки в обеих темах */
 [data-theme='light'],

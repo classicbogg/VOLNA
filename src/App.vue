@@ -6,6 +6,7 @@ import HeroSection from './components/HeroSection.vue'
 import ProgramSection from './components/ProgramSection.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import LocationSection from './components/LocationSection.vue'
+import SpeakersSection from './components/SpeakersSection.vue'
 </script>
 
 
@@ -17,6 +18,7 @@ import LocationSection from './components/LocationSection.vue'
     <HeroSection />
     <CountdownSection />
     <AudienceSection />
+    <SpeakersSection />
     <ProgramSection />
     <LocationSection />
     <SiteFooter />

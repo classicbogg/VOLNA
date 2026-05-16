@@ -47,12 +47,7 @@ const handleRegistrationSubmit = (data) => {
           27 мая 2026
         </div>
 
-        <button
-          class="hero-button"
-          type="button"
-          aria-haspopup="dialog"
-          @click="openRegistration"
-        >
+        <button class="hero-button" type="button" @click="openRegistration">
           зарегистрироваться
         </button>
       </div>
@@ -93,11 +88,8 @@ const handleRegistrationSubmit = (data) => {
   position: relative;
   min-height: 100vh;
   padding: 170px 40px 110px;
-  background: var(--color-bg);
-  color: var(--color-text);
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease;
+  background: var(--hero-bg, var(--color-bg, #ffffff));
+  color: var(--color-hero-title, var(--color-text, #1e1739));
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -117,7 +109,7 @@ const handleRegistrationSubmit = (data) => {
   max-width: calc(100vw - 32px);
   margin: 0 auto 44px;
   padding: 20px 40px 18px;
-  border: 3px solid var(--color-yellow);
+  border: 3px solid var(--color-yellow, #f2f55e);
   border-radius: 8px;
   background: transparent;
 
@@ -131,10 +123,10 @@ const handleRegistrationSubmit = (data) => {
   color: transparent;
   background-image: linear-gradient(
     90deg,
-    var(--color-yellow) 0%,
-    var(--color-yellow) 50%,
-    var(--color-hero-kicker-end) 50%,
-    var(--color-hero-kicker-end) 100%
+    var(--color-yellow, #f2f55e) 0%,
+    var(--color-yellow, #f2f55e) 50%,
+    var(--color-hero-kicker-end, #ffffff) 50%,
+    var(--color-hero-kicker-end, #ffffff) 100%
   );
   background-size: 200% 100%;
   background-position: 100% 0;
@@ -151,14 +143,13 @@ const handleRegistrationSubmit = (data) => {
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
 
   box-shadow:
-    8px 8px 0 rgba(var(--color-accent-rgb), 0.12),
+    8px 8px 0 rgba(242, 245, 94, 0.12),
     0 18px 36px rgba(0, 0, 0, 0.24);
 }
 
 .hero-title {
   position: relative;
   margin: 0;
-  color: var(--color-hero-title);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -193,8 +184,8 @@ const handleRegistrationSubmit = (data) => {
     heroTitleBreathe 5s ease-in-out infinite;
   animation-delay: var(--delay), calc(var(--delay) + 1.2s);
   text-shadow:
-    6px 6px 0 rgba(var(--color-accent-rgb), 0.12),
-    0 20px 46px var(--color-hero-title-shadow);
+    6px 6px 0 var(--color-hero-title-shadow, rgba(30, 23, 57, 0.1)),
+    0 20px 46px var(--color-hero-title-shadow-strong, rgba(30, 23, 57, 0.18));
 }
 
 .hero-title__line::before,
@@ -209,7 +200,7 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-title__line::before {
-  color: var(--color-yellow);
+  color: var(--color-yellow, #f2f55e);
   transform: translate(18px, 14px) skewX(-8deg);
   clip-path: inset(0 100% 0 0);
   animation: heroTitleStrike 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -218,8 +209,8 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-title__line::after {
   z-index: 4;
-  color: var(--color-hero-glitch);
-  mix-blend-mode: var(--hero-glitch-blend);
+  color: var(--color-hero-glitch, rgba(255, 255, 255, 0.9));
+  mix-blend-mode: var(--hero-glitch-blend, difference);
   animation: heroTitleGlitch 1.15s steps(2, end) both;
   animation-delay: calc(var(--delay) + 0.18s);
 }
@@ -231,6 +222,7 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-title__line--second {
   align-self: center;
+  color: var(--color-yellow, #f2f55e);
   --delay: 0.32s;
 }
 
@@ -249,15 +241,13 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-title__line--second::before {
-  color: var(--color-hero-line2-before);
+  color: var(--color-hero-line2-before, #ffffff);
 }
 
 .hero-title__line--second span {
-  color: var(--color-yellow);
-  -webkit-text-fill-color: var(--color-yellow);
   text-shadow:
-    6px 6px 0 rgba(var(--color-accent-rgb), 0.2),
-    0 20px 46px var(--color-hero-title-shadow-strong);
+    6px 6px 0 var(--color-hero-line2-shadow, rgba(255, 255, 255, 0.12)),
+    0 20px 46px var(--color-hero-title-shadow-strong, rgba(0, 0, 0, 0.24));
 }
 
 .hero-bottom {
@@ -274,9 +264,10 @@ const handleRegistrationSubmit = (data) => {
   width: fit-content;
   max-width: calc(100vw - 32px);
   padding: 18px 30px 16px;
+  border: 2px solid var(--hero-date-bg, #dbafff);
   border-radius: 999px;
-  background: var(--color-yellow);
-  color: var(--color-purple, #1e1739);
+  background: var(--hero-date-bg, #dbafff);
+  color: var(--hero-date-text, #1e1739);
   font-size: clamp(24px, 3vw, 46px);
   line-height: 0.9;
   font-weight: 900;
@@ -284,8 +275,14 @@ const handleRegistrationSubmit = (data) => {
   text-transform: lowercase;
   letter-spacing: -0.07em;
   box-shadow:
-    8px 8px 0 rgba(30, 23, 57, 0.06),
-    0 18px 34px var(--color-shadow-strong);
+    8px 8px 0 var(--hero-date-shadow-offset, rgba(30, 23, 57, 0.08)),
+    0 18px 34px var(--hero-date-shadow, rgba(30, 23, 57, 0.18));
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 }
 
 .hero-button {
@@ -293,10 +290,10 @@ const handleRegistrationSubmit = (data) => {
   min-height: 68px;
   min-width: min(100%, 320px);
   padding: 0 44px;
-  border: none;
+  border: 2px solid var(--hero-button-border, #f4d35e);
   border-radius: 999px;
-  color: var(--color-purple, #1e1739);
-  background: var(--color-registration-lavender, #cdb2ff);
+  background: var(--hero-button-bg, #f4d35e);
+  color: var(--hero-button-text, #1e1739);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -309,27 +306,36 @@ const handleRegistrationSubmit = (data) => {
   font-weight: 900;
   text-transform: lowercase;
   letter-spacing: -0.04em;
-  box-shadow: 0 14px 36px rgba(205, 178, 255, 0.55);
+  box-shadow:
+    8px 8px 0 var(--hero-button-shadow-offset, rgba(30, 23, 57, 0.08)),
+    0 18px 34px var(--hero-button-shadow, rgba(30, 23, 57, 0.18));
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .hero-button:hover {
-  background: #d9c4ff;
+  background: var(--hero-button-bg-hover, var(--hero-button-bg, #f4d35e));
+  border-color: var(--hero-button-border-hover, var(--hero-button-border, #f4d35e));
+  color: var(--hero-button-text-hover, var(--hero-button-text, #1e1739));
   transform: translateY(-3px);
-  box-shadow: 0 18px 42px rgba(205, 178, 255, 0.62);
+  box-shadow:
+    10px 10px 0 var(--hero-button-shadow-offset-hover, rgba(30, 23, 57, 0.12)),
+    0 24px 42px var(--hero-button-shadow-hover, rgba(30, 23, 57, 0.22));
 }
 
 .hero-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 8px 22px rgba(205, 178, 255, 0.4);
+  transform: translateY(-1px);
+  box-shadow:
+    6px 6px 0 var(--hero-button-shadow-offset, rgba(30, 23, 57, 0.08)),
+    0 12px 26px var(--hero-button-shadow, rgba(30, 23, 57, 0.18));
 }
 
 .hero-button:focus-visible {
-  outline: 3px solid var(--color-purple, #1e1739);
+  outline: 3px solid var(--hero-focus-outline, #1e1739);
   outline-offset: 4px;
 }
 
@@ -345,19 +351,19 @@ const handleRegistrationSubmit = (data) => {
   top: 18%;
   width: clamp(130px, 16vw, 280px);
   height: clamp(130px, 16vw, 280px);
-  background: var(--color-hero-decor-student);
+  background: var(--color-hero-decor-student, rgba(242, 245, 94, 0.13));
 
-  mask-image: url('/student-fill.svg');
+  mask-image: url('/icons/student-fill.svg');
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
 
-  -webkit-mask-image: url('/student-fill.svg');
+  -webkit-mask-image: url('/icons/student-fill.svg');
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
 
-  filter: drop-shadow(14px 14px 0 var(--color-hero-decor-student-shadow));
+  filter: drop-shadow(14px 14px 0 var(--color-hero-decor-student-shadow, rgba(242, 245, 94, 0.08)));
   transform: rotate(8deg);
 }
 
@@ -365,27 +371,27 @@ const handleRegistrationSubmit = (data) => {
   z-index: 1;
   width: 42px;
   height: 42px;
-  background: var(--color-hero-decor-pixel);
+  background: var(--color-hero-decor-pixel, rgba(242, 245, 94, 0.12));
 }
 
 .hero-decor--square-one {
   left: 8%;
   top: 28%;
   box-shadow:
-    42px 0 0 var(--color-hero-decor-pixel-shadow),
-    0 42px 0 var(--color-hero-decor-pixel-shadow),
-    84px 42px 0 var(--color-hero-decor-pixel-shadow);
+    42px 0 0 var(--color-hero-decor-pixel-shadow, rgba(242, 245, 94, 0.08)),
+    0 42px 0 var(--color-hero-decor-pixel-shadow, rgba(242, 245, 94, 0.07)),
+    84px 42px 0 var(--color-hero-decor-pixel-shadow, rgba(242, 245, 94, 0.06));
   transform: rotate(-8deg);
 }
 
 .hero-decor--square-two {
   right: 13%;
   bottom: 24%;
-  background: var(--color-hero-decor-square);
+  background: var(--color-hero-decor-square, rgba(255, 255, 255, 0.08));
   box-shadow:
-    -42px 0 0 var(--color-hero-decor-square),
-    0 -42px 0 var(--color-hero-decor-square),
-    -84px -42px 0 var(--color-hero-decor-square);
+    -42px 0 0 var(--color-hero-decor-square, rgba(255, 255, 255, 0.06)),
+    0 -42px 0 var(--color-hero-decor-square, rgba(255, 255, 255, 0.05)),
+    -84px -42px 0 var(--color-hero-decor-square, rgba(255, 255, 255, 0.04));
   transform: rotate(12deg);
 }
 
@@ -396,7 +402,7 @@ const handleRegistrationSubmit = (data) => {
   bottom: 0;
   z-index: 4;
   height: 54px;
-  background: var(--color-yellow);
+  background: var(--color-yellow, #f2f55e);
   color: var(--color-purple, #1e1739);
   display: flex;
   align-items: center;
@@ -445,14 +451,14 @@ const handleRegistrationSubmit = (data) => {
     background-position: 0 0;
     filter:
       drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 12px rgba(var(--color-accent-rgb), 0.28));
+      drop-shadow(0 0 12px rgba(242, 245, 94, 0.28));
   }
 
   100% {
     background-position: 0 0;
     filter:
       drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 6px rgba(var(--color-accent-rgb), 0.18));
+      drop-shadow(0 0 6px rgba(242, 245, 94, 0.18));
   }
 }
 
@@ -560,19 +566,6 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
-:global(html[data-theme='light']) .hero-section {
-  --color-yellow: var(--color-registration-lavender, #cdb2ff);
-  --color-accent-rgb: 205, 178, 255;
-  --color-hero-line-accent: var(--color-registration-lavender, #cdb2ff);
-  --color-hero-line2-before: var(--color-registration-lavender, #cdb2ff);
-  --color-hero-decor-student: rgba(205, 178, 255, 0.42);
-  --color-hero-decor-student-shadow: rgba(205, 178, 255, 0.22);
-  --color-hero-decor-pixel: rgba(205, 178, 255, 0.38);
-  --color-hero-decor-pixel-shadow: rgba(205, 178, 255, 0.2);
-  --color-hero-decor-square: rgba(205, 178, 255, 0.26);
-  --color-hero-line2-shadow: rgba(205, 178, 255, 0.28);
-}
-
 @media (max-width: 980px) {
   .hero-section {
     min-height: 780px;
@@ -666,9 +659,7 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-button {
-    min-height: 64px;
-    padding: 0 28px;
-    font-size: clamp(19px, 5.2vw, 24px);
+    min-height: 58px;
   }
 
   .hero-decor--student {
@@ -691,30 +682,6 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
-@media (max-width: 420px) {
-  .hero-title__line span,
-  .hero-title__line::before,
-  .hero-title__line::after {
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-
-  .hero-kicker {
-    font-size: clamp(26px, 8.5vw, 40px);
-    padding: 12px 18px 10px;
-  }
-
-  .hero-date {
-    font-size: clamp(20px, 6vw, 28px);
-    padding: 14px 22px 12px;
-  }
-
-  .hero-button {
-    min-height: 60px;
-    font-size: 18px;
-  }
-}
-
 @media (max-width: 380px) {
   .hero-title__line--third {
     --line-scale-x: 0.86;
@@ -727,21 +694,12 @@ const handleRegistrationSubmit = (data) => {
 }
 
 @media (max-width: 340px) {
-  .hero-section {
-    padding: 82px 12px 86px;
-  }
-
   .hero-title__line--third {
     --line-scale-x: 0.84;
   }
 
   .hero-title__line--third span {
     font-size: 20px;
-  }
-
-  .hero-button {
-    min-height: 56px;
-    font-size: 17px;
   }
 }
 </style>

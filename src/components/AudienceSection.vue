@@ -134,9 +134,24 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   padding: 92px 40px 112px;
-  background: var(--color-audience-section-bg, #ffffff);
-  color: var(--color-purple, #1e1739);
+  background: var(--color-audience-section-bg, var(--color-bg, #ffffff));
+  color: var(--color-audience-section-text, var(--color-purple, #1e1739));
   overflow: hidden;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease;
+}
+
+:global(html[data-theme='light']) .audience-section {
+  --color-audience-section-bg: #ffffff;
+  --color-audience-section-text: #1e1739;
+  --color-audience-marker: #1e1739;
+}
+
+:global(html[data-theme='dark']) .audience-section {
+  --color-audience-section-bg: var(--color-bg, #0b0814);
+  --color-audience-section-text: #ffffff;
+  --color-audience-marker: var(--color-yellow, #f2f55e);
 }
 
 .audience-bg {
@@ -201,9 +216,10 @@ onUnmounted(() => {
   top: 50%;
   width: 122%;
   height: 158%;
-  color: var(--color-purple, #1e1739);
+  color: var(--color-audience-marker, var(--color-purple, #1e1739));
   transform: translate(-50%, -50%) rotate(-3deg);
   pointer-events: none;
+  transition: color 0.35s ease;
 }
 
 .audience-intro {
@@ -225,13 +241,18 @@ onUnmounted(() => {
 }
 
 .audience-card {
-  --card-bg: #f2f55e;
+  --card-bg: #f4d35e;
   --card-bg-soft: rgba(255, 255, 255, 0.20);
   --card-text: #1e1739;
   --card-muted: rgba(30, 23, 57, 0.88);
-  --card-border: var(--color-audience-card-border, #dbafff);
+  --card-border: rgba(30, 23, 57, 0.86);
   --card-accent: #1e1739;
   --card-word: rgba(30, 23, 57, 0.12);
+  --card-shine: rgba(255, 255, 255, 0.52);
+  --card-sheen: rgba(255, 255, 255, 0.18);
+  --card-panel-bg: rgba(255, 255, 255, 0.26);
+  --card-panel-border: rgba(30, 23, 57, 0.10);
+  --card-panel-shadow: rgba(255, 255, 255, 0.22);
   --card-rotate: 0deg;
   --card-y: 0px;
   --hover-x: -4deg;
@@ -245,8 +266,8 @@ onUnmounted(() => {
   border-radius: 34px;
   color: var(--card-text);
   background:
-    radial-gradient(circle at 86% 15%, rgba(255, 255, 255, 0.52), transparent 30%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent 44%),
+    radial-gradient(circle at 86% 15%, var(--card-shine), transparent 30%),
+    linear-gradient(145deg, var(--card-sheen), transparent 44%),
     var(--card-bg);
   display: flex;
   flex-direction: column;
@@ -479,22 +500,29 @@ onUnmounted(() => {
   max-width: 100%;
   margin: 0;
   padding: 16px 18px 17px;
-  border: 1px solid rgba(30, 23, 57, 0.10);
+  border: 1px solid var(--card-panel-border);
   border-radius: 20px;
   color: var(--card-muted);
-  background: rgba(255, 255, 255, 0.26);
+  background: var(--card-panel-bg);
   font-size: clamp(16px, 1.12vw, 19px);
   line-height: 1.32;
   font-weight: 650;
   text-align: left;
   letter-spacing: -0.025em;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 var(--card-panel-shadow);
 }
 
 .audience-card--start {
-  --card-bg: #f2f55e;
-  --card-bg-soft: rgba(255, 255, 255, 0.19);
+  --card-bg: #f4d35e;
+  --card-bg-soft: rgba(255, 255, 255, 0.18);
+  --card-text: #1e1739;
+  --card-muted: rgba(30, 23, 57, 0.88);
+  --card-border: rgba(30, 23, 57, 0.86);
+  --card-accent: #1e1739;
   --card-word: rgba(30, 23, 57, 0.12);
+  --card-shine: rgba(255, 255, 255, 0.40);
+  --card-panel-bg: rgba(255, 255, 255, 0.28);
+  --card-panel-border: rgba(30, 23, 57, 0.12);
   --card-rotate: -1.6deg;
   --card-y: 0px;
   --hover-x: -4deg;
@@ -502,11 +530,18 @@ onUnmounted(() => {
 }
 
 .audience-card--scale {
-  --card-bg: #fff3b1;
-  --card-text: #0b0814;
-  --card-muted: rgba(11, 8, 20, 0.86);
-  --card-accent: #0b0814;
-  --card-word: rgba(11, 8, 20, 0.12);
+  --card-bg: #1e1739;
+  --card-text: #ffffff;
+  --card-muted: rgba(255, 255, 255, 0.84);
+  --card-border: rgba(219, 175, 255, 0.74);
+  --card-accent: #dbafff;
+  --card-bg-soft: rgba(219, 175, 255, 0.12);
+  --card-word: rgba(219, 175, 255, 0.12);
+  --card-shine: rgba(219, 175, 255, 0.18);
+  --card-sheen: rgba(255, 255, 255, 0.07);
+  --card-panel-bg: rgba(255, 255, 255, 0.09);
+  --card-panel-border: rgba(219, 175, 255, 0.18);
+  --card-panel-shadow: rgba(255, 255, 255, 0.10);
   --card-rotate: 0.8deg;
   --card-y: 16px;
   --hover-x: 0deg;
@@ -514,13 +549,16 @@ onUnmounted(() => {
 }
 
 .audience-card--opportunities {
-  --card-bg: #f5e95e;
+  --card-bg: #dbafff;
   --card-text: #1e1739;
   --card-muted: rgba(30, 23, 57, 0.88);
-  --card-border: var(--color-audience-card-border, #dbafff);
+  --card-border: rgba(30, 23, 57, 0.86);
   --card-accent: #1e1739;
-  --card-bg-soft: rgba(30, 23, 57, 0.10);
-  --card-word: rgba(30, 23, 57, 0.13);
+  --card-bg-soft: rgba(255, 255, 255, 0.20);
+  --card-word: rgba(30, 23, 57, 0.12);
+  --card-shine: rgba(255, 255, 255, 0.38);
+  --card-panel-bg: rgba(255, 255, 255, 0.24);
+  --card-panel-border: rgba(30, 23, 57, 0.12);
   --card-rotate: 1.4deg;
   --card-y: 0px;
   --hover-x: 4deg;
@@ -547,7 +585,15 @@ onUnmounted(() => {
 }
 
 .audience-card--opportunities p {
-  background: rgba(255, 255, 255, 0.24);
+  background: var(--card-panel-bg);
+}
+
+:global(html[data-theme='dark']) .audience-bg--left {
+  background: rgba(242, 245, 94, 0.08);
+}
+
+:global(html[data-theme='dark']) .audience-bg--right {
+  background: rgba(219, 175, 255, 0.10);
 }
 
 .scale-title {
