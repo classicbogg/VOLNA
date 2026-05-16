@@ -1,3 +1,22 @@
+<script setup>
+import { ref } from 'vue'
+import RegistrationModal from './RegistrationModal.vue'
+
+const isRegistrationOpen = ref(false)
+
+const openRegistration = () => {
+  isRegistrationOpen.value = true
+}
+
+const closeRegistration = () => {
+  isRegistrationOpen.value = false
+}
+
+const handleRegistrationSubmit = (data) => {
+  console.log('Данные регистрации:', data)
+}
+</script>
+
 <template>
   <section class="hero-section">
     <div class="hero-decor hero-decor--student" aria-hidden="true"></div>
@@ -28,9 +47,9 @@
           27 мая 2026
         </div>
 
-        <a class="hero-button" href="#registration">
+        <button class="hero-button" type="button" @click="openRegistration">
           зарегистрироваться
-        </a>
+        </button>
       </div>
     </div>
 
@@ -55,6 +74,11 @@
     </div>
   </div>
 </div>
+<RegistrationModal
+  :is-open="isRegistrationOpen"
+  @close="closeRegistration"
+  @submit="handleRegistrationSubmit"
+/>
   </section>
 </template>
 
