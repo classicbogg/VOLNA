@@ -5,6 +5,7 @@ import AudienceSection from './components/AudienceSection.vue'
 import HeroSection from './components/HeroSection.vue'
 import ProgramSection from './components/ProgramSection.vue'
 import SiteFooter from './components/SiteFooter.vue'
+import LocationSection from './components/LocationSection.vue'
 </script>
 
 
