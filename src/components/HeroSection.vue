@@ -326,12 +326,12 @@ const handleRegistrationSubmit = (data) => {
   height: clamp(130px, 16vw, 280px);
   background: rgba(242, 245, 94, 0.13);
 
-  mask-image: url('/icons/student-fill.svg');
+  mask-image: url('//public/student-fill.svg');
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
 
-  -webkit-mask-image: url('/icons/student-fill.svg');
+  -webkit-mask-image: url('//public/student-fill.svg');
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
