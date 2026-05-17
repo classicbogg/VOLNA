@@ -2,28 +2,25 @@
   <section class="in-program-section" id="program">
     <div class="in-program-container">
       <div class="in-program-heading">
-        <h2>в программе</h2>
-
-        <svg
-          class="in-program-marker"
-          viewBox="0 0 650 165"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M58 97C54 55 104 29 190 18C302 4 502 6 585 36C646 58 620 106 534 127C434 151 232 151 116 132C38 119 16 84 47 58"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-          <path
-            d="M360 143C424 143 482 137 523 126"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-        </svg>
+        <h2>
+          <span class="phrase-marker">
+            <span class="phrase-marker__text">в программе</span>
+            <svg
+              class="phrase-marker__svg"
+              viewBox="0 0 650 165"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M58 97C54 55 104 29 190 18C302 4 502 6 585 36C646 58 620 106 534 127C434 151 232 151 116 132C38 119 16 84 47 58"
+                stroke="currentColor"
+                stroke-width="8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </h2>
       </div>
 
       <div class="in-program-grid">
@@ -143,26 +140,17 @@ const toggleCards = () => {
   letter-spacing: -0.075em;
 }
 
-.in-program-marker {
-  position: absolute;
-  z-index: 1;
-  left: 72px;
-  top: -45px;
-  width: min(520px, 83vw);
-  height: auto;
-  color: var(--color-in-program-marker);
-  opacity: 0.95;
-  pointer-events: none;
-}
-
 .in-program-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px 28px;
+  align-items: stretch;
 }
 
 .in-program-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 448px;
   border: 3px solid var(--color-in-program-card-border);
   border-radius: 28px;
@@ -184,6 +172,7 @@ const toggleCards = () => {
 
 .in-program-card__image-wrap {
   position: relative;
+  flex-shrink: 0;
   height: 260px;
   overflow: hidden;
   background: rgba(var(--color-in-program-accent-rgb), 0.24);
@@ -247,17 +236,20 @@ const toggleCards = () => {
 .in-program-card__content {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-height: 188px;
   margin-top: -28px;
   padding: 28px 24px 30px;
-  border-radius: 28px 28px 0 0;
-  background: var(--color-in-program-card-bg);
+  border-radius: 28px;
+  background: var(--color-in-program-card-content-bg, var(--color-in-program-card-bg));
   transition: background-color 0.35s ease;
 }
 
 .in-program-card__content h3 {
   margin: 0 0 16px;
-  color: var(--color-in-program-text);
+  color: var(--color-in-program-card-content-text, var(--color-in-program-text));
   font-size: clamp(24px, 1.8vw, 31px);
   line-height: 1.12;
   font-weight: 900;
@@ -266,7 +258,7 @@ const toggleCards = () => {
 
 .in-program-card__content p {
   margin: 0;
-  color: var(--color-in-program-muted);
+  color: var(--color-in-program-card-content-muted, var(--color-in-program-muted));
   font-size: clamp(17px, 1.22vw, 22px);
   line-height: 1.36;
   font-weight: 650;
@@ -326,12 +318,6 @@ const toggleCards = () => {
     margin-bottom: 40px;
   }
 
-  .in-program-marker {
-    left: 35px;
-    top: -32px;
-    width: min(390px, 88vw);
-  }
-
   .in-program-grid {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -353,19 +339,20 @@ const toggleCards = () => {
   }
 
   .in-program-card__content {
-    min-height: auto;
+    flex: 1;
+    min-height: 160px;
     padding: 25px 20px 26px;
+  }
+
+  .in-program-card__content p {
+    font-size: 16px;
+    line-height: 1.42;
   }
 }
 
 @media (max-width: 460px) {
   .in-program-heading h2 {
     font-size: 42px;
-  }
-
-  .in-program-marker {
-    left: 12px;
-    top: -25px;
   }
 
   .in-program-card__image-wrap {

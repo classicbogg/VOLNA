@@ -202,7 +202,11 @@
   border: 1px solid var(--color-footer-border-strong);
   border-radius: 28px;
   background:
-    linear-gradient(135deg, rgba(11, 8, 20, 0.94), rgba(30, 23, 57, 0.98));
+    linear-gradient(
+      135deg,
+      var(--color-footer-logo-gradient-start),
+      var(--color-footer-logo-gradient-end)
+    );
   display: flex;
   align-items: center;
   justify-content: center;

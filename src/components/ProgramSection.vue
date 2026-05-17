@@ -7,27 +7,28 @@
 
     <div class="program-container">
       <div class="program-heading">
-        <h2>программа форума</h2>
-        <svg
-          class="program-marker"
-          viewBox="0 0 760 190"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-          <path
-            d="M420 166C487 165 551 158 596 146"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-        </svg>
+        <h2>
+          <span class="phrase-marker">
+            <span class="phrase-marker__text">
+              <span class="phrase-marker__line">программа</span>
+              <span class="phrase-marker__line">форума</span>
+            </span>
+            <svg
+              class="phrase-marker__svg"
+              viewBox="0 0 760 190"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
+                stroke="currentColor"
+                stroke-width="8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </h2>
       </div>
 
       <div class="program-timeline">
@@ -255,18 +256,6 @@ const programItems = ref([
   color: var(--color-program-heading, var(--color-text));
 }
 
-.program-marker {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 54%;
-  width: 145%;
-  height: 190%;
-  transform: translate(-50%, -50%) rotate(-2deg);
-  pointer-events: none;
-  color: var(--color-program-marker, var(--color-yellow));
-}
-
 .program-timeline {
   display: flex;
   flex-direction: column;
@@ -288,7 +277,7 @@ const programItems = ref([
 
 .program-card:hover {
   background: var(--color-program-card-bg-hover, var(--color-surface-card-hover));
-  border-color: var(--color-program-card-border-hover, rgba(30, 23, 57, 0.22));
+  border-color: var(--color-program-card-border-hover);
   transform: translateX(8px);
 }
 
@@ -443,10 +432,9 @@ const programItems = ref([
     margin-bottom: 35px;
   }
 
-  .program-marker {
-    top: 54%;
-    width: 155%;
-    height: 190%;
+  .program-card__description {
+    font-size: 15px;
+    line-height: 1.48;
   }
 
   .program-card {

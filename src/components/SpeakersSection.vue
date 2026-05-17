@@ -138,27 +138,25 @@ const speakers = [
   >
     <div class="speakers-container">
       <div class="speakers-heading">
-        <h2>кто выступит?</h2>
-        <svg
-          class="speakers-marker"
-          viewBox="0 0 760 190"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-          <path
-            d="M420 166C487 165 551 158 596 146"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-        </svg>
+        <h2>
+          <span class="phrase-marker">
+            <span class="phrase-marker__text">кто выступит?</span>
+            <svg
+              class="phrase-marker__svg"
+              viewBox="0 0 760 190"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
+                stroke="currentColor"
+                stroke-width="8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </h2>
       </div>
 
       <div class="speakers-grid" aria-label="Список спикеров форума">
@@ -189,20 +187,18 @@ const speakers = [
 
 <style scoped>
 .speakers-section {
-  --speakers-section-bg: var(--color-bg, #ffffff);
-  --speakers-heading: #1e1739;
-  --speakers-marker: #1e1739;
-  --speakers-card-bg: #f4ecff;
-  --speakers-card-border: #dbafff;
-  --speakers-card-shadow: rgba(30, 23, 57, 0.1);
-  --speakers-card-shadow-hover: rgba(30, 23, 57, 0.16);
-  --speakers-more-bg: #f4d35e;
-  --speakers-more-border: #f4d35e;
-  --speakers-more-text: #1e1739;
-  --speakers-more-shadow-offset: rgba(30, 23, 57, 0.1);
-  --speakers-more-shadow: rgba(30, 23, 57, 0.18);
-  --speakers-more-shadow-offset-hover: rgba(30, 23, 57, 0.14);
-  --speakers-more-shadow-hover: rgba(30, 23, 57, 0.24);
+  --speakers-section-bg: var(--color-speakers-section-bg);
+  --speakers-heading: var(--color-speakers-heading);
+  --speakers-marker: var(--color-speakers-marker);
+  --speakers-card-bg: var(--color-speakers-card-bg);
+  --speakers-card-border: var(--color-speakers-card-border);
+  --speakers-card-shadow: var(--color-speakers-card-shadow);
+  --speakers-card-shadow-hover: var(--color-speakers-card-shadow-hover);
+  --speakers-more-bg: var(--color-speakers-more-bg);
+  --speakers-more-border: var(--color-speakers-more-border);
+  --speakers-more-text: var(--color-speakers-more-text);
+  --speakers-more-shadow-offset: var(--color-speakers-more-shadow-offset);
+  --speakers-more-shadow: var(--color-speakers-more-shadow);
 
   position: relative;
   isolation: isolate;
@@ -211,71 +207,12 @@ const speakers = [
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   padding: 104px 40px 120px;
-  background: var(--speakers-section-bg, #ffffff) !important;
-  background-color: var(--speakers-section-bg, #ffffff) !important;
+  background: var(--speakers-section-bg);
   color: var(--speakers-heading);
   overflow: hidden;
   transition:
     background-color 0.35s ease,
     color 0.35s ease;
-}
-
-:global(html[data-theme='light']) .speakers-section,
-:global(body[data-theme='light']) .speakers-section,
-:global([data-theme='light']) .speakers-section {
-  --speakers-section-bg: #ffffff;
-  --speakers-heading: #1e1739;
-  --speakers-marker: #1e1739;
-}
-
-:global(html[data-theme='dark']) .speakers-section,
-:global(body[data-theme='dark']) .speakers-section,
-:global([data-theme='dark']) .speakers-section,
-:global(.dark) .speakers-section,
-:global(.theme-dark) .speakers-section {
-  --speakers-section-bg: #0b0814;
-  --speakers-heading: #ffffff;
-  --speakers-marker: #f2f55e;
-  background: #0b0814 !important;
-  background-color: #0b0814 !important;
-  --speakers-card-bg: #f4ecff;
-  --speakers-card-border: #dbafff;
-  --speakers-card-shadow: rgba(0, 0, 0, 0.28);
-  --speakers-card-shadow-hover: rgba(0, 0, 0, 0.38);
-}
-
-
-
-:global(html[data-theme='dark']) .speakers-section,
-:global(body[data-theme='dark']) .speakers-section,
-:global([data-theme='dark']) .speakers-section,
-:global(.dark) .speakers-section,
-:global(.theme-dark) .speakers-section {
-  background: #0b0814 !important;
-  background-color: #0b0814 !important;
-}
-
-:global(html[data-theme='light']) .speakers-section,
-:global(body[data-theme='light']) .speakers-section,
-:global([data-theme='light']) .speakers-section {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-}
-
-:global(html[data-theme='dark']) .speakers-heading h2,
-:global(body[data-theme='dark']) .speakers-heading h2,
-:global([data-theme='dark']) .speakers-heading h2,
-:global(.dark) .speakers-heading h2,
-:global(.theme-dark) .speakers-heading h2 {
-  color: #ffffff !important;
-}
-
-:global(html[data-theme='dark']) .speakers-marker,
-:global(body[data-theme='dark']) .speakers-marker,
-:global([data-theme='dark']) .speakers-marker,
-:global(.dark) .speakers-marker,
-:global(.theme-dark) .speakers-marker {
-  color: #f2f55e !important;
 }
 
 .speakers-container {
@@ -304,19 +241,6 @@ const speakers = [
   letter-spacing: -0.075em;
 }
 
-.speakers-marker {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 53%;
-  width: 142%;
-  height: 186%;
-  color: var(--speakers-marker, #1e1739);
-  transform: translate(-50%, -50%) rotate(-2deg);
-  pointer-events: none;
-  transition: color 0.35s ease;
-}
-
 .speakers-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -331,10 +255,10 @@ const speakers = [
   min-height: 58px;
   margin: 30px auto 0;
   padding: 0 30px;
-  border: 2px solid var(--speakers-more-border, #1e1739);
+  border: 2px solid var(--speakers-more-border);
   border-radius: 999px;
-  background: var(--speakers-more-bg, #f4d35e);
-  color: var(--speakers-more-text, #1e1739);
+  background: var(--speakers-more-bg);
+  color: var(--speakers-more-text);
   font-size: 20px;
   line-height: 1;
   font-weight: 900;
@@ -342,8 +266,8 @@ const speakers = [
   text-transform: lowercase;
   cursor: pointer;
   box-shadow:
-    7px 7px 0 var(--speakers-more-shadow-offset, rgba(30, 23, 57, 0.1)),
-    0 16px 34px var(--speakers-more-shadow, rgba(30, 23, 57, 0.18));
+    7px 7px 0 var(--speakers-more-shadow-offset),
+    0 16px 34px var(--speakers-more-shadow);
   transition:
     transform 0.25s ease,
     background-color 0.25s ease,
@@ -355,8 +279,8 @@ const speakers = [
 .speakers-more:hover {
   transform: translateY(-3px);
   box-shadow:
-    9px 9px 0 var(--speakers-more-shadow-offset-hover, rgba(30, 23, 57, 0.14)),
-    0 22px 42px var(--speakers-more-shadow-hover, rgba(30, 23, 57, 0.24));
+    9px 9px 0 var(--speakers-more-shadow-offset),
+    0 22px 42px var(--speakers-more-shadow);
 }
 
 .speakers-more:active {
@@ -372,10 +296,10 @@ const speakers = [
   border-radius: 30px;
   background:
     radial-gradient(circle at 76% 12%, rgba(255, 255, 255, 0.96), transparent 34%),
-    linear-gradient(180deg, var(--speakers-card-bg) 0%, #fbf8ff 100%);
+    linear-gradient(180deg, var(--speakers-card-bg) 0%, var(--color-speakers-card-bg-end) 100%);
   overflow: hidden;
   box-shadow:
-    9px 9px 0 rgba(219, 175, 255, 0.18),
+    9px 9px 0 rgba(var(--palette-purple-rgb), 0.18),
     0 22px 48px var(--speakers-card-shadow);
   transition:
     transform 0.25s ease,
@@ -385,10 +309,26 @@ const speakers = [
 
 .speaker-card:hover {
   transform: translateY(-6px);
-  border-color: #e7ccff;
+  border-color: var(--palette-peach);
   box-shadow:
-    11px 11px 0 rgba(219, 175, 255, 0.24),
+    11px 11px 0 rgba(var(--palette-purple-rgb), 0.24),
     0 30px 58px var(--speakers-card-shadow-hover);
+}
+
+.speakers-section--dark .speaker-card {
+  background: linear-gradient(
+    180deg,
+    var(--speakers-card-bg) 0%,
+    var(--color-speakers-card-bg-end) 100%
+  );
+}
+
+.speakers-section--dark .speaker-card:hover {
+  border-color: var(--palette-purple);
+}
+
+.speakers-section--dark .speaker-card__photo-wrap::before {
+  display: none;
 }
 
 .speaker-card__photo-wrap {
@@ -409,7 +349,7 @@ const speakers = [
   bottom: 8px;
   height: 64%;
   border-radius: 999px;
-  background: rgba(219, 175, 255, 0.18);
+  background: rgba(var(--palette-purple-rgb), 0.2);
   filter: blur(18px);
 }
 
@@ -441,13 +381,13 @@ const speakers = [
   margin-top: 0;
   padding: 22px 24px 24px;
   border-radius: 26px 26px 0 0;
-  background: #ffffff;
-  box-shadow: 0 -10px 28px rgba(30, 23, 57, 0.08);
+  background: var(--color-speakers-card-info-bg);
+  box-shadow: 0 -10px 28px rgba(var(--palette-navy-rgb), 0.1);
 }
 
 .speaker-card__info h3 {
   margin: 0 0 12px;
-  color: #1e1739;
+  color: var(--color-speakers-card-info-text);
   font-size: clamp(21px, 1.6vw, 27px);
   line-height: 0.94;
   font-weight: 950;
@@ -458,7 +398,7 @@ const speakers = [
 
 .speaker-card__info p {
   margin: 0;
-  color: rgba(30, 23, 57, 0.74);
+  color: var(--color-speakers-card-info-muted);
   font-size: clamp(13px, 1vw, 15px);
   line-height: 1.35;
   font-weight: 650;
@@ -509,10 +449,9 @@ const speakers = [
     letter-spacing: -0.065em;
   }
 
-  .speakers-marker {
-    width: 138%;
-    height: 172%;
-    stroke-width: 9px;
+  .speaker-card__info p {
+    font-size: 14px;
+    line-height: 1.42;
   }
 
   .speakers-grid {
@@ -607,45 +546,6 @@ const speakers = [
     font-size: clamp(14px, 4vw, 16px);
     line-height: 1.4;
   }
-}
-
-.speakers-section.speakers-section--light {
-  --speakers-section-bg: #ffffff !important;
-  --speakers-heading: #1e1739 !important;
-  --speakers-marker: #1e1739 !important;
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-}
-
-.speakers-section.speakers-section--light .speakers-heading h2 {
-  color: #1e1739 !important;
-}
-
-.speakers-section.speakers-section--light .speakers-marker {
-  color: #1e1739 !important;
-}
-
-.speakers-section.speakers-section--dark {
-  --speakers-section-bg: #0b0814 !important;
-  --speakers-heading: #ffffff !important;
-  --speakers-marker: #f2f55e !important;
-  --speakers-more-bg: #dbafff !important;
-  --speakers-more-border: #dbafff !important;
-  --speakers-more-text: #1e1739 !important;
-  --speakers-more-shadow-offset: rgba(219, 175, 255, 0.16) !important;
-  --speakers-more-shadow: rgba(0, 0, 0, 0.32) !important;
-  --speakers-more-shadow-offset-hover: rgba(219, 175, 255, 0.22) !important;
-  --speakers-more-shadow-hover: rgba(0, 0, 0, 0.4) !important;
-  background: #0b0814 !important;
-  background-color: #0b0814 !important;
-}
-
-.speakers-section.speakers-section--dark .speakers-heading h2 {
-  color: #ffffff !important;
-}
-
-.speakers-section.speakers-section--dark .speakers-marker {
-  color: #f2f55e !important;
 }
 
 </style>

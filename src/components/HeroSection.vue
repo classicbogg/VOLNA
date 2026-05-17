@@ -43,10 +43,6 @@ const handleRegistrationSubmit = (data) => {
       </h1>
 
       <div class="hero-bottom">
-        <div class="hero-date">
-          27 мая 2026
-        </div>
-
         <button
           class="hero-button"
           type="button"
@@ -62,19 +58,15 @@ const handleRegistrationSubmit = (data) => {
       <div class="hero-marquee__track">
         <div class="hero-marquee__group">
           <span>создай наше</span>
-          <span>27 мая 2026</span>
           <span>форум молодых предпринимателей</span>
           <span>создай наше</span>
-          <span>27 мая 2026</span>
           <span>форум молодых предпринимателей</span>
         </div>
 
         <div class="hero-marquee__group">
           <span>создай наше</span>
-          <span>27 мая 2026</span>
           <span>форум молодых предпринимателей</span>
           <span>создай наше</span>
-          <span>27 мая 2026</span>
           <span>форум молодых предпринимателей</span>
         </div>
       </div>
@@ -93,8 +85,8 @@ const handleRegistrationSubmit = (data) => {
   position: relative;
   min-height: 100vh;
   padding: 170px 40px 110px;
-  background: var(--hero-bg, var(--color-bg, #ffffff));
-  color: var(--color-hero-title, var(--color-text, #1e1739));
+  background: var(--hero-bg, var(--color-bg));
+  color: var(--color-hero-title, var(--color-text));
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -114,7 +106,7 @@ const handleRegistrationSubmit = (data) => {
   max-width: calc(100vw - 32px);
   margin: 0 auto 44px;
   padding: 20px 40px 18px;
-  border: 3px solid var(--color-yellow);
+  border: 3px solid var(--palette-purple);
   border-radius: 8px;
   background: transparent;
 
@@ -125,31 +117,19 @@ const handleRegistrationSubmit = (data) => {
   letter-spacing: 0.04em;
   text-align: center;
 
-  color: transparent;
-  background-image: linear-gradient(
-    90deg,
-    var(--color-yellow, #f2f55e) 0%,
-    var(--color-yellow, #f2f55e) 50%,
-    var(--color-hero-kicker-end, #ffffff) 50%,
-    var(--color-hero-kicker-end, #ffffff) 100%
-  );
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--palette-purple);
+  -webkit-text-fill-color: var(--palette-purple);
 
   transform: rotate(-2deg);
   overflow: hidden;
   isolation: isolate;
-  animation: kickerLettersFill 0.9s steps(18, end) forwards;
+  opacity: 0;
+  animation: heroKickerReveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: 1.75s;
 
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
-
   box-shadow:
-    8px 8px 0 rgba(var(--color-accent-rgb), 0.12),
-    0 18px 36px rgba(0, 0, 0, 0.24);
+    6px 6px 0 rgba(var(--palette-purple-rgb), 0.12),
+    0 14px 28px rgba(var(--palette-navy-rgb), 0.1);
 }
 
 .hero-title {
@@ -190,8 +170,8 @@ const handleRegistrationSubmit = (data) => {
     heroTitleBreathe 5s ease-in-out infinite;
   animation-delay: var(--delay), calc(var(--delay) + 1.2s);
   text-shadow:
-    6px 6px 0 var(--color-hero-title-shadow, rgba(30, 23, 57, 0.1)),
-    0 20px 46px var(--color-hero-title-shadow-strong, rgba(30, 23, 57, 0.18));
+    6px 6px 0 var(--color-hero-title-shadow),
+    0 20px 46px var(--color-hero-title-shadow-strong);
 }
 
 .hero-title__line::before,
@@ -241,20 +221,20 @@ const handleRegistrationSubmit = (data) => {
 .hero-title__line--third span,
 .hero-title__line--third::before,
 .hero-title__line--third::after {
-  font-size: 0.76em;
+  font-size: 0.82em;
   letter-spacing: -0.035em;
 }
 
 .hero-title__line--second::before {
-  color: var(--color-hero-line2-before, #ffffff);
+  color: var(--palette-purple);
 }
 
 .hero-title__line--second span {
-  color: var(--color-yellow);
-  -webkit-text-fill-color: var(--color-yellow);
+  color: var(--palette-purple);
+  -webkit-text-fill-color: var(--palette-purple);
   text-shadow:
-    6px 6px 0 var(--color-hero-line2-shadow, rgba(255, 255, 255, 0.12)),
-    0 20px 46px var(--color-hero-title-shadow-strong, rgba(0, 0, 0, 0.24));
+    6px 6px 0 rgba(var(--palette-purple-rgb), 0.14),
+    0 20px 46px var(--color-hero-title-shadow-strong);
 }
 
 .hero-bottom {
@@ -264,32 +244,6 @@ const handleRegistrationSubmit = (data) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-}
-
-.hero-date {
-  width: fit-content;
-  max-width: calc(100vw - 32px);
-  padding: 18px 30px 16px;
-  border: 2px solid var(--hero-date-bg, #dbafff);
-  border-radius: 999px;
-  background: var(--hero-date-bg, #dbafff);
-  color: var(--hero-date-text, #1e1739);
-  font-size: clamp(24px, 3vw, 46px);
-  line-height: 0.9;
-  font-weight: 900;
-  text-align: center;
-  text-transform: lowercase;
-  letter-spacing: -0.07em;
-  box-shadow:
-    8px 8px 0 var(--hero-date-shadow-offset, rgba(30, 23, 57, 0.08)),
-    0 18px 34px var(--hero-date-shadow, rgba(30, 23, 57, 0.18));
-  transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease,
-    color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
 }
 
 .hero-button {
@@ -297,10 +251,10 @@ const handleRegistrationSubmit = (data) => {
   min-height: 68px;
   min-width: min(100%, 320px);
   padding: 0 44px;
-  border: 2px solid var(--hero-button-border, #f4d35e);
+  border: 2px solid var(--hero-button-border);
   border-radius: 999px;
-  background: var(--hero-button-bg, #f4d35e);
-  color: var(--hero-button-text, #1e1739);
+  background: var(--hero-button-bg);
+  color: var(--hero-button-text);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -314,8 +268,8 @@ const handleRegistrationSubmit = (data) => {
   text-transform: lowercase;
   letter-spacing: -0.04em;
   box-shadow:
-    8px 8px 0 var(--hero-button-shadow-offset, rgba(30, 23, 57, 0.08)),
-    0 18px 34px var(--hero-button-shadow, rgba(30, 23, 57, 0.18));
+    8px 8px 0 var(--hero-button-shadow-offset),
+    0 18px 34px var(--hero-button-shadow);
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease,
@@ -325,24 +279,24 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-button:hover {
-  background: var(--hero-button-bg-hover, var(--hero-button-bg, #f4d35e));
-  border-color: var(--hero-button-border-hover, var(--hero-button-border, #f4d35e));
-  color: var(--hero-button-text-hover, var(--hero-button-text, #1e1739));
+  background: var(--hero-button-bg-hover, var(--hero-button-bg));
+  border-color: var(--hero-button-border-hover, var(--hero-button-border));
+  color: var(--hero-button-text-hover, var(--hero-button-text));
   transform: translateY(-3px);
   box-shadow:
-    10px 10px 0 var(--hero-button-shadow-offset-hover, rgba(30, 23, 57, 0.12)),
-    0 24px 42px var(--hero-button-shadow-hover, rgba(30, 23, 57, 0.22));
+    10px 10px 0 var(--hero-button-shadow-offset-hover),
+    0 24px 42px var(--hero-button-shadow-hover);
 }
 
 .hero-button:active {
   transform: translateY(-1px);
   box-shadow:
-    6px 6px 0 var(--hero-button-shadow-offset, rgba(30, 23, 57, 0.08)),
-    0 12px 26px var(--hero-button-shadow, rgba(30, 23, 57, 0.18));
+    6px 6px 0 var(--hero-button-shadow-offset),
+    0 12px 26px var(--hero-button-shadow);
 }
 
 .hero-button:focus-visible {
-  outline: 3px solid var(--hero-focus-outline, #1e1739);
+  outline: 3px solid var(--hero-focus-outline);
   outline-offset: 4px;
 }
 
@@ -358,7 +312,7 @@ const handleRegistrationSubmit = (data) => {
   top: 18%;
   width: clamp(130px, 16vw, 280px);
   height: clamp(130px, 16vw, 280px);
-  background: var(--color-hero-decor-student, rgba(242, 245, 94, 0.13));
+  background: var(--color-hero-decor-student);
 
   mask-image: url('/icons/student-fill.svg');
   mask-size: contain;
@@ -370,7 +324,7 @@ const handleRegistrationSubmit = (data) => {
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
 
-  filter: drop-shadow(14px 14px 0 var(--color-hero-decor-student-shadow, rgba(242, 245, 94, 0.08)));
+  filter: drop-shadow(14px 14px 0 var(--color-hero-decor-student-shadow));
   transform: rotate(8deg);
 }
 
@@ -378,16 +332,16 @@ const handleRegistrationSubmit = (data) => {
   z-index: 1;
   width: 42px;
   height: 42px;
-  background: var(--color-hero-decor-pixel, rgba(242, 245, 94, 0.12));
+  background: var(--color-hero-decor-pixel);
 }
 
 .hero-decor--square-one {
   left: 8%;
   top: 28%;
   box-shadow:
-    42px 0 0 var(--color-hero-decor-pixel-shadow, rgba(242, 245, 94, 0.08)),
-    0 42px 0 var(--color-hero-decor-pixel-shadow, rgba(242, 245, 94, 0.07)),
-    84px 42px 0 var(--color-hero-decor-pixel-shadow, rgba(242, 245, 94, 0.06));
+    42px 0 0 var(--color-hero-decor-pixel-shadow),
+    0 42px 0 var(--color-hero-decor-pixel-shadow),
+    84px 42px 0 var(--color-hero-decor-pixel-shadow);
   transform: rotate(-8deg);
 }
 
@@ -409,8 +363,8 @@ const handleRegistrationSubmit = (data) => {
   bottom: 0;
   z-index: 4;
   height: 54px;
-  background: var(--color-yellow);
-  color: var(--color-purple, #1e1739);
+  background: var(--palette-navy-mid);
+  color: var(--palette-pink);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -448,24 +402,15 @@ const handleRegistrationSubmit = (data) => {
   margin-left: 30px;
 }
 
-@keyframes kickerLettersFill {
+@keyframes heroKickerReveal {
   0% {
-    background-position: 100% 0;
-    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24));
-  }
-
-  70% {
-    background-position: 0 0;
-    filter:
-      drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 12px rgba(var(--color-accent-rgb), 0.28));
+    opacity: 0;
+    transform: rotate(-2deg) translateY(16px);
   }
 
   100% {
-    background-position: 0 0;
-    filter:
-      drop-shadow(0 18px 30px rgba(0, 0, 0, 0.24))
-      drop-shadow(0 0 6px rgba(var(--color-accent-rgb), 0.18));
+    opacity: 1;
+    transform: rotate(-2deg) translateY(0);
   }
 }
 
@@ -573,19 +518,6 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
-:global(html[data-theme='light']) .hero-section {
-  --color-yellow: var(--color-registration-lavender, #cdb2ff);
-  --color-accent-rgb: 205, 178, 255;
-  --color-hero-line-accent: var(--color-registration-lavender, #cdb2ff);
-  --color-hero-line2-before: var(--color-registration-lavender, #cdb2ff);
-  --color-hero-decor-student: rgba(205, 178, 255, 0.42);
-  --color-hero-decor-student-shadow: rgba(205, 178, 255, 0.22);
-  --color-hero-decor-pixel: rgba(205, 178, 255, 0.38);
-  --color-hero-decor-pixel-shadow: rgba(205, 178, 255, 0.2);
-  --color-hero-decor-square: rgba(205, 178, 255, 0.26);
-  --color-hero-line2-shadow: rgba(205, 178, 255, 0.28);
-}
-
 @media (max-width: 980px) {
   .hero-section {
     min-height: 780px;
@@ -612,7 +544,7 @@ const handleRegistrationSubmit = (data) => {
   .hero-title__line--third span,
   .hero-title__line--third::before,
   .hero-title__line--third::after {
-    font-size: clamp(32px, 7.1vw, 58px);
+    font-size: clamp(34px, 7.5vw, 62px);
     letter-spacing: -0.032em;
   }
 
@@ -620,6 +552,36 @@ const handleRegistrationSubmit = (data) => {
     right: -18px;
     top: 110px;
     opacity: 0.8;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-kicker,
+  .hero-button,
+  .hero-button:hover,
+  .hero-button:active,
+  .hero-button:focus-visible {
+    box-shadow: none;
+  }
+
+  .hero-title__line span,
+  .hero-title__line--second span,
+  .hero-title__line::before,
+  .hero-title__line::after {
+    text-shadow: none;
+  }
+
+  .hero-title__line--first::before,
+  .hero-title__line--first::after,
+  .hero-title__line--second::before,
+  .hero-title__line--second::after {
+    display: none;
+  }
+
+  .hero-decor--student,
+  .hero-decor--square {
+    filter: none;
+    box-shadow: none;
   }
 }
 
@@ -657,7 +619,7 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-title__line--third span {
-    font-size: clamp(24px, 6.9vw, 38px);
+    font-size: clamp(27px, 7.5vw, 42px);
     letter-spacing: -0.015em;
   }
 
@@ -671,7 +633,6 @@ const handleRegistrationSubmit = (data) => {
     gap: 16px;
   }
 
-  .hero-date,
   .hero-button {
     width: min(100%, 360px);
     justify-content: center;
@@ -717,11 +678,6 @@ const handleRegistrationSubmit = (data) => {
     padding: 12px 18px 10px;
   }
 
-  .hero-date {
-    font-size: clamp(20px, 6vw, 28px);
-    padding: 14px 22px 12px;
-  }
-
   .hero-button {
     min-height: 60px;
     font-size: 18px;
@@ -734,7 +690,7 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-title__line--third span {
-    font-size: clamp(21px, 6.4vw, 26px);
+    font-size: clamp(23px, 6.9vw, 29px);
     letter-spacing: -0.01em;
   }
 }
@@ -749,7 +705,7 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-title__line--third span {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .hero-button {

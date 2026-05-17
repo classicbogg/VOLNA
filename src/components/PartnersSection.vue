@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const partners = [
   { name: 'Высшая школа экономики', image: '/partners_1.png' },
@@ -21,11 +21,15 @@ const partners = [
 ]
 
 const isDarkTheme = ref(false)
-const isMobile = ref(false)
-const isExpanded = ref(false)
+const showAllPartners = ref(false)
 
 let themeObserver = null
-let mediaQuery = null
+
+const togglePartners = () => {
+  showAllPartners.value = !showAllPartners.value
+}
+
+const isPartnerHidden = (index) => !showAllPartners.value && index >= 4
 
 const detectTheme = () => {
   if (typeof document === 'undefined') return
@@ -43,29 +47,6 @@ const detectTheme = () => {
   isDarkTheme.value = theme === 'dark' || hasDarkClass
 }
 
-const updateMobileState = () => {
-  if (!mediaQuery) return
-
-  isMobile.value = mediaQuery.matches
-
-  if (!isMobile.value) {
-    isExpanded.value = true
-  } else {
-    isExpanded.value = false
-  }
-}
-
-const visiblePartners = computed(() => {
-  if (!isMobile.value || isExpanded.value) return partners
-  return partners.slice(0, 6)
-})
-
-const shouldShowToggle = computed(() => isMobile.value && partners.length > 6)
-
-const togglePartners = () => {
-  isExpanded.value = !isExpanded.value
-}
-
 onMounted(() => {
   detectTheme()
 
@@ -79,14 +60,10 @@ onMounted(() => {
     attributeFilter: ['data-theme', 'class'],
   })
 
-  mediaQuery = window.matchMedia('(max-width: 600px)')
-  updateMobileState()
-  mediaQuery.addEventListener('change', updateMobileState)
 })
 
 onUnmounted(() => {
   themeObserver?.disconnect()
-  mediaQuery?.removeEventListener('change', updateMobileState)
 })
 </script>
 
@@ -101,48 +78,49 @@ onUnmounted(() => {
   >
     <div class="partners-container">
       <div class="partners-heading" aria-label="Партнёры форума">
-        <h2>партнёры</h2>
-        <svg
-          class="partners-marker"
-          viewBox="0 0 760 210"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M28 125C12 89 67 49 151 33C279 8 522 5 660 30C739 44 750 92 713 123C657 170 470 188 283 183C134 179 55 166 30 132"
-            stroke="currentColor"
-            stroke-width="12"
-            stroke-linecap="round"
-          />
-          <path
-            d="M455 182C515 177 586 168 642 152"
-            stroke="currentColor"
-            stroke-width="12"
-            stroke-linecap="round"
-          />
-        </svg>
+        <h2>
+          <span class="phrase-marker">
+            <span class="phrase-marker__text">партнёры</span>
+            <svg
+              class="phrase-marker__svg"
+              viewBox="0 0 760 210"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M28 125C12 89 67 49 151 33C279 8 522 5 660 30C739 44 750 92 713 123C657 170 470 188 283 183C134 179 55 166 30 132"
+                stroke="currentColor"
+                stroke-width="12"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </h2>
       </div>
 
-      <div class="partners-grid" :class="{ 'partners-grid--collapsed': shouldShowToggle && !isExpanded }">
+      <div class="partners-grid">
         <article
-          v-for="partner in visiblePartners"
+          v-for="(partner, index) in partners"
           :key="partner.name"
           class="partner-card"
-          :class="{ 'partner-card--large-logo': partner.largeLogo }"
+          :class="{
+            'partner-card--large-logo': partner.largeLogo,
+            'partner-card--collapsed': isPartnerHidden(index),
+          }"
         >
           <img class="partner-logo" :src="partner.image" :alt="partner.name" loading="lazy" />
         </article>
       </div>
 
       <button
-        v-if="shouldShowToggle"
+        v-if="partners.length > 4"
         class="partners-toggle"
         type="button"
-        :aria-expanded="isExpanded"
+        :aria-expanded="showAllPartners"
         @click="togglePartners"
       >
-        {{ isExpanded ? 'скрыть' : 'показать ещё' }}
+        {{ showAllPartners ? 'скрыть' : 'показать ещё' }}
       </button>
     </div>
   </section>
@@ -150,16 +128,16 @@ onUnmounted(() => {
 
 <style scoped>
 .partners-section {
-  --partners-section-bg: #ffffff;
-  --partners-heading: #1e1739;
-  --partners-marker: #1e1739;
-  --partners-card-bg: #f1edf8;
-  --partners-card-bg-soft: rgba(219, 175, 255, 0.2);
-  --partners-card-border: rgba(219, 175, 255, 0.82);
-  --partners-card-shadow: rgba(30, 23, 57, 0.11);
-  --partners-button-bg: #f4d35e;
-  --partners-button-text: #1e1739;
-  --partners-button-shadow: rgba(30, 23, 57, 0.16);
+  --partners-section-bg: var(--color-partners-section-bg);
+  --partners-heading: var(--color-partners-heading);
+  --partners-marker: var(--color-partners-marker);
+  --partners-card-bg: var(--color-partners-card-bg);
+  --partners-card-bg-soft: var(--color-partners-card-bg-soft);
+  --partners-card-border: var(--color-partners-card-border);
+  --partners-card-shadow: var(--color-partners-card-shadow);
+  --partners-button-bg: var(--color-partners-button-bg);
+  --partners-button-text: var(--color-partners-button-text);
+  --partners-button-shadow: var(--color-partners-button-shadow);
 
   position: relative;
   width: 100vw;
@@ -175,23 +153,10 @@ onUnmounted(() => {
     color 0.35s ease;
 }
 
-.partners-section--dark {
-  --partners-section-bg: #0b0814;
-  --partners-heading: #ffffff;
-  --partners-marker: #f2f55e;
-  --partners-card-bg: #f4efff;
-  --partners-card-bg-soft: rgba(242, 245, 94, 0.08);
-  --partners-card-border: rgba(219, 175, 255, 0.9);
-  --partners-card-shadow: rgba(0, 0, 0, 0.34);
-  --partners-button-bg: #dbafff;
-  --partners-button-text: #1e1739;
-  --partners-button-shadow: rgba(219, 175, 255, 0.18);
-}
-
 .partners-container {
   position: relative;
   z-index: 1;
-  width: min(100%, 1280px);
+  width: min(100%, 1440px);
   margin: 0 auto;
 }
 
@@ -217,24 +182,11 @@ onUnmounted(() => {
   text-transform: lowercase;
 }
 
-.partners-marker {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 50%;
-  width: 128%;
-  min-width: 340px;
-  height: 150%;
-  color: var(--partners-marker);
-  pointer-events: none;
-  transform: translate(-50%, -50%) rotate(-2deg);
-  transition: color 0.35s ease;
-}
-
 .partners-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(18px, 2vw, 26px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 1.6vw, 24px);
+  align-items: stretch;
 }
 
 .partner-card {
@@ -246,21 +198,16 @@ onUnmounted(() => {
   --cut-height-b: 24px;
 
   position: relative;
-  min-height: 162px;
+  min-height: clamp(168px, 14vw, 196px);
   border: 2px solid var(--partners-card-border);
   border-radius: 24px;
-  background:
-    radial-gradient(circle at 16% 10%, rgba(255, 255, 255, 0.72), transparent 28%),
-    linear-gradient(145deg, var(--partners-card-bg-soft), transparent 58%),
-    var(--partners-card-bg);
+  background: var(--partners-card-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 30px 44px;
+  padding: clamp(22px, 2.2vw, 32px) clamp(20px, 2vw, 28px);
   overflow: hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 20px 44px var(--partners-card-shadow);
+  box-shadow: 8px 8px 0 rgba(var(--palette-navy-rgb), 0.1);
   transition:
     transform 0.25s ease,
     border-color 0.25s ease,
@@ -290,7 +237,7 @@ onUnmounted(() => {
   height: var(--cut-height-b);
 }
 
-.partner-card:nth-child(3n + 1) {
+.partner-card:nth-child(4n + 1) {
   --cut-left: 32px;
   --cut-right: 66px;
   --cut-width-a: 96px;
@@ -299,7 +246,7 @@ onUnmounted(() => {
   --cut-height-b: 24px;
 }
 
-.partner-card:nth-child(3n + 2) {
+.partner-card:nth-child(4n + 2) {
   --cut-left: 74px;
   --cut-right: 32px;
   --cut-width-a: 74px;
@@ -308,7 +255,7 @@ onUnmounted(() => {
   --cut-height-b: 30px;
 }
 
-.partner-card:nth-child(3n) {
+.partner-card:nth-child(4n + 3) {
   --cut-left: 46px;
   --cut-right: 92px;
   --cut-width-a: 112px;
@@ -320,35 +267,35 @@ onUnmounted(() => {
 .partner-card:nth-child(4n) {
   --cut-left: 118px;
   --cut-right: 46px;
+  --cut-width-a: 88px;
+  --cut-width-b: 92px;
 }
 
 .partner-card:hover {
-  transform: translateY(-5px);
-  border-color: #dbafff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 28px 56px var(--partners-card-shadow);
+  transform: translateY(-4px);
+  border-color: var(--color-partners-card-hover-border);
+  box-shadow: 10px 10px 0 rgba(var(--palette-navy-rgb), 0.14);
 }
 
 .partner-logo {
   position: relative;
   z-index: 1;
   display: block;
-  width: min(92%, 340px);
-  max-width: 340px;
-  height: 96px;
+  width: 100%;
+  max-width: 100%;
+  height: clamp(92px, 8.5vw, 118px);
   object-fit: contain;
-  filter: saturate(1.04) contrast(1.04);
+  object-position: center;
 }
 
 .partner-card--large-logo .partner-logo {
-  width: min(100%, 440px);
-  max-width: 440px;
-  height: 122px;
+  height: clamp(104px, 9.5vw, 132px);
 }
 
 .partners-toggle {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: fit-content;
   min-height: 54px;
   margin: 34px auto 0;
@@ -379,13 +326,54 @@ onUnmounted(() => {
   transform: translateY(-1px);
 }
 
-@media (max-width: 1024px) {
+.partner-card--collapsed {
+  display: none;
+}
+
+@media (min-width: 901px) {
+  .partner-card--collapsed {
+    display: flex;
+  }
+
+  .partners-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .partners-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .partner-logo {
+    height: clamp(88px, 10vw, 110px);
+  }
+
+  .partner-card--large-logo .partner-logo {
+    height: clamp(98px, 11vw, 124px);
+  }
+}
+
+@media (max-width: 900px) {
   .partners-container {
-    width: min(100%, 900px);
+    width: min(100%, 960px);
   }
 
   .partners-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .partner-card {
+    min-height: 156px;
+  }
+
+  .partner-logo {
+    height: clamp(84px, 12vw, 104px);
+  }
+
+  .partner-card--large-logo .partner-logo {
+    height: clamp(94px, 13vw, 118px);
   }
 }
 
@@ -404,21 +392,16 @@ onUnmounted(() => {
     letter-spacing: -0.075em;
   }
 
-  .partners-marker {
-    width: 122%;
-    min-width: 290px;
-    height: 140%;
-  }
-
   .partners-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
 
   .partner-card {
-    min-height: 138px;
+    min-height: 148px;
     border-radius: 22px;
-    padding: 26px 32px;
+    padding: 22px 20px;
+    box-shadow: 6px 6px 0 rgba(var(--palette-navy-rgb), 0.1);
   }
 
   .partner-card::before {
@@ -434,21 +417,31 @@ onUnmounted(() => {
   }
 
   .partner-logo {
-    width: min(92%, 300px);
-    max-width: 300px;
-    height: 82px;
+    height: clamp(78px, 22vw, 96px);
   }
 
   .partner-card--large-logo .partner-logo {
-    width: min(100%, 340px);
-    max-width: 340px;
-    height: 104px;
+    height: clamp(88px, 24vw, 108px);
+  }
+}
+
+@media (max-width: 480px) {
+  .partners-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .partners-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .partner-card {
+    min-height: 140px;
+    padding: 24px 28px;
+  }
+
+  .partner-logo {
+    height: clamp(82px, 24vw, 100px);
+  }
+
+  .partner-card--large-logo .partner-logo {
+    height: clamp(92px, 26vw, 112px);
   }
 }
 
@@ -467,21 +460,17 @@ onUnmounted(() => {
     font-size: 40px;
   }
 
-  .partners-marker {
-    min-width: 250px;
-  }
-
   .partner-card {
-    min-height: 126px;
-    padding: 24px 24px;
+    min-height: 132px;
+    padding: 20px 18px;
   }
 
   .partner-logo {
-    height: 74px;
+    height: 76px;
   }
 
   .partner-card--large-logo .partner-logo {
-    height: 94px;
+    height: 88px;
   }
 }
 </style>

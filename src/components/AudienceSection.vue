@@ -43,28 +43,28 @@ onUnmounted(() => {
 
     <div class="audience-container">
       <div class="audience-heading">
-        <h2>Для кого форум?</h2>
-
-        <svg
-          class="heading-marker"
-          viewBox="0 0 760 190"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-          <path
-            d="M420 166C487 165 551 158 596 146"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-        </svg>
+        <h2>
+          <span class="phrase-marker">
+            <span class="phrase-marker__text">
+              <span class="phrase-marker__line">Для кого</span>
+              <span class="phrase-marker__line">форум?</span>
+            </span>
+            <svg
+              class="phrase-marker__svg"
+              viewBox="0 0 760 190"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
+                stroke="currentColor"
+                stroke-width="8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </h2>
       </div>
 
       <p class="audience-intro">
@@ -77,46 +77,41 @@ onUnmounted(() => {
         class="audience-layout"
         :class="{ 'audience-layout--visible': cardsVisible }"
       >
-        <article class="audience-card audience-card--start" data-word="идея">
+        <article class="audience-card audience-card--start">
           <span class="audience-card__number">01</span>
-          <span class="audience-card__icon audience-card__icon--rocket" aria-hidden="true"></span>
-          <span class="audience-card__blob" aria-hidden="true"></span>
-
-          <h3>старт</h3>
-          <p>
-            Если ты только думаешь о собственном бизнесе, поможем сделать первый шаг.
-            Присоединяйся и узнай, как начать бизнес без опыта, собрать команду,
-            проверить идею и запустить свое дело.
-          </p>
+          <div class="audience-card__content">
+            <h3>старт</h3>
+            <p>
+              Если ты только думаешь о собственном бизнесе, поможем сделать первый шаг.
+              Присоединяйся и узнай, как начать бизнес без опыта, собрать команду,
+              проверить идею и запустить свое дело.
+            </p>
+          </div>
         </article>
 
-        <article class="audience-card audience-card--scale" data-word="рост">
+        <article class="audience-card audience-card--scale">
           <span class="audience-card__number">02</span>
-          <span class="audience-card__icon audience-card__icon--scale" aria-hidden="true">⤢</span>
-          <span class="audience-card__blob" aria-hidden="true"></span>
-
-          <h3 class="scale-title">
-            <span>масштабирование</span>
-          </h3>
-          <p>
-            Если проект уже есть, здесь ты найдешь новые идеи, мотивацию и полезные
-            знакомства. В программе — лекции, сессии с экспертами, нетворкинг,
-            а также кейсы реальных предпринимателей и финалистов конкурса «Создай НАШЕ».
-          </p>
+          <div class="audience-card__content">
+            <h3>масштабирование</h3>
+            <p>
+              Если проект уже есть, здесь ты найдешь новые идеи, мотивацию и полезные
+              знакомства. В программе — лекции, сессии с экспертами, нетворкинг,
+              а также кейсы реальных предпринимателей и финалистов конкурса «Создай НАШЕ».
+            </p>
+          </div>
         </article>
 
-        <article class="audience-card audience-card--opportunities" data-word="шанс">
+        <article class="audience-card audience-card--opportunities">
           <span class="audience-card__number">03</span>
-          <span class="audience-card__icon audience-card__icon--star" aria-hidden="true">✦</span>
-          <span class="audience-card__blob" aria-hidden="true"></span>
-
-          <h3>возможности</h3>
-          <p>
-            Форум откроет доступ к инструментам, которые помогают расти быстрее:
-            гранты для молодых предпринимателей, акселерационные программы,
-            обучение ключевым предпринимательским навыкам — от продуктового подхода
-            до управления финансами.
-          </p>
+          <div class="audience-card__content">
+            <h3>возможности</h3>
+            <p>
+              Форум откроет доступ к инструментам, которые помогают расти быстрее:
+              гранты для молодых предпринимателей, акселерационные программы,
+              обучение ключевым предпринимательским навыкам — от продуктового подхода
+              до управления финансами.
+            </p>
+          </div>
         </article>
       </div>
 
@@ -134,8 +129,8 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   padding: 92px 40px 112px;
-  background: var(--color-audience-section-bg, var(--color-bg, #ffffff));
-  color: var(--color-audience-section-text, var(--color-purple, #1e1739));
+  background: var(--color-audience-section-bg, var(--color-bg));
+  color: var(--color-audience-section-text, var(--color-purple));
   overflow: hidden;
   transition:
     background-color 0.35s ease,
@@ -143,15 +138,15 @@ onUnmounted(() => {
 }
 
 :global(html[data-theme='light']) .audience-section {
-  --color-audience-section-bg: #ffffff;
-  --color-audience-section-text: #1e1739;
-  --color-audience-marker: #1e1739;
+  --color-audience-section-bg: var(--palette-cream);
+  --color-audience-section-text: var(--palette-navy);
+  --color-audience-marker: var(--palette-navy);
 }
 
 :global(html[data-theme='dark']) .audience-section {
-  --color-audience-section-bg: var(--color-bg, #0b0814);
-  --color-audience-section-text: #ffffff;
-  --color-audience-marker: var(--color-yellow, #f2f55e);
+  --color-audience-section-bg: var(--color-bg);
+  --color-audience-section-text: var(--palette-cream);
+  --color-audience-marker: var(--color-yellow);
 }
 
 .audience-bg {
@@ -167,7 +162,7 @@ onUnmounted(() => {
   width: 210px;
   height: 210px;
   border-radius: 48% 52% 58% 42% / 46% 36% 64% 54%;
-  background: rgba(30, 23, 57, 0.10);
+  background: rgba(var(--palette-purple-rgb), 0.12);
   filter: blur(1px);
   animation: audienceFloatLeft 10s ease-in-out infinite;
 }
@@ -209,17 +204,8 @@ onUnmounted(() => {
   letter-spacing: -0.08em;
 }
 
-.heading-marker {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 50%;
-  width: 122%;
-  height: 158%;
-  color: var(--color-audience-marker, var(--color-purple, #1e1739));
-  transform: translate(-50%, -50%) rotate(-3deg);
-  pointer-events: none;
-  transition: color 0.35s ease;
+.audience-heading .phrase-marker__line + .phrase-marker__line {
+  margin-top: 0.02em;
 }
 
 .audience-intro {
@@ -235,43 +221,31 @@ onUnmounted(() => {
 .audience-layout {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
+  gap: 24px;
   align-items: stretch;
-  perspective: 1200px;
 }
 
 .audience-card {
-  --card-bg: #f4d35e;
-  --card-bg-soft: rgba(255, 255, 255, 0.20);
-  --card-text: #1e1739;
-  --card-muted: rgba(30, 23, 57, 0.88);
-  --card-border: rgba(30, 23, 57, 0.86);
-  --card-accent: #1e1739;
-  --card-word: rgba(30, 23, 57, 0.12);
-  --card-shine: rgba(255, 255, 255, 0.52);
-  --card-sheen: rgba(255, 255, 255, 0.18);
-  --card-panel-bg: rgba(255, 255, 255, 0.26);
-  --card-panel-border: rgba(30, 23, 57, 0.10);
-  --card-panel-shadow: rgba(255, 255, 255, 0.22);
+  --card-bg: var(--palette-orange);
+  --card-text: var(--palette-navy);
+  --card-border: rgba(var(--palette-navy-rgb), 0.86);
+  --card-accent: var(--palette-navy);
   --card-rotate: 0deg;
   --card-y: 0px;
   --hover-x: -4deg;
-  --text-lift: 0px;
   --enter-delay: 0ms;
 
   position: relative;
-  min-height: 382px;
-  padding: 36px 38px 38px;
+  min-height: 100%;
+  padding: 28px 32px 32px;
   border: 2px solid var(--card-border);
   border-radius: 34px;
   color: var(--card-text);
-  background:
-    radial-gradient(circle at 86% 15%, var(--card-shine), transparent 30%),
-    linear-gradient(145deg, var(--card-sheen), transparent 44%),
-    var(--card-bg);
+  background: var(--card-bg);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: stretch;
+  gap: 0;
   overflow: hidden;
   opacity: 0;
   transform:
@@ -288,8 +262,8 @@ onUnmounted(() => {
     background-color 360ms ease,
     border-color 360ms ease;
   box-shadow:
-    10px 10px 0 rgba(30, 23, 57, 0.13),
-    0 22px 36px rgba(30, 23, 57, 0.13);
+    10px 10px 0 rgba(var(--palette-navy-rgb), 0.13),
+    0 22px 36px rgba(var(--palette-navy-rgb), 0.13);
 }
 
 .audience-layout--visible .audience-card {
@@ -317,42 +291,16 @@ onUnmounted(() => {
     rotateY(var(--hover-x))
     scale(1.025);
   box-shadow:
-    16px 16px 0 rgba(30, 23, 57, 0.17),
-    0 34px 54px rgba(30, 23, 57, 0.22);
-}
-
-.audience-card::after {
-  content: attr(data-word);
-  position: absolute;
-  right: 22px;
-  bottom: 14px;
-  z-index: 1;
-  font-size: clamp(78px, 7vw, 116px);
-  line-height: 0.78;
-  font-weight: 900;
-  letter-spacing: -0.08em;
-  text-transform: lowercase;
-  color: var(--card-word);
-  transform: translateZ(8px) rotate(-5deg);
-  pointer-events: none;
-  user-select: none;
-  transition:
-    opacity 360ms ease,
-    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.audience-card:hover::after {
-  opacity: 0.95;
-  transform: translateZ(34px) translateX(-4px) rotate(-3deg);
+    16px 16px 0 rgba(var(--palette-navy-rgb), 0.17),
+    0 34px 54px rgba(var(--palette-navy-rgb), 0.22);
 }
 
 .audience-card__number {
-  position: absolute;
-  left: 26px;
-  top: 24px;
-  z-index: 4;
+  flex-shrink: 0;
+  width: fit-content;
   min-width: 58px;
   height: 38px;
+  margin: 0 0 22px;
   padding: 0 14px;
   border: 2px solid currentColor;
   border-radius: 999px;
@@ -367,7 +315,22 @@ onUnmounted(() => {
   letter-spacing: -0.02em;
   opacity: 0;
   translate: 0 -10px;
-  transform: translateZ(56px);
+}
+
+.audience-card__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: 0;
+  opacity: 0;
+  translate: 0 16px;
+}
+
+.audience-layout--visible .audience-card__content {
+  animation: audienceContentEnter 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--enter-delay) + 200ms);
 }
 
 .audience-layout--visible .audience-card__number {
@@ -452,148 +415,93 @@ onUnmounted(() => {
   pointer-events: none;
 }
 
-.audience-card h3,
-.audience-card p {
-  position: relative;
-  z-index: 5;
-  opacity: 0;
-  translate: 0 16px;
-  transform: translateZ(48px) translateY(var(--text-lift));
-  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.audience-layout--visible .audience-card h3,
-.audience-layout--visible .audience-card p {
-  animation: audienceContentEnter 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.audience-layout--visible .audience-card h3 {
-  animation-delay: calc(var(--enter-delay) + 220ms);
-}
-
-.audience-layout--visible .audience-card p {
-  animation-delay: calc(var(--enter-delay) + 330ms);
-}
-
-.audience-card:hover h3 {
-  transform: translateZ(84px) translateY(calc(var(--text-lift) - 3px));
-}
-
-.audience-card:hover p {
-  transform: translateZ(66px) translateY(calc(var(--text-lift) - 2px));
-}
-
 .audience-card h3 {
   width: 100%;
-  margin: 0 0 18px;
+  max-width: 100%;
+  margin: 0;
   color: var(--card-text);
-  font-size: clamp(34px, 2.9vw, 50px);
-  line-height: 0.9;
+  font-size: clamp(30px, 2.35vw, 44px);
+  line-height: 0.96;
   font-weight: 900;
   text-align: left;
   text-transform: lowercase;
-  letter-spacing: -0.07em;
+  letter-spacing: -0.05em;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 .audience-card p {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 16px 18px 17px;
-  border: 1px solid var(--card-panel-border);
-  border-radius: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
   color: var(--card-muted);
-  background: var(--card-panel-bg);
+  background: none;
   font-size: clamp(16px, 1.12vw, 19px);
   line-height: 1.32;
   font-weight: 650;
   text-align: left;
   letter-spacing: -0.025em;
-  box-shadow: inset 0 1px 0 var(--card-panel-shadow);
+  box-shadow: none;
 }
 
 .audience-card--start {
-  --card-bg: #f4d35e;
+  --card-bg: var(--color-audience-card-start-bg, var(--palette-orange));
   --card-bg-soft: rgba(255, 255, 255, 0.18);
-  --card-text: #1e1739;
-  --card-muted: rgba(30, 23, 57, 0.88);
-  --card-border: rgba(30, 23, 57, 0.86);
-  --card-accent: #1e1739;
-  --card-word: rgba(30, 23, 57, 0.12);
-  --card-shine: rgba(255, 255, 255, 0.40);
-  --card-panel-bg: rgba(255, 255, 255, 0.28);
-  --card-panel-border: rgba(30, 23, 57, 0.12);
+  --card-text: var(--palette-navy);
+  --card-muted: rgba(var(--palette-navy-rgb), 0.88);
+  --card-border: rgba(var(--palette-navy-rgb), 0.86);
+  --card-accent: var(--palette-navy);
+  --card-word: rgba(var(--palette-navy-rgb), 0.12);
+  --card-shine: rgba(255, 255, 255, 0.4);
+  --card-panel-bg: rgba(var(--palette-cream-rgb), 0.28);
+  --card-panel-border: rgba(var(--palette-navy-rgb), 0.12);
   --card-rotate: -1.6deg;
   --card-y: 0px;
   --hover-x: -4deg;
-  --text-lift: -30px;
 }
 
 .audience-card--scale {
-  --card-bg: #1e1739;
-  --card-text: #ffffff;
-  --card-muted: rgba(255, 255, 255, 0.84);
-  --card-border: rgba(219, 175, 255, 0.74);
-  --card-accent: #dbafff;
-  --card-bg-soft: rgba(219, 175, 255, 0.12);
-  --card-word: rgba(219, 175, 255, 0.12);
-  --card-shine: rgba(219, 175, 255, 0.18);
-  --card-sheen: rgba(255, 255, 255, 0.07);
-  --card-panel-bg: rgba(255, 255, 255, 0.09);
-  --card-panel-border: rgba(219, 175, 255, 0.18);
-  --card-panel-shadow: rgba(255, 255, 255, 0.10);
+  --card-bg: var(--palette-navy-mid);
+  --card-text: var(--palette-cream);
+  --card-muted: rgba(var(--palette-cream-rgb), 0.84);
+  --card-border: rgba(var(--palette-purple-rgb), 0.74);
+  --card-accent: var(--palette-white);
+  --card-bg-soft: rgba(var(--palette-purple-rgb), 0.12);
+  --card-word: rgba(var(--palette-purple-rgb), 0.12);
+  --card-shine: rgba(var(--palette-purple-rgb), 0.18);
+  --card-sheen: rgba(var(--palette-cream-rgb), 0.07);
+  --card-panel-bg: rgba(var(--palette-cream-rgb), 0.09);
+  --card-panel-border: rgba(var(--palette-peach-rgb), 0.22);
+  --card-panel-shadow: rgba(var(--palette-cream-rgb), 0.1);
   --card-rotate: 0.8deg;
-  --card-y: 16px;
+  --card-y: 0px;
   --hover-x: 0deg;
-  --text-lift: -26px;
 }
 
 .audience-card--opportunities {
-  --card-bg: #dbafff;
-  --card-text: #1e1739;
-  --card-muted: rgba(30, 23, 57, 0.88);
-  --card-border: rgba(30, 23, 57, 0.86);
-  --card-accent: #1e1739;
-  --card-bg-soft: rgba(255, 255, 255, 0.20);
-  --card-word: rgba(30, 23, 57, 0.12);
-  --card-shine: rgba(255, 255, 255, 0.38);
-  --card-panel-bg: rgba(255, 255, 255, 0.24);
-  --card-panel-border: rgba(30, 23, 57, 0.12);
+  --card-bg: var(--color-audience-card-opportunities-bg, var(--palette-peach));
+  --card-text: var(--color-audience-card-opportunities-text, var(--palette-navy));
+  --card-muted: var(--color-audience-card-opportunities-body, rgba(var(--palette-navy-rgb), 0.88));
+  --card-border: rgba(var(--palette-navy-rgb), 0.86);
+  --card-accent: var(--color-audience-card-opportunities-accent, var(--palette-navy));
   --card-rotate: 1.4deg;
   --card-y: 0px;
   --hover-x: 4deg;
 }
 
-.audience-card--opportunities h3 {
-  max-width: calc(100% - 82px);
-  font-size: clamp(32px, 2.52vw, 44px);
-  letter-spacing: -0.052em;
-  white-space: nowrap;
-}
-
-.audience-card--opportunities .audience-card__icon--star {
-  right: 18px;
-  top: 18px;
-}
-
-.audience-layout--visible .audience-card--opportunities .audience-card__icon--star {
-  opacity: 0.16;
-}
-
-.audience-card--opportunities p {
-  max-width: 100%;
-}
-
-.audience-card--opportunities p {
-  background: var(--card-panel-bg);
-}
-
 :global(html[data-theme='dark']) .audience-bg--left {
-  background: rgba(242, 245, 94, 0.08);
+  background: rgba(var(--palette-orange-rgb), 0.08);
 }
 
 :global(html[data-theme='dark']) .audience-bg--right {
-  background: rgba(219, 175, 255, 0.10);
+  background: rgba(var(--palette-purple-rgb), 0.1);
+}
+
+.audience-card--opportunities p {
+  color: var(--color-audience-card-opportunities-body, var(--card-muted));
 }
 
 .scale-title {
@@ -809,9 +717,6 @@ onUnmounted(() => {
     --hover-x: 0deg;
   }
 
-  .audience-card {
-    min-height: 320px;
-  }
 }
 
 @media (max-width: 560px) {
@@ -832,11 +737,6 @@ onUnmounted(() => {
     font-size: clamp(42px, 16vw, 66px);
   }
 
-  .heading-marker {
-    width: 136%;
-    height: 168%;
-  }
-
   .audience-intro {
     margin-bottom: 44px;
   }
@@ -847,24 +747,20 @@ onUnmounted(() => {
   }
 
   .audience-card {
-    min-height: 306px;
-    padding: 88px 22px 28px;
+    padding: 24px 22px 26px;
     border-radius: 26px;
   }
 
-  .audience-card--start,
-  .audience-card--scale {
-    --text-lift: -16px;
+  .audience-card__number {
+    margin-bottom: 18px;
+  }
+
+  .audience-card__content {
+    gap: 14px;
   }
 
   .audience-card h3 {
-    font-size: 40px;
-  }
-
-  .audience-card--opportunities h3 {
-    max-width: calc(100% - 64px);
-    font-size: clamp(31px, 9.1vw, 38px);
-    letter-spacing: -0.045em;
+    font-size: clamp(28px, 8vw, 36px);
   }
 
   .scale-title span {
@@ -872,14 +768,22 @@ onUnmounted(() => {
   }
 
   .audience-card p {
-    padding: 14px 15px 15px;
-    font-size: 16px;
-    line-height: 1.3;
+    font-size: 17px;
+    line-height: 1.38;
+  }
+
+  .audience-card--scale h3 {
+    font-size: clamp(26px, 7vw, 34px);
+    letter-spacing: -0.04em;
+  }
+
+  .audience-card {
+    box-shadow:
+      8px 8px 0 rgba(var(--palette-navy-rgb), 0.1),
+      0 16px 28px rgba(var(--palette-navy-rgb), 0.1);
   }
 
   .audience-card__number {
-    left: 20px;
-    top: 20px;
     min-width: 52px;
     height: 34px;
     font-size: 16px;
@@ -915,12 +819,6 @@ onUnmounted(() => {
 }
 
 @media (max-width: 390px) {
-  .audience-card--opportunities h3 {
-    white-space: normal;
-    max-width: 100%;
-    font-size: clamp(26px, 8vw, 32px);
-  }
-
   .audience-intro,
   .audience-bottom {
     font-size: 17px;
@@ -937,16 +835,11 @@ onUnmounted(() => {
     transform: translateY(var(--card-y)) rotate(var(--card-rotate));
   }
 
-  .audience-card:hover h3,
-  .audience-card:hover p {
-    transform: translateZ(48px) translateY(var(--text-lift));
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .audience-layout--visible .audience-card,
-  .audience-layout--visible .audience-card h3,
-  .audience-layout--visible .audience-card p,
+  .audience-layout--visible .audience-card__content,
   .audience-layout--visible .audience-card__number,
   .audience-layout--visible .audience-card__icon,
   .audience-card__blob,
@@ -955,8 +848,7 @@ onUnmounted(() => {
   }
 
   .audience-card,
-  .audience-card h3,
-  .audience-card p,
+  .audience-card__content,
   .audience-card__number,
   .audience-card__icon {
     opacity: 1;

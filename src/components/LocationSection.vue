@@ -6,28 +6,25 @@
 
     <div class="route-container">
       <div class="route-heading">
-        <h2>как добраться</h2>
-
-        <svg
-          class="route-marker"
-          viewBox="0 0 760 190"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-          <path
-            d="M420 166C487 165 551 158 596 146"
-            stroke="currentColor"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-        </svg>
+        <h2>
+          <span class="phrase-marker">
+            <span class="phrase-marker__text">как добраться</span>
+            <svg
+              class="phrase-marker__svg"
+              viewBox="0 0 760 190"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
+                stroke="currentColor"
+                stroke-width="8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+        </h2>
       </div>
 
       <div class="route-layout">
@@ -208,18 +205,6 @@
   letter-spacing: -0.08em;
 }
 
-.route-marker {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 50%;
-  width: 120%;
-  height: 158%;
-  color: var(--color-yellow);
-  transform: translate(-50%, -50%) rotate(-3deg);
-  pointer-events: none;
-}
-
 .route-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
@@ -252,7 +237,7 @@
   pointer-events: none;
   background:
     linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.18), transparent 34%),
-    linear-gradient(0deg, rgba(30, 23, 57, 0.06), transparent 44%);
+    linear-gradient(0deg, rgba(var(--palette-navy-rgb), 0.06), transparent 44%);
   mix-blend-mode: multiply;
 }
 
@@ -448,9 +433,9 @@
     font-size: clamp(42px, 15vw, 66px);
   }
 
-  .route-marker {
-    width: 138%;
-    height: 170%;
+  .route-info-card p {
+    font-size: 17px;
+    line-height: 1.4;
   }
 
   .route-layout {
