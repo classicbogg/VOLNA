@@ -1,6 +1,38 @@
 <template>
-  <header class="site-header" :class="{ 'site-header--scrolled': isScrolled }">
-    <div class="site-header__shell">
+  <header
+    class="site-header"
+    :class="{
+      'site-header--scrolled': isScrolled,
+      'site-header--hidden': isHeaderHidden,
+      'site-header--revealed': isHeaderRevealed,
+      'site-header--compact': showRevealButton
+    }"
+  >
+    <button
+      class="site-header__reveal"
+      type="button"
+      :aria-expanded="isHeaderRevealed"
+      aria-label="Показать навигацию"
+      @mouseenter="revealHeader"
+      @focus="revealHeader"
+      @mouseleave="scheduleHideHeader"
+      @blur="scheduleHideHeader"
+      @click="toggleHeaderReveal"
+    >
+      <span class="site-header__reveal-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <div
+      class="site-header__shell"
+      @mouseenter="revealHeader"
+      @focusin="revealHeader"
+      @mouseleave="scheduleHideHeader"
+      @focusout="scheduleHideHeader"
+    >
       <div class="site-header__info-tab" aria-label="Информация о форуме">
         <span>создай наше</span>
         <span>москва</span>
@@ -128,16 +160,82 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useTheme } from '../composables/useTheme'
 
 const { isDark, toggleTheme } = useTheme()
 
 const isScrolled = ref(false)
+const isHeaderHidden = ref(false)
+const isHeaderRevealed = ref(false)
 const menuOpen = ref(false)
+const lastScrollY = ref(0)
+
+let hideHeaderTimer = null
+
+const showRevealButton = computed(() => {
+  return isHeaderHidden.value && !isHeaderRevealed.value && !menuOpen.value
+})
+
+const clearHideHeaderTimer = () => {
+  if (hideHeaderTimer) {
+    window.clearTimeout(hideHeaderTimer)
+    hideHeaderTimer = null
+  }
+}
+
+const hideHeaderReveal = () => {
+  if (window.scrollY > 80 && !menuOpen.value) {
+    isHeaderRevealed.value = false
+  }
+}
+
+const revealHeader = () => {
+  clearHideHeaderTimer()
+
+  if (isHeaderHidden.value) {
+    isHeaderRevealed.value = true
+  }
+}
+
+const scheduleHideHeader = () => {
+  clearHideHeaderTimer()
+  hideHeaderTimer = window.setTimeout(hideHeaderReveal, 180)
+}
+
+const toggleHeaderReveal = () => {
+  clearHideHeaderTimer()
+  isHeaderRevealed.value = !isHeaderRevealed.value
+}
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 40
+  const currentScrollY = Math.max(window.scrollY, 0)
+  const scrollDifference = currentScrollY - lastScrollY.value
+
+  isScrolled.value = currentScrollY > 40
+
+  if (menuOpen.value) {
+    lastScrollY.value = currentScrollY
+    return
+  }
+
+  if (currentScrollY <= 80) {
+    isHeaderHidden.value = false
+    isHeaderRevealed.value = false
+    lastScrollY.value = currentScrollY
+    return
+  }
+
+  if (scrollDifference > 6) {
+    isHeaderHidden.value = true
+    isHeaderRevealed.value = false
+  }
+
+  if (scrollDifference < -6) {
+    isHeaderHidden.value = true
+  }
+
+  lastScrollY.value = currentScrollY
 }
 
 const setBodyLock = (value) => {
@@ -146,6 +244,8 @@ const setBodyLock = (value) => {
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
+  isHeaderHidden.value = false
+  isHeaderRevealed.value = false
   setBodyLock(menuOpen.value)
 }
 
@@ -157,6 +257,7 @@ const closeMenu = () => {
 const handleEscape = (event) => {
   if (event.key === 'Escape') {
     closeMenu()
+    isHeaderRevealed.value = false
   }
 }
 
@@ -167,6 +268,7 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  lastScrollY.value = Math.max(window.scrollY, 0)
   handleScroll()
 
   window.addEventListener('scroll', handleScroll, { passive: true })
@@ -178,6 +280,7 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleEscape)
   window.removeEventListener('resize', handleResize)
+  clearHideHeaderTimer()
   setBodyLock(false)
 })
 </script>
@@ -197,15 +300,253 @@ onUnmounted(() => {
   max-width: 1600px;
   margin: 18px auto 0;
   pointer-events: auto;
+  opacity: 1;
   transition:
     margin 0.25s ease,
-    transform 0.25s ease,
-    filter 0.25s ease;
+    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.24s ease,
+    filter 0.24s ease;
 }
 
 .site-header--scrolled .site-header__shell {
   margin-top: 10px;
   transform: translateY(-4px);
+}
+
+.site-header--hidden:not(.site-header--revealed) .site-header__shell {
+  transform: translateY(calc(-100% - 52px));
+  opacity: 0;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.site-header--revealed .site-header__shell {
+  transform: translateY(0);
+  opacity: 1;
+  filter: none;
+}
+
+.site-header__reveal {
+  --reveal-mark-start: var(--palette-navy);
+  --reveal-mark-middle: var(--palette-purple);
+  --reveal-mark-end: var(--palette-orange);
+  --reveal-mark-hover-start: var(--palette-purple);
+  --reveal-mark-hover-middle: var(--palette-pink);
+  --reveal-mark-hover-end: var(--palette-orange);
+  --reveal-outline: rgba(var(--palette-purple-rgb), 0.48);
+  --reveal-glow: rgba(var(--palette-orange-rgb), 0.24);
+  --reveal-glow-strong: rgba(var(--palette-pink-rgb), 0.3);
+  --reveal-shadow: rgba(var(--palette-navy-rgb), 0.24);
+  --reveal-highlight: rgba(var(--palette-cream-rgb), 0.22);
+  --reveal-inner-shadow: rgba(var(--palette-navy-rgb), 0.14);
+
+  position: fixed;
+  z-index: 1002;
+  top: 14px;
+  left: 50%;
+  width: 82px;
+  height: 66px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -130%) scale(0.86);
+  filter:
+    drop-shadow(0 14px 24px var(--reveal-shadow))
+    drop-shadow(0 0 18px var(--reveal-glow));
+  transition:
+    transform 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.24s ease,
+    filter 0.24s ease;
+}
+
+:global(html[data-theme='light']) .site-header__reveal {
+  --reveal-mark-start: var(--palette-navy);
+  --reveal-mark-middle: var(--palette-purple);
+  --reveal-mark-end: var(--palette-orange);
+  --reveal-mark-hover-start: var(--palette-purple);
+  --reveal-mark-hover-middle: var(--palette-pink);
+  --reveal-mark-hover-end: var(--palette-orange);
+  --reveal-outline: rgba(var(--palette-purple-rgb), 0.52);
+  --reveal-glow: rgba(var(--palette-orange-rgb), 0.24);
+  --reveal-glow-strong: rgba(var(--palette-pink-rgb), 0.28);
+  --reveal-shadow: rgba(var(--palette-navy-rgb), 0.23);
+  --reveal-highlight: rgba(var(--palette-cream-rgb), 0.26);
+  --reveal-inner-shadow: rgba(var(--palette-navy-rgb), 0.16);
+}
+
+:global(html[data-theme='dark']) .site-header__reveal {
+  --reveal-mark-start: var(--palette-purple);
+  --reveal-mark-middle: var(--palette-pink);
+  --reveal-mark-end: var(--palette-orange);
+  --reveal-mark-hover-start: var(--palette-peach);
+  --reveal-mark-hover-middle: var(--palette-pink);
+  --reveal-mark-hover-end: var(--palette-orange);
+  --reveal-outline: rgba(var(--palette-peach-rgb), 0.34);
+  --reveal-glow: rgba(var(--palette-pink-rgb), 0.25);
+  --reveal-glow-strong: rgba(var(--palette-orange-rgb), 0.42);
+  --reveal-shadow: rgba(0, 0, 0, 0.38);
+  --reveal-highlight: rgba(255, 255, 255, 0.2);
+  --reveal-inner-shadow: rgba(0, 0, 0, 0.18);
+}
+
+.site-header--compact .site-header__reveal {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.site-header__reveal:hover,
+.site-header__reveal:focus-visible {
+  outline: none;
+  transform: translate(-50%, 0) scale(1.08) rotate(-2deg);
+  filter:
+    drop-shadow(0 18px 34px var(--reveal-shadow))
+    drop-shadow(0 0 26px var(--reveal-glow-strong));
+}
+
+.site-header__reveal:active {
+  transform: translate(-50%, 0) scale(0.96);
+}
+
+.site-header__reveal-icon {
+  position: relative;
+  width: 72px;
+  height: 60px;
+  display: block;
+}
+
+.site-header__reveal-icon::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 68px;
+  height: 31px;
+  background:
+    linear-gradient(
+      120deg,
+      var(--reveal-mark-start) 0%,
+      var(--reveal-mark-middle) 48%,
+      var(--reveal-mark-end) 100%
+    );
+  border: 1px solid var(--reveal-outline);
+  border-radius: 999px 999px 9px 9px;
+  transform: translateX(-50%);
+  box-shadow:
+    inset 0 2px 0 var(--reveal-highlight),
+    inset 0 -8px 18px var(--reveal-inner-shadow);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.site-header__reveal-icon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 46px;
+  height: 12px;
+  border-radius: 999px 999px 8px 8px;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(var(--palette-cream-rgb), 0.28),
+      rgba(var(--palette-cream-rgb), 0)
+    );
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.site-header__reveal-icon span {
+  position: absolute;
+  left: 50%;
+  height: 7px;
+  background:
+    linear-gradient(
+      120deg,
+      var(--reveal-mark-start) 0%,
+      var(--reveal-mark-middle) 48%,
+      var(--reveal-mark-end) 100%
+    );
+  border: 1px solid var(--reveal-outline);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  box-shadow:
+    inset 0 1px 0 var(--reveal-highlight),
+    inset 0 -4px 10px var(--reveal-inner-shadow);
+  transition:
+    width 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.site-header__reveal-icon span:nth-child(1) {
+  top: 35px;
+  width: 72px;
+}
+
+.site-header__reveal-icon span:nth-child(2) {
+  top: 45px;
+  width: 49px;
+}
+
+.site-header__reveal-icon span:nth-child(3) {
+  top: 54px;
+  width: 27px;
+}
+
+.site-header__reveal:hover .site-header__reveal-icon::before,
+.site-header__reveal:focus-visible .site-header__reveal-icon::before,
+.site-header__reveal:hover .site-header__reveal-icon span,
+.site-header__reveal:focus-visible .site-header__reveal-icon span {
+  background:
+    linear-gradient(
+      120deg,
+      var(--reveal-mark-hover-start) 0%,
+      var(--reveal-mark-hover-middle) 46%,
+      var(--reveal-mark-hover-end) 100%
+    );
+  border-color: var(--color-header-accent);
+}
+
+.site-header__reveal:hover .site-header__reveal-icon::before {
+  transform: translateX(-50%) translateY(-1px);
+}
+
+.site-header__reveal:hover .site-header__reveal-icon::after {
+  opacity: 0.95;
+  transform: translateX(-50%) translateY(-1px);
+}
+
+.site-header__reveal:hover .site-header__reveal-icon span:nth-child(1) {
+  width: 76px;
+}
+
+.site-header__reveal:hover .site-header__reveal-icon span:nth-child(2) {
+  width: 55px;
+}
+
+.site-header__reveal:hover .site-header__reveal-icon span:nth-child(3) {
+  width: 32px;
+}
+
+.site-header__reveal:focus-visible .site-header__reveal-icon {
+  outline: 2px solid var(--color-header-accent);
+  outline-offset: 8px;
+  border-radius: 999px;
 }
 
 .site-header__info-tab {
@@ -307,7 +648,12 @@ onUnmounted(() => {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(120deg, transparent 0%, rgba(var(--color-header-accent-rgb), 0.14) 45%, transparent 70%);
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(var(--color-header-accent-rgb), 0.14) 45%,
+      transparent 70%
+    );
   transform: translateX(-120%);
   transition: transform 0.55s ease;
 }
@@ -754,6 +1100,59 @@ onUnmounted(() => {
 
   .site-header--scrolled .site-header__body {
     min-height: 72px;
+  }
+
+  .site-header__reveal {
+    top: 10px;
+    width: 62px;
+    height: 52px;
+  }
+
+  .site-header__reveal-icon {
+    width: 54px;
+    height: 48px;
+  }
+
+  .site-header__reveal-icon::before {
+    width: 52px;
+    height: 24px;
+  }
+
+  .site-header__reveal-icon::after {
+    top: 5px;
+    width: 35px;
+    height: 10px;
+  }
+
+  .site-header__reveal-icon span {
+    height: 5px;
+  }
+
+  .site-header__reveal-icon span:nth-child(1) {
+    top: 28px;
+    width: 54px;
+  }
+
+  .site-header__reveal-icon span:nth-child(2) {
+    top: 36px;
+    width: 38px;
+  }
+
+  .site-header__reveal-icon span:nth-child(3) {
+    top: 43px;
+    width: 22px;
+  }
+
+  .site-header__reveal:hover .site-header__reveal-icon span:nth-child(1) {
+    width: 58px;
+  }
+
+  .site-header__reveal:hover .site-header__reveal-icon span:nth-child(2) {
+    width: 42px;
+  }
+
+  .site-header__reveal:hover .site-header__reveal-icon span:nth-child(3) {
+    width: 25px;
   }
 
   .site-header__body::after {
