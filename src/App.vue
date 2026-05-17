@@ -8,6 +8,7 @@ import ProgramSection from './components/ProgramSection.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import LocationSection from './components/LocationSection.vue'
 import SpeakersSection from './components/SpeakersSection.vue'
+import PartnersSection from './components/PartnersSection.vue'
 </script>
 
 <template>
@@ -21,6 +22,7 @@ import SpeakersSection from './components/SpeakersSection.vue'
     <InProgramSection />
     <ProgramSection />
     <LocationSection />
+    <PartnersSection/>
     <SiteFooter />
   </div>
 </template>
