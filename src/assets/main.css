@@ -17,6 +17,16 @@
   --palette-peach-rgb: 255, 214, 165;
   --palette-cream-rgb: 255, 244, 241;
 
+  --volna-brand-start: #fc526c;
+  --volna-brand-mid: #ff4f6a;
+  --volna-brand-end: #ff924d;
+  --volna-brand-gradient: linear-gradient(
+    92deg,
+    var(--volna-brand-start) 0%,
+    var(--volna-brand-mid) 42%,
+    var(--volna-brand-end) 100%
+  );
+
   /* Semantic aliases (shared) */
   --color-yellow: var(--palette-orange);
   --color-accent-soft: var(--palette-pink);
@@ -28,20 +38,18 @@
   --color-lavender: var(--palette-purple);
 
   --hero-date-bg: var(--palette-peach);
+  --hero-date-border: var(--volna-brand-gradient);
   --hero-date-text: var(--palette-navy);
+  --hero-date-place: var(--palette-purple);
   --hero-date-shadow-offset: rgba(var(--palette-navy-rgb), 0.08);
   --hero-date-shadow: rgba(var(--palette-navy-rgb), 0.16);
 
-  --hero-button-bg: var(--palette-navy);
-  --hero-button-border: var(--palette-navy);
-  --hero-button-text: var(--palette-cream);
-  --hero-button-bg-hover: var(--palette-navy-mid);
-  --hero-button-border-hover: var(--palette-navy-mid);
-  --hero-button-text-hover: var(--palette-cream);
-  --hero-button-shadow-offset: rgba(var(--palette-navy-rgb), 0.12);
-  --hero-button-shadow: rgba(var(--palette-navy-rgb), 0.2);
-  --hero-button-shadow-offset-hover: rgba(var(--palette-navy-rgb), 0.16);
-  --hero-button-shadow-hover: rgba(var(--palette-navy-rgb), 0.26);
+  --hero-button-ring: var(--hero-date-border);
+  --hero-button-text: var(--hero-date-text);
+  --hero-button-text-hover: var(--hero-date-text);
+  --hero-button-wash-rgb: var(--hero-kicker-ink-rgb, 252, 82, 108);
+  --hero-button-fill: rgba(var(--palette-peach-rgb), 0.5);
+  --hero-button-fill-hover: rgba(var(--palette-peach-rgb), 0.68);
   --hero-focus-outline: var(--palette-purple);
 
   --color-header-accent: var(--palette-orange);
@@ -49,6 +57,19 @@
   --color-header-purple: var(--palette-navy);
   --color-header-deep: var(--palette-navy);
   --color-header-white: var(--palette-cream);
+
+  --header-bar-solid: var(--palette-white);
+  --header-glass-bg: rgba(255, 255, 255, 0.88);
+  --header-glass-border: rgba(255, 255, 255, 0.9);
+  --header-glass-shadow: 0 14px 48px rgba(var(--palette-navy-rgb), 0.08);
+  --header-nav-link: var(--palette-navy);
+  --header-nav-link-hover: var(--palette-purple);
+  --header-aside-bg: rgba(255, 255, 255, 0.85);
+  --header-aside-border: rgba(var(--palette-navy-rgb), 0.08);
+  --header-social-bg: var(--palette-navy);
+  --header-social-fg: var(--palette-white);
+  --header-mobile-overlay: rgba(var(--palette-navy-rgb), 0.45);
+  --header-mobile-panel: rgba(255, 255, 255, 0.96);
 
   --color-footer-accent: var(--palette-orange);
   --color-footer-accent-rgb: var(--palette-orange-rgb);
@@ -106,25 +127,31 @@
   --color-logo-opacity: 0.95;
 
   --color-hero-title: var(--palette-navy);
+  --color-hero-title-primary: transparent;
+  --hero-title-primary-gradient: var(--volna-brand-gradient);
+  --hero-title-primary-clip: text;
+  --color-hero-title-primary-glitch: rgba(252, 82, 108, 0.4);
+  --hero-glitch-blend-primary: multiply;
+  --hero-kicker-border: var(--volna-brand-gradient);
+  --hero-kicker-ink-rgb: 252, 82, 108;
+  --hero-kicker-shadow-rgb: 252, 82, 108;
   --color-hero-kicker-end: var(--palette-navy-mid);
   --color-hero-line-accent: var(--palette-orange);
   --color-hero-button-text: var(--palette-navy);
 
   --hero-date-bg: var(--palette-peach);
+  --hero-date-border: var(--volna-brand-gradient);
   --hero-date-text: var(--palette-navy);
+  --hero-date-place: var(--palette-purple);
   --hero-date-shadow-offset: rgba(var(--palette-navy-rgb), 0.08);
   --hero-date-shadow: rgba(var(--palette-navy-rgb), 0.16);
 
-  --hero-button-bg: var(--palette-navy);
-  --hero-button-border: var(--palette-navy);
-  --hero-button-text: var(--palette-cream);
-  --hero-button-bg-hover: var(--palette-navy-mid);
-  --hero-button-border-hover: var(--palette-navy-mid);
-  --hero-button-text-hover: var(--palette-cream);
-  --hero-button-shadow-offset: rgba(var(--palette-navy-rgb), 0.12);
-  --hero-button-shadow: rgba(var(--palette-navy-rgb), 0.2);
-  --hero-button-shadow-offset-hover: rgba(var(--palette-navy-rgb), 0.16);
-  --hero-button-shadow-hover: rgba(var(--palette-navy-rgb), 0.26);
+  --hero-button-ring: var(--hero-date-border);
+  --hero-button-text: var(--hero-date-text);
+  --hero-button-text-hover: var(--hero-date-text);
+  --hero-button-wash-rgb: var(--hero-kicker-ink-rgb, 252, 82, 108);
+  --hero-button-fill: rgba(var(--palette-peach-rgb), 0.5);
+  --hero-button-fill-hover: rgba(var(--palette-peach-rgb), 0.68);
   --hero-focus-outline: var(--palette-purple);
 
   --color-hero-glitch: rgba(var(--palette-navy-rgb), 0.32);
@@ -312,6 +339,14 @@
   --color-icon-fg-hover: var(--palette-navy);
 
   --color-hero-title: var(--palette-cream);
+  --color-hero-title-primary: var(--palette-white);
+  --hero-title-primary-gradient: none;
+  --hero-title-primary-clip: border-box;
+  --color-hero-title-primary-glitch: rgba(var(--palette-cream-rgb), 0.88);
+  --hero-glitch-blend-primary: difference;
+  --hero-kicker-border: var(--palette-white);
+  --hero-kicker-ink-rgb: var(--palette-cream-rgb);
+  --hero-kicker-shadow-rgb: var(--palette-cream-rgb);
   --color-hero-kicker-end: var(--palette-cream);
   --color-hero-glitch: rgba(var(--palette-cream-rgb), 0.88);
   --hero-glitch-blend: difference;
@@ -323,20 +358,18 @@
   --color-hero-button-text: var(--palette-navy);
 
   --hero-date-bg: var(--palette-peach);
-  --hero-date-text: var(--palette-navy);
+  --hero-date-border: var(--palette-white);
+  --hero-date-text: var(--palette-cream);
+  --hero-date-place: var(--palette-peach);
   --hero-date-shadow-offset: rgba(var(--palette-peach-rgb), 0.14);
   --hero-date-shadow: rgba(0, 0, 0, 0.28);
 
-  --hero-button-bg: var(--palette-cream);
-  --hero-button-border: var(--palette-cream);
-  --hero-button-text: var(--palette-navy);
-  --hero-button-bg-hover: var(--palette-white);
-  --hero-button-border-hover: var(--palette-white);
-  --hero-button-text-hover: var(--palette-navy);
-  --hero-button-shadow-offset: rgba(var(--palette-cream-rgb), 0.14);
-  --hero-button-shadow: rgba(0, 0, 0, 0.28);
-  --hero-button-shadow-offset-hover: rgba(var(--palette-cream-rgb), 0.2);
-  --hero-button-shadow-hover: rgba(0, 0, 0, 0.34);
+  --hero-button-ring: var(--hero-date-border);
+  --hero-button-text: var(--hero-date-text);
+  --hero-button-text-hover: var(--hero-date-text);
+  --hero-button-wash-rgb: var(--palette-cream-rgb);
+  --hero-button-fill: rgba(var(--palette-cream-rgb), 0.14);
+  --hero-button-fill-hover: rgba(var(--palette-cream-rgb), 0.24);
   --hero-focus-outline: var(--palette-peach);
 
   --color-hero-decor-student: rgba(var(--palette-pink-rgb), 0.16);
@@ -401,6 +434,19 @@
   --color-header-info-tab-border: var(--palette-purple);
   --color-header-info-tab-shadow-offset: rgba(var(--palette-purple-rgb), 0.24);
   --color-header-info-tab-glow: rgba(var(--palette-purple-rgb), 0.38);
+
+  --header-bar-solid: var(--palette-navy-mid);
+  --header-glass-bg: rgba(27, 38, 59, 0.82);
+  --header-glass-border: rgba(var(--palette-purple-rgb), 0.28);
+  --header-glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  --header-nav-link: var(--palette-cream);
+  --header-nav-link-hover: var(--palette-peach);
+  --header-aside-bg: rgba(27, 38, 59, 0.88);
+  --header-aside-border: rgba(var(--palette-purple-rgb), 0.35);
+  --header-social-bg: var(--palette-purple);
+  --header-social-fg: var(--palette-white);
+  --header-mobile-overlay: rgba(0, 0, 0, 0.55);
+  --header-mobile-panel: rgba(27, 38, 59, 0.97);
 
   --color-footer-bg: var(--palette-navy);
   --color-footer-bg-2: var(--palette-navy-mid);
@@ -521,6 +567,10 @@ html[data-theme='light'] {
 
 html[data-theme='dark'] {
   color-scheme: dark;
+}
+
+:root {
+  --site-header-offset: 92px;
 }
 
 body {
@@ -661,4 +711,12 @@ img {
     height: calc(100% + 0.5em);
     min-height: 128%;
   }
+}
+
+/* Модалка регистрации поверх фиксированного хэдера */
+body.has-registration-modal .site-header {
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(calc(-100% - 24px));
+  transition: transform 0.3s ease, visibility 0.3s ease;
 }

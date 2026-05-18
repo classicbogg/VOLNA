@@ -1,18 +1,14 @@
 <template>
   <footer class="footer">
-    <div class="footer-pixels footer-pixels--left" aria-hidden="true"></div>
-    <div class="footer-pixels footer-pixels--right" aria-hidden="true"></div>
-    <div class="footer-pixels footer-pixels--bottom" aria-hidden="true"></div>
+    <WaveDecor placement="left" size="sm" />
+    <WaveDecor placement="right" size="md" />
+    <WaveDecor placement="bottom" size="sm" />
 
     <div class="footer-container">
       <div class="footer-main">
         <div class="footer-brand">
-          <a class="footer-logo-card" href="#" aria-label="Создай НАШЕ">
-            <img
-              src="https://xn--80aakggo2ad0a1f.xn--p1ai/assets/img/header_logos.png"
-              alt="Создай НАШЕ"
-              class="footer-logo"
-            />
+          <a class="footer-logo-card" href="#" :aria-label="logoAlt">
+            <img :src="logoSrc" :alt="logoAlt" class="footer-logo" @error="onLogoError" />
           </a>
 
           <p class="footer-tagline">
@@ -163,6 +159,13 @@
   </footer>
 </template>
 
+<script setup>
+import WaveDecor from './WaveDecor.vue'
+import { useVolnaLogo } from '../composables/useVolnaLogo'
+
+const { logoSrc, logoAlt, onLogoError } = useVolnaLogo()
+</script>
+
 <style scoped>
 .footer {
   position: relative;
@@ -247,10 +250,13 @@
   position: relative;
   z-index: 2;
   display: block;
-  width: 100%;
+  width: min(100%, 340px);
   height: auto;
-  filter: var(--color-logo-filter);
-  opacity: var(--color-logo-opacity, 1);
+  max-height: clamp(48px, 7vw, 72px);
+  object-fit: contain;
+  object-position: left center;
+  filter: none;
+  opacity: 1;
 }
 
 .footer-tagline {

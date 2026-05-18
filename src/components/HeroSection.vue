@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import RegistrationModal from './RegistrationModal.vue'
+import WaveDecor from './WaveDecor.vue'
+import { useVolnaLogo } from '../composables/useVolnaLogo'
+
+const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'hero' })
 
 const isRegistrationOpen = ref(false)
 
@@ -19,38 +23,56 @@ const handleRegistrationSubmit = (data) => {
 
 <template>
   <section class="hero-section">
-    <div class="hero-decor hero-decor--student" aria-hidden="true"></div>
-    <div class="hero-decor hero-decor--square hero-decor--square-one" aria-hidden="true"></div>
-    <div class="hero-decor hero-decor--square hero-decor--square-two" aria-hidden="true"></div>
+    <WaveDecor placement="left" size="md" />
+    <WaveDecor placement="right" size="lg" />
 
     <div class="hero-container">
-      <h2 class="hero-kicker">
-        ТРЕТИЙ ФОРУМ
-      </h2>
+      <div class="hero-brand">
+        <img
+          class="hero-brand__logo"
+          :src="logoSrc"
+          :alt="logoAlt"
+          width="605"
+          height="172"
+          decoding="async"
+          @error="onLogoError"
+        />
+      </div>
 
-      <h1 class="hero-title" aria-label="форум молодых предпринимателей">
-        <span class="hero-title__line hero-title__line--first" data-text="форум">
-          <span>форум</span>
-        </span>
+      <h2 class="hero-kicker">региональный</h2>
 
-        <span class="hero-title__line hero-title__line--second" data-text="молодых">
-          <span>молодых</span>
-        </span>
+      <div class="hero-title-fit">
+        <h1 class="hero-title" aria-label="форум молодежного предпринимательства">
+          <span class="hero-title__line hero-title__line--first">
+            <span>форум</span>
+          </span>
 
-        <span class="hero-title__line hero-title__line--third" data-text="предпринимателей">
-          <span>предпринимателей</span>
-        </span>
-      </h1>
+          <span class="hero-title__line hero-title__line--second">
+            <span>молодежного</span>
+          </span>
+
+          <span class="hero-title__line hero-title__line--third">
+            <span>предпринимательства</span>
+          </span>
+        </h1>
+      </div>
 
       <div class="hero-bottom">
-        <button
-          class="hero-button"
-          type="button"
-          aria-haspopup="dialog"
-          @click="openRegistration"
-        >
-          зарегистрироваться
-        </button>
+        <div class="hero-actions">
+          <div class="hero-date">
+            <p class="hero-date__where">ХМАО-Югра Сургут</p>
+            <p class="hero-date__when">29 мая 2026</p>
+          </div>
+
+          <button
+            class="hero-button"
+            type="button"
+            aria-haspopup="dialog"
+            @click="openRegistration"
+          >
+            зарегистрироваться
+          </button>
+        </div>
       </div>
     </div>
 
@@ -58,16 +80,16 @@ const handleRegistrationSubmit = (data) => {
       <div class="hero-marquee__track">
         <div class="hero-marquee__group">
           <span>создай наше</span>
-          <span>форум молодых предпринимателей</span>
+          <span>форум молодежного предпринимательства</span>
           <span>создай наше</span>
-          <span>форум молодых предпринимателей</span>
+          <span>форум молодежного предпринимательства</span>
         </div>
 
         <div class="hero-marquee__group">
           <span>создай наше</span>
-          <span>форум молодых предпринимателей</span>
+          <span>форум молодежного предпринимательства</span>
           <span>создай наше</span>
-          <span>форум молодых предпринимателей</span>
+          <span>форум молодежного предпринимательства</span>
         </div>
       </div>
     </div>
@@ -83,75 +105,186 @@ const handleRegistrationSubmit = (data) => {
 <style scoped>
 .hero-section {
   position: relative;
-  min-height: 100vh;
-  padding: 170px 40px 110px;
+  min-height: auto;
+  --hero-top-gap: clamp(12px, 2.4vw, 28px);
+  --hero-marquee-h: 54px;
+  --hero-bottom-gap: clamp(16px, 3vw, 24px);
+  padding-top: calc(
+    var(--site-header-offset, 172px) + env(safe-area-inset-top, 0px) + var(--hero-top-gap)
+  );
+  padding-inline: clamp(16px, 4vw, 40px);
+  padding-bottom: calc(
+    var(--hero-bottom-gap) + var(--hero-marquee-h) + env(safe-area-inset-bottom, 0px)
+  );
   background: var(--hero-bg, var(--color-bg));
   color: var(--color-hero-title, var(--color-text));
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .hero-container {
   position: relative;
   z-index: 3;
   width: min(1440px, 100%);
+  max-width: 100%;
   margin: 0 auto;
   display: block;
+  container-type: inline-size;
+  container-name: hero;
+  overflow: visible;
+  --hero-logo-delay: 0.08s;
+  --hero-kicker-delay: 0.52s;
+  /* после штампа (~0.52s) — пауза, затем заголовок */
+  --hero-title-base-delay: 1.16s;
+  --hero-logo-max-h: min(clamp(148px, 26vw, 228px), 30vh);
+  --hero-logo-max-w: min(840px, 98vw);
+  /* зазор «региональный» → заголовок; на узких экранах только положительный */
+  --hero-kicker-title-gap: clamp(10px, 2.4vw, 16px);
+}
+
+.hero-brand {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto clamp(22px, 4.5vw, 40px);
+  opacity: 0;
+  animation: heroLogoReveal 0.48s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--hero-logo-delay);
+}
+
+.hero-brand__logo {
+  display: block;
+  width: var(--hero-logo-max-w);
+  height: auto;
+  max-height: var(--hero-logo-max-h);
+  object-fit: contain;
+  object-position: center;
 }
 
 .hero-kicker {
   position: relative;
-  width: fit-content;
-  max-width: calc(100vw - 32px);
-  margin: 0 auto 44px;
-  padding: 20px 40px 18px;
-  border: 3px solid var(--palette-purple);
-  border-radius: 8px;
-  background: transparent;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  margin: clamp(4px, 0.8vw, 10px) auto 0;
+  z-index: 2;
+  padding: clamp(7px, 1.4vw, 12px) clamp(14px, 2.8vw, 26px) clamp(5px, 1vw, 8px);
+  border: none;
+  border-radius: 6px;
+  background-color: transparent;
+  background-image: var(--hero-title-primary-gradient, none);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 50%;
 
-  font-size: clamp(36px, 4.2vw, 72px);
-  line-height: 0.9;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: clamp(17px, 3.6vw, 38px);
+  line-height: 1.15;
+  font-weight: 800;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
   text-align: center;
 
-  color: var(--palette-purple);
-  -webkit-text-fill-color: var(--palette-purple);
+  color: var(--color-hero-title-primary);
+  -webkit-text-fill-color: var(--color-hero-title-primary);
+  -webkit-background-clip: var(--hero-title-primary-clip, border-box);
+  background-clip: var(--hero-title-primary-clip, border-box);
 
   transform: rotate(-2deg);
-  overflow: hidden;
+  transform-origin: center center;
+  overflow: visible;
   isolation: isolate;
   opacity: 0;
-  animation: heroKickerReveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 1.75s;
+  animation: heroKickerStamp 0.52s cubic-bezier(0.22, 1.05, 0.32, 1) forwards;
+  animation-delay: var(--hero-kicker-delay);
 
   box-shadow:
-    6px 6px 0 rgba(var(--palette-purple-rgb), 0.12),
-    0 14px 28px rgba(var(--palette-navy-rgb), 0.1);
+    4px 4px 0 rgba(var(--hero-kicker-shadow-rgb, 252, 82, 108), 0.12),
+    0 10px 20px rgba(var(--palette-navy-rgb), 0.08);
+}
+
+.hero-kicker::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  padding: 1.5px;
+  pointer-events: none;
+  z-index: -2;
+  background: var(--hero-kicker-border, var(--volna-brand-gradient));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.hero-kicker::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 22% 38%, rgba(var(--hero-kicker-ink-rgb, 252, 82, 108), 0.18), transparent 44%),
+    radial-gradient(circle at 78% 62%, rgba(var(--hero-kicker-ink-rgb, 252, 82, 108), 0.12), transparent 40%);
+  transform: scale(1.08);
+  animation: heroKickerInkWash 0.55s ease-out forwards;
+  animation-delay: var(--hero-kicker-delay);
+}
+
+.hero-title-fit {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+  padding-inline: clamp(12px, 3vw, 32px);
+  padding-block: 0;
+  margin-top: var(--hero-kicker-title-gap);
+  margin-bottom: 0;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 3;
 }
 
 .hero-title {
   position: relative;
-  margin: 0;
+  margin-inline: auto;
+  width: min(max-content, 100%);
+  max-width: 100%;
   color: var(--color-hero-title);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: clamp(54px, 9.5vw, 158px);
-  line-height: 0.76;
+  align-items: stretch;
+  gap: clamp(2px, 0.45cqi, 6px);
+  font-size: clamp(40px, min(7.8cqi, 8.2vw), 132px);
+  line-height: 1.06;
   font-weight: 900;
-  text-transform: lowercase;
-  letter-spacing: -0.105em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   isolation: isolate;
+  overflow: visible;
 }
 
 .hero-title__line {
   position: relative;
-  display: block;
-  width: fit-content;
+  display: flex;
+  justify-content: center;
+  width: 100%;
   max-width: 100%;
+  line-height: 1.1;
+  padding-block: 0;
   overflow: visible;
   --delay: 0s;
   --line-scale-x: 1;
@@ -160,7 +293,10 @@ const handleRegistrationSubmit = (data) => {
 .hero-title__line span {
   position: relative;
   z-index: 3;
-  display: block;
+  display: inline-block;
+  max-width: 100%;
+  line-height: 1.1;
+  padding-block: 0;
   opacity: 0;
   white-space: nowrap;
   transform: translateY(120%) rotate(4deg) scaleX(var(--line-scale-x)) scaleY(0.72);
@@ -169,92 +305,137 @@ const handleRegistrationSubmit = (data) => {
     heroTitleReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards,
     heroTitleBreathe 5s ease-in-out infinite;
   animation-delay: var(--delay), calc(var(--delay) + 1.2s);
-  text-shadow:
-    6px 6px 0 var(--color-hero-title-shadow),
-    0 20px 46px var(--color-hero-title-shadow-strong);
-}
-
-.hero-title__line::before,
-.hero-title__line::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  opacity: 0;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.hero-title__line::before {
-  color: var(--color-yellow);
-  transform: translate(18px, 14px) skewX(-8deg);
-  clip-path: inset(0 100% 0 0);
-  animation: heroTitleStrike 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: calc(var(--delay) + 0.08s);
-}
-
-.hero-title__line::after {
-  z-index: 4;
-  color: var(--color-hero-glitch, rgba(255, 255, 255, 0.9));
-  mix-blend-mode: var(--hero-glitch-blend, difference);
-  animation: heroTitleGlitch 1.15s steps(2, end) both;
-  animation-delay: calc(var(--delay) + 0.18s);
+  text-shadow: none;
 }
 
 .hero-title__line--first {
-  align-self: flex-start;
-  --delay: 0.1s;
+  --delay: var(--hero-title-base-delay);
 }
 
 .hero-title__line--second {
-  align-self: center;
-  --delay: 0.32s;
+  /* ~11 символов «молодежного» */
+  font-size: min(0.94em, calc((100cqi - 1.25rem) / 11.2));
+  --delay: calc(var(--hero-title-base-delay) + 0.22s);
 }
 
 .hero-title__line--third {
-  align-self: flex-end;
-  max-width: 100%;
-  text-align: center;
-  --delay: 0.54s;
+  /* ~20 символов «предпринимательства» в CAPS (делитель ≈ ширина / кегль) */
+  font-size: min(0.78em, calc((100cqi - 1.25rem) / 16.8));
+  --delay: calc(var(--hero-title-base-delay) + 0.44s);
 }
 
-.hero-title__line--third span,
-.hero-title__line--third::before,
-.hero-title__line--third::after {
-  font-size: 0.82em;
-  letter-spacing: -0.035em;
-}
-
-.hero-title__line--second::before {
-  color: var(--palette-purple);
+.hero-title__line--third span {
+  letter-spacing: 0.04em;
 }
 
 .hero-title__line--second span {
-  color: var(--palette-purple);
-  -webkit-text-fill-color: var(--palette-purple);
-  text-shadow:
-    6px 6px 0 rgba(var(--palette-purple-rgb), 0.14),
-    0 20px 46px var(--color-hero-title-shadow-strong);
+  letter-spacing: 0.03em;
+}
+
+.hero-title__line--first span {
+  letter-spacing: 0.02em;
+}
+
+.hero-title__line--first span,
+.hero-title__line--second span,
+.hero-title__line--third span {
+  line-height: 1.12;
+  padding-block: 0.02em;
+  background-image: var(--hero-title-primary-gradient, none);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 50%;
+  -webkit-background-clip: var(--hero-title-primary-clip, border-box);
+  background-clip: var(--hero-title-primary-clip, border-box);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  color: var(--color-hero-title-primary);
+  -webkit-text-fill-color: var(--color-hero-title-primary);
+  text-shadow: none;
 }
 
 .hero-bottom {
   width: 100%;
-  margin-top: 54px;
+  max-width: 100%;
+  margin-top: clamp(-12px, -1.5vh, -4px);
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
 }
 
-.hero-button {
-  width: fit-content;
-  min-height: 68px;
-  min-width: min(100%, 320px);
-  padding: 0 44px;
-  border: 2px solid var(--hero-button-border);
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(10px, 2.2vw, 14px);
+  width: min(100%, 420px);
+  max-width: 100%;
+}
+
+.hero-date {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: clamp(6px, 1.2vw, 10px) clamp(18px, 3.6vw, 26px);
+  border: none;
   border-radius: 999px;
-  background: var(--hero-button-bg);
-  color: var(--hero-button-text);
+  background: transparent;
+  text-align: center;
+  box-shadow: none;
+  isolation: isolate;
+}
+
+.hero-date::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--hero-date-border, var(--hero-kicker-border, var(--volna-brand-gradient)));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.hero-date__when,
+.hero-date__where {
+  margin: 0;
+  color: var(--hero-date-text, var(--palette-navy));
+  font-size: clamp(24px, 3.2vw, 38px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.hero-date__when {
+  margin-top: clamp(2px, 0.4vw, 4px);
+  text-transform: lowercase;
+}
+
+.hero-date__where {
+  text-transform: none;
+}
+
+.hero-button {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 80px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 52px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--hero-button-text, var(--hero-date-text, var(--palette-navy)));
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -262,37 +443,66 @@ const handleRegistrationSubmit = (data) => {
   text-align: center;
   cursor: pointer;
   font-family: inherit;
-  font-size: clamp(20px, 2vw, 28px);
+  font-size: clamp(22px, 2.4vw, 32px);
   line-height: 1.05;
   font-weight: 900;
   text-transform: lowercase;
   letter-spacing: -0.04em;
   box-shadow:
-    8px 8px 0 var(--hero-button-shadow-offset),
-    0 18px 34px var(--hero-button-shadow);
+    5px 5px 0 rgba(var(--hero-button-wash-rgb, 252, 82, 108), 0.14),
+    0 14px 28px rgba(var(--palette-navy-rgb), 0.08);
   transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease,
     color 0.25s ease,
     transform 0.25s ease,
     box-shadow 0.25s ease;
 }
 
+.hero-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3px;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--hero-button-ring, var(--hero-date-border, var(--volna-brand-gradient)));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.hero-button::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -2;
+  background: var(--hero-button-fill, rgba(var(--palette-peach-rgb), 0.5));
+  transition: background-color 0.25s ease;
+}
+
 .hero-button:hover {
-  background: var(--hero-button-bg-hover, var(--hero-button-bg));
-  border-color: var(--hero-button-border-hover, var(--hero-button-border));
+  background: transparent;
   color: var(--hero-button-text-hover, var(--hero-button-text));
   transform: translateY(-3px);
   box-shadow:
-    10px 10px 0 var(--hero-button-shadow-offset-hover),
-    0 24px 42px var(--hero-button-shadow-hover);
+    6px 6px 0 rgba(var(--hero-button-wash-rgb, 252, 82, 108), 0.18),
+    0 18px 34px rgba(var(--palette-navy-rgb), 0.1);
+}
+
+.hero-button:hover::after {
+  background: var(--hero-button-fill-hover, var(--hero-button-fill));
 }
 
 .hero-button:active {
-  transform: translateY(-1px);
-  box-shadow:
-    6px 6px 0 var(--hero-button-shadow-offset),
-    0 12px 26px var(--hero-button-shadow);
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .hero-button:focus-visible {
@@ -300,60 +510,21 @@ const handleRegistrationSubmit = (data) => {
   outline-offset: 4px;
 }
 
-.hero-decor {
-  position: absolute;
-  pointer-events: none;
-  user-select: none;
+.hero-section :deep(.wave-decor--left) {
+  left: 6%;
+  top: 22%;
 }
 
-.hero-decor--student {
-  z-index: 1;
-  right: 7%;
-  top: 18%;
-  width: clamp(130px, 16vw, 280px);
-  height: clamp(130px, 16vw, 280px);
-  background: var(--color-hero-decor-student);
-
-  mask-image: url('/icons/student-fill.svg');
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-
-  -webkit-mask-image: url('/icons/student-fill.svg');
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-
-  filter: drop-shadow(14px 14px 0 var(--color-hero-decor-student-shadow));
-  transform: rotate(8deg);
+.hero-section :deep(.wave-decor--right) {
+  right: 8%;
+  bottom: 22%;
+  top: auto;
 }
 
-.hero-decor--square {
-  z-index: 1;
-  width: 42px;
-  height: 42px;
-  background: var(--color-hero-decor-pixel);
-}
-
-.hero-decor--square-one {
-  left: 8%;
-  top: 28%;
-  box-shadow:
-    42px 0 0 var(--color-hero-decor-pixel-shadow),
-    0 42px 0 var(--color-hero-decor-pixel-shadow),
-    84px 42px 0 var(--color-hero-decor-pixel-shadow);
-  transform: rotate(-8deg);
-}
-
-.hero-decor--square-two {
-  right: 13%;
-  bottom: 24%;
-  background: var(--color-hero-decor-square, rgba(255, 255, 255, 0.08));
-  box-shadow:
-    -42px 0 0 var(--color-hero-decor-square, rgba(255, 255, 255, 0.06)),
-    0 -42px 0 var(--color-hero-decor-square, rgba(255, 255, 255, 0.05)),
-    -84px -42px 0 var(--color-hero-decor-square, rgba(255, 255, 255, 0.04));
-  transform: rotate(12deg);
+@media (max-width: 760px) {
+  .hero-section :deep(.wave-decor) {
+    display: none;
+  }
 }
 
 .hero-marquee {
@@ -362,7 +533,7 @@ const handleRegistrationSubmit = (data) => {
   right: 0;
   bottom: 0;
   z-index: 4;
-  height: 54px;
+  height: var(--hero-marquee-h, 54px);
   background: var(--palette-navy-mid);
   color: var(--palette-pink);
   display: flex;
@@ -402,15 +573,61 @@ const handleRegistrationSubmit = (data) => {
   margin-left: 30px;
 }
 
-@keyframes heroKickerReveal {
+@keyframes heroLogoReveal {
   0% {
     opacity: 0;
-    transform: rotate(-2deg) translateY(16px);
+    transform: translateY(12px) scale(0.96);
   }
 
   100% {
     opacity: 1;
-    transform: rotate(-2deg) translateY(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroKickerStamp {
+  0% {
+    opacity: 0;
+    transform: rotate(-7deg) scale(1.28) translateY(-28px);
+    filter: blur(2px);
+  }
+
+  48% {
+    opacity: 0.92;
+    transform: rotate(-2.5deg) scale(0.96) translateY(3px);
+    filter: blur(0);
+  }
+
+  64% {
+    opacity: 1;
+    transform: rotate(-1.5deg) scale(1.025) translateY(-1px);
+  }
+
+  82% {
+    transform: rotate(-2.2deg) scale(0.995) translateY(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(-2deg) scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes heroKickerInkWash {
+  0% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+
+  38% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
   }
 }
 
@@ -434,70 +651,6 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
-@keyframes heroTitleStrike {
-  0% {
-    opacity: 0;
-    clip-path: inset(0 100% 0 0);
-    transform: translate(28px, 20px) skewX(-12deg);
-  }
-
-  35% {
-    opacity: 0.9;
-  }
-
-  70% {
-    opacity: 0.45;
-    clip-path: inset(0 0 0 0);
-    transform: translate(12px, 10px) skewX(-7deg);
-  }
-
-  100% {
-    opacity: 0.16;
-    clip-path: inset(0 0 0 0);
-    transform: translate(8px, 7px) skewX(-4deg);
-  }
-}
-
-@keyframes heroTitleGlitch {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0);
-    clip-path: inset(0 0 100% 0);
-  }
-
-  12% {
-    opacity: 0.85;
-    transform: translate(-8px, 4px);
-    clip-path: inset(8% 0 72% 0);
-  }
-
-  20% {
-    transform: translate(10px, -4px);
-    clip-path: inset(58% 0 22% 0);
-  }
-
-  30% {
-    transform: translate(-5px, 3px);
-    clip-path: inset(28% 0 45% 0);
-  }
-
-  42% {
-    opacity: 0.65;
-    transform: translate(7px, 0);
-    clip-path: inset(72% 0 8% 0);
-  }
-
-  56% {
-    opacity: 0;
-    transform: translate(0, 0);
-    clip-path: inset(0 0 100% 0);
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 @keyframes heroTitleBreathe {
   0%, 100% {
     transform: translateY(0) rotate(0) scaleX(var(--line-scale-x)) scaleY(1);
@@ -518,40 +671,125 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
+@media (max-width: 1280px) and (min-width: 981px) {
+  .hero-title {
+    font-size: clamp(38px, 6.8cqi, 118px);
+  }
+}
+
+@media (min-width: 981px) {
+  .hero-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: center;
+  }
+
+  .hero-container {
+    --hero-kicker-title-gap: clamp(-2px, -0.4vh, 4px);
+  }
+}
+
 @media (max-width: 980px) {
   .hero-section {
-    min-height: 780px;
-    padding: 110px 24px 98px;
+    --hero-top-gap: 12px;
+    --hero-bottom-gap: 14px;
+  }
+
+  .hero-date__when,
+  .hero-date__where {
+    font-size: clamp(22px, 3.4vw, 34px);
+  }
+
+  .hero-container {
+    --hero-logo-max-h: min(clamp(132px, 27vw, 196px), 28vh);
+  }
+
+  .hero-container {
+    --hero-kicker-title-gap: clamp(8px, 1.8vw, 12px);
+  }
+
+  .hero-kicker {
+    font-size: clamp(15px, 3.2vw, 32px);
+    padding: 8px 18px 7px;
   }
 
   .hero-title {
-    gap: 8px;
-    font-size: clamp(52px, 13vw, 116px);
-    text-align: center;
-  }
-
-  .hero-title__line--first,
-  .hero-title__line--second,
-  .hero-title__line--third {
-    align-self: center;
+    gap: clamp(2px, 0.5cqi, 6px);
+    font-size: clamp(34px, 7.2cqi, 88px);
   }
 
   .hero-title__line--third {
-    width: 100%;
-    text-align: center;
+    font-size: min(0.76em, calc((100cqi - 1.25rem) / 16.8));
+  }
+}
+
+@container hero (max-width: 720px) {
+  .hero-title {
+    font-size: clamp(28px, min(8.5cqi, 9.2vw), 68px);
   }
 
-  .hero-title__line--third span,
-  .hero-title__line--third::before,
-  .hero-title__line--third::after {
-    font-size: clamp(34px, 7.5vw, 62px);
-    letter-spacing: -0.032em;
+  .hero-title__line--second {
+    font-size: min(0.92em, calc((100cqi - 0.75rem) / 11.2));
   }
 
-  .hero-decor--student {
-    right: -18px;
-    top: 110px;
-    opacity: 0.8;
+  .hero-title__line--third {
+    font-size: min(0.74em, calc((100cqi - 0.75rem) / 16.8));
+  }
+}
+
+@container hero (max-width: 620px) {
+  .hero-title__line--third {
+    font-size: min(0.74em, calc((100cqi - 1rem) / 17));
+  }
+
+  .hero-title__line--third span {
+    letter-spacing: 0.02em;
+  }
+}
+
+@container hero (max-width: 520px) {
+  .hero-container {
+    --hero-kicker-title-gap: 12px;
+  }
+
+  .hero-kicker {
+    transform: rotate(-1deg);
+    font-size: clamp(13px, 3.4vw, 22px);
+    padding: 7px 14px 6px;
+  }
+
+  .hero-title {
+    font-size: clamp(26px, min(8.8cqi, 9.4vw), 52px);
+  }
+
+  .hero-title__line--third {
+    font-size: min(0.72em, calc((100cqi - 0.5rem) / 17));
+  }
+}
+
+@container hero (max-width: 390px) {
+  .hero-title__line--third {
+    font-size: min(0.7em, calc((100cqi - 0.65rem) / 17.1));
+  }
+}
+
+@container hero (max-width: 360px) {
+  .hero-container {
+    --hero-kicker-title-gap: 10px;
+  }
+
+  .hero-kicker {
+    font-size: clamp(12px, 3.2vw, 20px);
+    letter-spacing: 0.05em;
+  }
+
+  .hero-title {
+    font-size: clamp(22px, min(8.2cqi, 8.8vw), 40px);
+    letter-spacing: 0.02em;
+  }
+
+  .hero-title__line--third {
+    font-size: min(0.68em, calc((100cqi - 0.5rem) / 17.2));
   }
 }
 
@@ -563,154 +801,215 @@ const handleRegistrationSubmit = (data) => {
   .hero-button:focus-visible {
     box-shadow: none;
   }
-
-  .hero-title__line span,
-  .hero-title__line--second span,
-  .hero-title__line::before,
-  .hero-title__line::after {
-    text-shadow: none;
-  }
-
-  .hero-title__line--first::before,
-  .hero-title__line--first::after,
-  .hero-title__line--second::before,
-  .hero-title__line--second::after {
-    display: none;
-  }
-
-  .hero-decor--student,
-  .hero-decor--square {
-    filter: none;
-    box-shadow: none;
-  }
 }
 
 @media (max-width: 620px) {
   .hero-section {
-    min-height: 720px;
-    padding: 90px 16px 90px;
+    --hero-top-gap: 10px;
+    --hero-bottom-gap: 12px;
+    --hero-marquee-h: 44px;
+    padding-inline: clamp(12px, 3.5vw, 20px);
+  }
+
+  .hero-container {
+    --hero-logo-max-h: min(clamp(118px, 28vw, 168px), 22vh);
+  }
+
+  .hero-brand {
+    margin-bottom: 14px;
+  }
+
+  .hero-container {
+    --hero-kicker-title-gap: 12px;
   }
 
   .hero-kicker {
-    margin-bottom: 32px;
-    padding: 14px 24px 12px;
-    border-radius: 6px;
-    font-size: clamp(30px, 10vw, 48px);
-    letter-spacing: 0.04em;
+    margin-top: clamp(4px, 0.8vw, 8px);
+    padding: 8px 16px 7px;
+    border-radius: 5px;
+    font-size: clamp(14px, 3.6vw, 26px);
+    letter-spacing: 0.07em;
     text-align: center;
+    transform: rotate(-1deg);
+  }
+
+  .hero-title-fit {
+    padding-inline: clamp(6px, 1.8vw, 14px);
+    padding-block: 0 clamp(0px, 0.4vh, 4px);
+    margin-bottom: 0;
   }
 
   .hero-title {
-    gap: 8px;
-    font-size: clamp(48px, 16vw, 82px);
-    line-height: 0.82;
-    letter-spacing: -0.075em;
-    text-align: center;
+    gap: clamp(2px, 0.5cqi, 6px);
+    font-size: clamp(25px, min(8.8cqi, 9vw), 52px);
+    letter-spacing: 0.02em;
   }
 
-  .hero-title__line {
-    width: 100%;
-    max-width: 100%;
-    text-align: center;
+  .hero-title__line--second {
+    font-size: min(0.92em, calc((100cqi - 0.75rem) / 11.2));
   }
 
   .hero-title__line--third {
-    --line-scale-x: 0.89;
+    font-size: min(
+      0.74em,
+      calc((100cqi - 0.75rem) / 17),
+      calc((100vw - 3rem) / 17)
+    );
   }
 
   .hero-title__line--third span {
-    font-size: clamp(27px, 7.5vw, 42px);
-    letter-spacing: -0.015em;
+    letter-spacing: 0.02em;
   }
 
-  .hero-title__line--third::before,
-  .hero-title__line--third::after {
-    display: none;
+  .hero-actions {
+    gap: 12px;
+    width: min(100%, 360px);
   }
 
   .hero-bottom {
-    margin-top: 38px;
-    gap: 16px;
+    margin-top: 0;
   }
 
   .hero-button {
-    width: min(100%, 360px);
+    width: 100%;
+    max-width: 100%;
+    min-height: 72px;
+    padding: 0 32px;
+    font-size: clamp(20px, 5.4vw, 26px);
     justify-content: center;
     text-align: center;
   }
 
-  .hero-button {
-    min-height: 64px;
-    padding: 0 28px;
-    font-size: clamp(19px, 5.2vw, 24px);
+  .hero-date {
+    padding: 11px 20px;
+    max-width: 100%;
   }
 
-  .hero-decor--student {
-    width: 120px;
-    height: 120px;
-    right: -28px;
-    top: 86px;
-  }
-
-  .hero-decor--square {
-    display: none;
-  }
-
-  .hero-marquee {
-    height: 44px;
+  .hero-date__when,
+  .hero-date__where {
+    font-size: clamp(21px, 5.8vw, 30px);
   }
 
   .hero-marquee__group span {
     font-size: 18px;
   }
+
+  .hero-marquee__group {
+    gap: 22px;
+    padding-right: 22px;
+  }
+
+  .hero-marquee__group span::after {
+    margin-left: 22px;
+  }
 }
 
 @media (max-width: 420px) {
-  .hero-title__line span,
-  .hero-title__line::before,
-  .hero-title__line::after {
-    white-space: normal;
-    overflow-wrap: anywhere;
+  .hero-container {
+    --hero-logo-max-h: min(clamp(104px, 30vw, 148px), 26vh);
+    --hero-kicker-title-gap: 11px;
   }
 
-  .hero-kicker {
-    font-size: clamp(26px, 8.5vw, 40px);
-    padding: 12px 18px 10px;
+  .hero-date {
+    padding: 10px 18px;
+  }
+
+  .hero-date__when,
+  .hero-date__where {
+    font-size: clamp(20px, 5.4vw, 28px);
   }
 
   .hero-button {
     min-height: 60px;
     font-size: 18px;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
 @media (max-width: 380px) {
-  .hero-title__line--third {
-    --line-scale-x: 0.86;
-  }
-
-  .hero-title__line--third span {
-    font-size: clamp(23px, 6.9vw, 29px);
-    letter-spacing: -0.01em;
+  .hero-container {
+    --hero-kicker-title-gap: 10px;
   }
 }
 
 @media (max-width: 340px) {
   .hero-section {
-    padding: 82px 12px 86px;
+    --hero-top-gap: 10px;
   }
 
-  .hero-title__line--third {
-    --line-scale-x: 0.84;
+  .hero-date {
+    padding: 10px 16px;
   }
 
-  .hero-title__line--third span {
-    font-size: 22px;
+  .hero-date__when,
+  .hero-date__where {
+    font-size: clamp(19px, 5.2vw, 24px);
+    letter-spacing: -0.03em;
+  }
+
+  .hero-container {
+    --hero-logo-max-h: min(clamp(96px, 32vw, 132px), 25vh);
+  }
+
+  .hero-container {
+    --hero-kicker-title-gap: 9px;
   }
 
   .hero-button {
     min-height: 56px;
     font-size: 17px;
+  }
+}
+
+/* Низкий экран (ландшафт / маленький телефон) — не даём логотипу вытеснить заголовок */
+@media (max-height: 680px) {
+  .hero-container {
+    --hero-logo-max-h: min(clamp(100px, 22vw, 140px), 24vh);
+  }
+
+  .hero-bottom {
+    margin-top: clamp(-4px, -0.8vh, 4px);
+    gap: 12px;
+  }
+
+  .hero-container {
+    --hero-kicker-title-gap: 10px;
+  }
+
+  .hero-kicker {
+    margin-top: 6px;
+    transform: rotate(-1deg);
+  }
+
+  .hero-bottom {
+    margin-top: -6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-brand {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-kicker {
+    animation: none;
+    opacity: 1;
+    transform: rotate(-2deg);
+  }
+
+  .hero-kicker::after {
+    animation: none;
+    opacity: 0.3;
+    transform: none;
+  }
+
+  .hero-title__line span {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 </style>

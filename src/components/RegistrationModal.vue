@@ -61,15 +61,15 @@ const submitForm = () => {
   closeModal()
 }
 
-watch(
-  () => props.isOpen,
-  (value) => {
-    document.body.style.overflow = value ? 'hidden' : ''
-  },
-)
+const setModalOpenState = (value) => {
+  document.body.style.overflow = value ? 'hidden' : ''
+  document.body.classList.toggle('has-registration-modal', value)
+}
+
+watch(() => props.isOpen, setModalOpenState)
 
 onUnmounted(() => {
-  document.body.style.overflow = ''
+  setModalOpenState(false)
 })
 </script>
 
@@ -168,7 +168,7 @@ onUnmounted(() => {
 .registration-overlay {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 1200;
   padding: 28px;
   background: var(--color-overlay);
   backdrop-filter: blur(14px);

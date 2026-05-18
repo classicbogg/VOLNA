@@ -1,9 +1,8 @@
 <template>
   <section class="program-section" id="schedule">
-    <!-- Пиксельные декорации -->
-    <div class="program-pixels program-pixels--left" aria-hidden="true"></div>
-    <div class="program-pixels program-pixels--right" aria-hidden="true"></div>
-    <div class="program-pixels program-pixels--top" aria-hidden="true"></div>
+    <WaveDecor placement="left" size="md" />
+    <WaveDecor placement="right" size="sm" />
+    <WaveDecor placement="top" size="sm" />
 
     <div class="program-container">
       <div class="program-heading">
@@ -78,6 +77,8 @@
 </template>
 
 <script setup>
+import WaveDecor from './WaveDecor.vue'
+
 import { ref } from 'vue'
 
 const expandedIndex = ref(null)

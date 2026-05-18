@@ -1,8 +1,8 @@
 <template>
   <section class="route-section" id="contacts">
-    <div class="route-pixels route-pixels--left" aria-hidden="true"></div>
-    <div class="route-pixels route-pixels--right" aria-hidden="true"></div>
-    <div class="route-pixels route-pixels--top" aria-hidden="true"></div>
+    <WaveDecor placement="left" size="md" />
+    <WaveDecor placement="right" size="sm" />
+    <WaveDecor placement="top" size="sm" />
 
     <div class="route-container">
       <div class="route-heading">
@@ -78,6 +78,10 @@
     </div>
   </section>
 </template>
+
+<script setup>
+import WaveDecor from './WaveDecor.vue'
+</script>
 
 <style scoped>
 .route-section {

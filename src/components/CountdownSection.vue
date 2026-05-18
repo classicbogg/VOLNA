@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-const targetDate = new Date('2026-05-27T00:00:00')
+const targetDate = new Date('2026-05-29T00:00:00')
 
 const now = ref(new Date())
 const sparks = ref([])
@@ -320,7 +320,7 @@ onUnmounted(() => {
 
 @media (max-width: 900px) {
   .countdown-section {
-    padding: 72px 24px 82px;
+    padding: 56px 24px 72px;
   }
 
   .countdown-decor svg {
@@ -352,7 +352,7 @@ onUnmounted(() => {
 
 @media (max-width: 520px) {
   .countdown-section {
-    padding: 58px 16px 66px;
+    padding: 44px 16px 56px;
   }
 
   .countdown-decor,
@@ -381,7 +381,7 @@ onUnmounted(() => {
 
 @media (max-width: 360px) {
   .countdown-section {
-    padding: 48px 12px 56px;
+    padding: 40px 12px 48px;
   }
 
   .countdown-label {
