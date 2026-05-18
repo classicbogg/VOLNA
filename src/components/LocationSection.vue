@@ -8,7 +8,7 @@
       <div class="route-heading">
         <h2>
           <span class="phrase-marker">
-            <span class="phrase-marker__text">как добраться</span>
+            <span class="phrase-marker__text">как добраться до корпуса</span>
             <svg
               class="phrase-marker__svg"
               viewBox="0 0 760 190"
@@ -32,32 +32,33 @@
 
           <iframe
             class="route-map"
-            title="Карта: Цифровое деловое пространство"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=37.646062%2C55.758564%2C37.662062%2C55.768564&layer=mapnik&marker=55.763564%2C37.654062"
+            title="Карта: СИЭУиП институт, проспект Пролетарский, 3, Сургут"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=73.435845%2C61.250863%2C73.439845%2C61.254863&layer=mapnik&marker=61.252863%2C73.437845"
             loading="lazy"
           ></iframe>
         </div>
 
         <article class="route-info-card">
-          <div class="route-badge">ЦДП, Москва</div>
+          <div class="route-badge">Локация</div>
 
-          <h3>Цифровое деловое пространство</h3>
+          <h3 class="route-info-card__title">
+            <span class="route-info-card__title-abbr">СИЭУиП</span>
+            <span class="route-info-card__title-name">институт</span>
+          </h3>
 
           <p>
-            Современная столичная площадка для открытого сотрудничества всех
-            вовлеченных в сферу инноваций.
+            г. Сургут, проспект Пролетарский, 3.
           </p>
 
           <p>
-            Здесь можно получить знания, которые помогут в развитии бизнеса,
-            представить свои идеи и решения и стать частью сообщества
-            технологичных предпринимателей.
+            Доберитесь на общественном транспорте или такси до здания с адресом
+            проспект Пролетарский, 3. Ориентир — СИЭУиП институт на карте.
           </p>
 
           <div class="route-actions">
             <a
               class="route-button route-button--primary"
-              href="https://yandex.ru/maps/?pt=37.654062,55.763564&z=17&l=map"
+              href="https://yandex.ru/maps/?pt=73.437845,61.252863&z=18&l=map"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -66,7 +67,7 @@
 
             <a
               class="route-button route-button--ghost"
-              href="https://www.openstreetmap.org/?mlat=55.763564&mlon=37.654062#map=17/55.763564/37.654062"
+              href="https://www.openstreetmap.org/?mlat=61.252863&mlon=73.437845#map=19/61.252863/73.437845"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -87,7 +88,7 @@ import WaveDecor from './WaveDecor.vue'
 .route-section {
   position: relative;
   width: 100%;
-  padding: 96px 40px 112px;
+  padding: 96px var(--layout-gutter-wide, 40px) 112px;
   background: var(--color-bg);
   color: var(--color-text);
   overflow: hidden;
@@ -211,7 +212,7 @@ import WaveDecor from './WaveDecor.vue'
 
 .route-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
   gap: 34px;
   align-items: stretch;
 }
@@ -264,16 +265,26 @@ import WaveDecor from './WaveDecor.vue'
 }
 
 .route-info-card::before {
-  content: '⌖';
+  content: '';
   position: absolute;
-  top: 18px;
-  right: 28px;
-  color: rgba(var(--color-accent-rgb), 0.16);
-  font-size: 92px;
-  line-height: 1;
-  font-weight: 900;
-  transform: rotate(8deg);
+  top: 22px;
+  right: 26px;
+  width: clamp(52px, 11vw, 72px);
+  height: clamp(52px, 11vw, 72px);
   pointer-events: none;
+  opacity: 1;
+  background-color: rgba(var(--palette-orange-rgb), 0.88);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z' fill='%23000'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z' fill='%23000'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transform: rotate(6deg);
+  filter: drop-shadow(2px 3px 0 rgba(var(--palette-navy-rgb), 0.12));
+}
+
+:global(html[data-theme='dark']) .route-info-card::before {
+  background-color: rgba(var(--palette-peach-rgb), 0.92);
+  filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.28));
 }
 
 .route-info-card::after {
@@ -318,16 +329,33 @@ import WaveDecor from './WaveDecor.vue'
   letter-spacing: -0.04em;
 }
 
-.route-info-card h3 {
+.route-info-card__title {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.22em;
   margin: 0 0 26px;
+  padding-right: clamp(56px, 14vw, 84px);
   color: var(--color-text);
-  font-size: clamp(36px, 3.8vw, 62px);
-  line-height: 0.92;
+  font-size: clamp(40px, 4.6vw, 68px);
+  line-height: 0.95;
   font-weight: 900;
-  text-transform: lowercase;
-  letter-spacing: -0.075em;
+  text-transform: none;
+  letter-spacing: -0.06em;
+}
+
+.route-info-card__title-abbr {
+  font-size: 1em;
+  line-height: 0.92;
+}
+
+.route-info-card__title-name {
+  font-size: 0.58em;
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -0.04em;
 }
 
 .route-info-card p {
@@ -393,9 +421,15 @@ import WaveDecor from './WaveDecor.vue'
   color: var(--color-purple);
 }
 
+@media (min-width: 1920px) {
+  .route-section {
+    padding: 108px var(--layout-gutter-wide, 80px) 124px;
+  }
+}
+
 @media (max-width: 1050px) {
   .route-section {
-    padding: 82px 28px 96px;
+    padding: 82px var(--layout-gutter, 28px) 96px;
   }
 
   .route-layout {
@@ -456,8 +490,9 @@ import WaveDecor from './WaveDecor.vue'
     border-radius: 26px;
   }
 
-  .route-info-card h3 {
-    font-size: clamp(34px, 12vw, 48px);
+  .route-info-card__title {
+    font-size: clamp(36px, 11vw, 52px);
+    padding-right: clamp(48px, 12vw, 72px);
   }
 
   .route-info-card p {
@@ -489,12 +524,19 @@ import WaveDecor from './WaveDecor.vue'
     padding: 52px 12px 64px;
   }
 
+  .route-heading {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 16px 24px;
+    box-sizing: border-box;
+  }
+
   .route-heading h2 {
     font-size: clamp(34px, 12vw, 48px);
   }
 
-  .route-info-card h3 {
-    font-size: clamp(28px, 11vw, 38px);
+  .route-info-card__title {
+    font-size: clamp(32px, 10vw, 44px);
   }
 
   .route-button {

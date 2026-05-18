@@ -68,7 +68,7 @@ onUnmounted(() => {
       </div>
 
       <p class="audience-intro">
-        Создай НАШЕ — форум для молодых предпринимателей, которые хотят запустить
+        ВОЛНА — форум для молодых предпринимателей, которые хотят запустить
         свой проект, найти точки роста и превратить идею в реальный бизнес.
       </p>
 
@@ -128,7 +128,7 @@ onUnmounted(() => {
 .audience-section {
   position: relative;
   width: 100%;
-  padding: 92px 40px 112px;
+  padding: 92px var(--layout-gutter-wide, 40px) 112px;
   background: var(--color-audience-section-bg, var(--color-bg));
   color: var(--color-audience-section-text, var(--color-purple));
   overflow: hidden;
@@ -700,7 +700,22 @@ onUnmounted(() => {
   }
 }
 
+@media (min-width: 1920px) {
+  .audience-section {
+    padding: 108px var(--layout-gutter-wide, 80px) 124px;
+  }
+}
+
 @media (max-width: 760px) {
+  .audience-section {
+    padding: 68px var(--layout-gutter, 18px) 76px;
+  }
+
+  .audience-heading {
+    margin-bottom: 36px;
+    padding: 28px 32px 32px;
+  }
+
   .audience-layout {
     grid-template-columns: 1fr;
     perspective: none;
@@ -819,6 +834,17 @@ onUnmounted(() => {
 }
 
 @media (max-width: 390px) {
+  .audience-section {
+    padding-inline: 12px;
+  }
+
+  .audience-heading {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 18px 24px;
+    box-sizing: border-box;
+  }
+
   .audience-intro,
   .audience-bottom {
     font-size: 17px;
@@ -827,6 +853,11 @@ onUnmounted(() => {
 
   .audience-card h3 {
     font-size: clamp(32px, 10vw, 38px);
+  }
+
+  .scale-title span {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 

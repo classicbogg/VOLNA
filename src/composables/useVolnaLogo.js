@@ -10,10 +10,16 @@ const LOGO_BY_THEME = {
     light: ['/volna-logo-color-hero.svg', '/volna-logo-color.svg', '/volna-logo.png'],
     dark: ['/volna-logo-white-hero.svg', '/volna-logo-white.svg', '/volna-logo.png'],
   },
+  footer: {
+    light: ['/volna-logo-color-hero.svg', '/volna-logo-color.svg', '/volna-logo.png'],
+    dark: ['/volna-logo-white-hero.svg', '/volna-logo-white.svg', '/volna-logo.png'],
+  },
 }
 
 export function useVolnaLogo(options = {}) {
-  const variant = options.variant === 'hero' ? 'hero' : 'full'
+  const variantKey =
+    options.variant === 'hero' ? 'hero' : options.variant === 'footer' ? 'footer' : 'full'
+  const variant = variantKey
   const { isDark } = useTheme()
   const logoIndex = ref(0)
 

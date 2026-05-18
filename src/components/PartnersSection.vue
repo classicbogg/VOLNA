@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 const partners = [
   { name: 'Высшая школа экономики', image: '/partners_1.png' },
@@ -20,16 +20,35 @@ const partners = [
   { name: 'Кампус', image: '/partners_16.png' },
 ]
 
+const MOBILE_MAX_WIDTH = 900
+const DESKTOP_AUTOPLAY_MS = 2800
+const GAP_PX = 18
+
 const isDarkTheme = ref(false)
-const showAllPartners = ref(false)
+const isMobile = ref(false)
+const activeIndex = ref(0)
+const viewportRef = ref(null)
+const cardRefs = ref([])
+const isDragging = ref(false)
+const prefersReducedMotion = ref(false)
 
 let themeObserver = null
+let mobileMedia = null
+let reducedMotionMedia = null
+let autoplayTimer = null
+let scrollRaf = null
+let dragStartX = 0
+let dragScrollLeft = 0
 
-const togglePartners = () => {
-  showAllPartners.value = !showAllPartners.value
+const partnerIndices = computed(() => partners.map((_, index) => index))
+
+const activePartnerName = computed(() => partners[activeIndex.value]?.name ?? '')
+
+const setCardRef = (element, index) => {
+  if (element) {
+    cardRefs.value[index] = element
+  }
 }
-
-const isPartnerHidden = (index) => !showAllPartners.value && index >= 4
 
 const detectTheme = () => {
   if (typeof document === 'undefined') return
@@ -47,6 +66,138 @@ const detectTheme = () => {
   isDarkTheme.value = theme === 'dark' || hasDarkClass
 }
 
+const updateActiveFromScroll = () => {
+  const viewport = viewportRef.value
+  const cards = cardRefs.value.filter(Boolean)
+
+  if (!viewport || !cards.length) return
+
+  const center = viewport.scrollLeft + viewport.clientWidth / 2
+  let closestIndex = 0
+  let closestDistance = Number.POSITIVE_INFINITY
+
+  cards.forEach((card, index) => {
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2
+    const distance = Math.abs(center - cardCenter)
+
+    if (distance < closestDistance) {
+      closestDistance = distance
+      closestIndex = index
+    }
+  })
+
+  activeIndex.value = closestIndex
+}
+
+const onScroll = () => {
+  if (scrollRaf) return
+
+  scrollRaf = requestAnimationFrame(() => {
+    scrollRaf = null
+    updateActiveFromScroll()
+  })
+}
+
+const getScrollLeftForIndex = (index) => {
+  const viewport = viewportRef.value
+  const card = cardRefs.value[index]
+
+  if (!viewport || !card) return 0
+
+  return card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2
+}
+
+const goToPartner = (index, behavior = 'smooth') => {
+  const viewport = viewportRef.value
+
+  if (!viewport) return
+
+  const safeIndex = Math.max(0, Math.min(index, partners.length - 1))
+
+  viewport.scrollTo({
+    left: getScrollLeftForIndex(safeIndex),
+    behavior,
+  })
+
+  activeIndex.value = safeIndex
+}
+
+const stopAutoplay = () => {
+  if (autoplayTimer) {
+    clearInterval(autoplayTimer)
+    autoplayTimer = null
+  }
+}
+
+const startAutoplay = () => {
+  stopAutoplay()
+
+  if (isMobile.value || prefersReducedMotion.value) return
+
+  autoplayTimer = setInterval(() => {
+    const nextIndex = (activeIndex.value + 1) % partners.length
+    goToPartner(nextIndex)
+  }, DESKTOP_AUTOPLAY_MS)
+}
+
+const onPointerDown = (event) => {
+  if (event.button !== 0) return
+
+  const viewport = viewportRef.value
+  if (!viewport) return
+
+  isDragging.value = true
+  dragStartX = event.clientX
+  dragScrollLeft = viewport.scrollLeft
+  viewport.setPointerCapture(event.pointerId)
+  stopAutoplay()
+}
+
+const onPointerMove = (event) => {
+  if (!isDragging.value) return
+
+  const viewport = viewportRef.value
+  if (!viewport) return
+
+  viewport.scrollLeft = dragScrollLeft - (event.clientX - dragStartX)
+}
+
+const finishDrag = (event) => {
+  if (!isDragging.value) return
+
+  const viewport = viewportRef.value
+
+  isDragging.value = false
+
+  if (viewport?.hasPointerCapture(event.pointerId)) {
+    viewport.releasePointerCapture(event.pointerId)
+  }
+
+  updateActiveFromScroll()
+  goToPartner(activeIndex.value)
+
+  if (!isMobile.value) {
+    startAutoplay()
+  }
+}
+
+const onDotClick = (index) => {
+  stopAutoplay()
+  goToPartner(index)
+  startAutoplay()
+}
+
+const onMediaChange = () => {
+  isMobile.value = mobileMedia?.matches ?? false
+  prefersReducedMotion.value = reducedMotionMedia?.matches ?? false
+
+  stopAutoplay()
+
+  if (!isMobile.value) {
+    startAutoplay()
+  }
+}
+
 onMounted(() => {
   detectTheme()
 
@@ -60,10 +211,30 @@ onMounted(() => {
     attributeFilter: ['data-theme', 'class'],
   })
 
+  if (typeof window !== 'undefined') {
+    mobileMedia = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`)
+    reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    mobileMedia.addEventListener('change', onMediaChange)
+    reducedMotionMedia.addEventListener('change', onMediaChange)
+    onMediaChange()
+  }
+
+  requestAnimationFrame(() => {
+    updateActiveFromScroll()
+    startAutoplay()
+  })
 })
 
 onUnmounted(() => {
   themeObserver?.disconnect()
+  mobileMedia?.removeEventListener('change', onMediaChange)
+  reducedMotionMedia?.removeEventListener('change', onMediaChange)
+  stopAutoplay()
+
+  if (scrollRaf) {
+    cancelAnimationFrame(scrollRaf)
+  }
 })
 </script>
 
@@ -99,29 +270,52 @@ onUnmounted(() => {
         </h2>
       </div>
 
-      <div class="partners-grid">
-        <article
-          v-for="(partner, index) in partners"
-          :key="partner.name"
-          class="partner-card"
-          :class="{
-            'partner-card--large-logo': partner.largeLogo,
-            'partner-card--collapsed': isPartnerHidden(index),
-          }"
-        >
-          <img class="partner-logo" :src="partner.image" :alt="partner.name" loading="lazy" />
-        </article>
-      </div>
-
-      <button
-        v-if="partners.length > 4"
-        class="partners-toggle"
-        type="button"
-        :aria-expanded="showAllPartners"
-        @click="togglePartners"
+      <div
+        class="partners-strip"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Партнёры форума"
       >
-        {{ showAllPartners ? 'скрыть' : 'показать ещё' }}
-      </button>
+        <div
+          ref="viewportRef"
+          class="partners-strip__viewport"
+          :class="{ 'partners-strip__viewport--dragging': isDragging }"
+          @scroll.passive="onScroll"
+          @pointerdown="onPointerDown"
+          @pointermove="onPointerMove"
+          @pointerup="finishDrag"
+          @pointercancel="finishDrag"
+        >
+          <div class="partners-strip__track" :style="{ '--partners-gap': `${GAP_PX}px` }">
+            <article
+              v-for="(partner, index) in partners"
+              :key="partner.name"
+              :ref="(element) => setCardRef(element, index)"
+              class="partner-card"
+              :class="{ 'partner-card--large-logo': partner.largeLogo }"
+            >
+              <img class="partner-logo" :src="partner.image" :alt="partner.name" loading="lazy" />
+            </article>
+          </div>
+        </div>
+
+        <p class="visually-hidden" aria-live="polite" aria-atomic="true">
+          {{ activePartnerName }}
+        </p>
+
+        <div class="partners-strip__dots" role="tablist" aria-label="Партнёры">
+          <button
+            v-for="index in partnerIndices"
+            :key="`partner-dot-${index}`"
+            type="button"
+            class="partners-strip__dot"
+            role="tab"
+            :aria-selected="index === activeIndex"
+            :aria-label="`${partners[index].name}, ${index + 1} из ${partners.length}`"
+            @click="onDotClick(index)"
+          />
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -129,22 +323,16 @@ onUnmounted(() => {
 <style scoped>
 .partners-section {
   --partners-section-bg: var(--color-partners-section-bg);
+  --partners-strip-bg: var(--color-partners-strip-bg, var(--partners-section-bg));
   --partners-heading: var(--color-partners-heading);
   --partners-marker: var(--color-partners-marker);
   --partners-card-bg: var(--color-partners-card-bg);
-  --partners-card-bg-soft: var(--color-partners-card-bg-soft);
   --partners-card-border: var(--color-partners-card-border);
-  --partners-card-shadow: var(--color-partners-card-shadow);
-  --partners-button-bg: var(--color-partners-button-bg);
-  --partners-button-text: var(--color-partners-button-text);
-  --partners-button-shadow: var(--color-partners-button-shadow);
 
   position: relative;
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  padding: clamp(72px, 7vw, 112px) 24px clamp(80px, 8vw, 128px);
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(72px, 7vw, 112px) 0 clamp(80px, 8vw, 128px);
   background: var(--partners-section-bg);
   color: var(--partners-heading);
   overflow: hidden;
@@ -158,13 +346,14 @@ onUnmounted(() => {
   z-index: 1;
   width: min(100%, 1440px);
   margin: 0 auto;
+  padding-inline: 24px;
 }
 
 .partners-heading {
   position: relative;
   width: fit-content;
   max-width: 100%;
-  margin: 0 auto clamp(44px, 5vw, 72px);
+  margin: 0 auto clamp(36px, 5vw, 56px);
   padding: 32px 72px;
   color: var(--partners-heading);
   text-align: center;
@@ -182,295 +371,197 @@ onUnmounted(() => {
   text-transform: lowercase;
 }
 
-.partners-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(16px, 1.6vw, 24px);
-  align-items: stretch;
+.partners-strip {
+  width: 100%;
+  max-width: 100%;
+}
+
+.partners-strip__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-block: 2px solid var(--partners-card-border);
+  background: var(--partners-strip-bg);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-inline: max(14px, calc((100% - clamp(168px, 18vw, 220px)) / 2));
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  cursor: grab;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.partners-strip__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.partners-strip__viewport--dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  user-select: none;
+}
+
+.partners-strip__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: var(--partners-gap, 18px);
+  padding: clamp(18px, 2.5vw, 24px) clamp(14px, 2vw, 22px);
 }
 
 .partner-card {
-  --cut-left: 38px;
-  --cut-right: 58px;
-  --cut-width-a: 92px;
-  --cut-width-b: 72px;
-  --cut-height-a: 28px;
-  --cut-height-b: 24px;
-
-  position: relative;
-  min-height: clamp(168px, 14vw, 196px);
+  flex: 0 0 auto;
+  width: clamp(168px, 18vw, 220px);
+  min-height: clamp(120px, 12vw, 148px);
+  padding: clamp(16px, 2vw, 22px) clamp(14px, 1.8vw, 20px);
   border: 2px solid var(--partners-card-border);
-  border-radius: 24px;
+  border-radius: 22px;
   background: var(--partners-card-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(22px, 2.2vw, 32px) clamp(20px, 2vw, 28px);
-  overflow: hidden;
-  box-shadow: 8px 8px 0 rgba(var(--palette-navy-rgb), 0.1);
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    background-color 0.25s ease;
-}
-
-.partner-card::before,
-.partner-card::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  border-radius: 0 0 999px 999px;
-  background: var(--partners-section-bg);
-  transition: background-color 0.35s ease;
-}
-
-.partner-card::before {
-  left: var(--cut-left);
-  width: var(--cut-width-a);
-  height: var(--cut-height-a);
-}
-
-.partner-card::after {
-  right: var(--cut-right);
-  width: var(--cut-width-b);
-  height: var(--cut-height-b);
-}
-
-.partner-card:nth-child(4n + 1) {
-  --cut-left: 32px;
-  --cut-right: 66px;
-  --cut-width-a: 96px;
-  --cut-width-b: 64px;
-  --cut-height-a: 30px;
-  --cut-height-b: 24px;
-}
-
-.partner-card:nth-child(4n + 2) {
-  --cut-left: 74px;
-  --cut-right: 32px;
-  --cut-width-a: 74px;
-  --cut-width-b: 104px;
-  --cut-height-a: 24px;
-  --cut-height-b: 30px;
-}
-
-.partner-card:nth-child(4n + 3) {
-  --cut-left: 46px;
-  --cut-right: 92px;
-  --cut-width-a: 112px;
-  --cut-width-b: 78px;
-  --cut-height-a: 28px;
-  --cut-height-b: 25px;
-}
-
-.partner-card:nth-child(4n) {
-  --cut-left: 118px;
-  --cut-right: 46px;
-  --cut-width-a: 88px;
-  --cut-width-b: 92px;
-}
-
-.partner-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-partners-card-hover-border);
-  box-shadow: 10px 10px 0 rgba(var(--palette-navy-rgb), 0.14);
+  box-sizing: border-box;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
 .partner-logo {
-  position: relative;
-  z-index: 1;
   display: block;
   width: 100%;
   max-width: 100%;
-  height: clamp(92px, 8.5vw, 118px);
+  height: clamp(72px, 8vw, 96px);
   object-fit: contain;
   object-position: center;
+  pointer-events: none;
 }
 
 .partner-card--large-logo .partner-logo {
-  height: clamp(104px, 9.5vw, 132px);
+  height: clamp(82px, 9vw, 108px);
 }
 
-.partners-toggle {
-  display: inline-flex;
-  align-items: center;
+.partners-strip__dots {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  width: fit-content;
-  min-height: 54px;
-  margin: 34px auto 0;
-  padding: 0 34px;
-  border: 2px solid var(--partners-button-bg);
-  border-radius: 999px;
-  background: var(--partners-button-bg);
-  color: var(--partners-button-text);
+  align-items: center;
+  gap: clamp(5px, 1vw, 8px);
+  width: 100%;
+  margin-top: clamp(14px, 2.5vw, 20px);
+  padding: 0 clamp(16px, 4vw, 40px) clamp(4px, 1vw, 8px);
+}
+
+.partners-strip__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(var(--palette-navy-rgb), 0.22);
   cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  text-transform: lowercase;
-  box-shadow: 0 16px 34px var(--partners-button-shadow);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease,
     background-color 0.2s ease;
 }
 
-.partners-toggle:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 22px 42px var(--partners-button-shadow);
+.partners-section--dark .partners-strip__dot {
+  background: rgba(var(--palette-cream-rgb), 0.28);
 }
 
-.partners-toggle:active {
-  transform: translateY(-1px);
+.partners-strip__dot[aria-selected='true'] {
+  background: var(--palette-orange);
+  transform: scale(1.25);
 }
 
-.partner-card--collapsed {
-  display: none;
+.partners-section--dark .partners-strip__dot[aria-selected='true'] {
+  background: var(--palette-pink);
+}
+
+.partners-strip__dot:focus-visible {
+  outline: 2px solid var(--palette-purple);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (min-width: 901px) {
-  .partner-card--collapsed {
-    display: flex;
-  }
-
-  .partners-toggle {
-    display: none;
-  }
-}
-
-@media (max-width: 1200px) {
-  .partners-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .partner-logo {
-    height: clamp(88px, 10vw, 110px);
-  }
-
-  .partner-card--large-logo .partner-logo {
-    height: clamp(98px, 11vw, 124px);
+  .partners-strip__viewport:not(.partners-strip__viewport--dragging) {
+    cursor: default;
   }
 }
 
 @media (max-width: 900px) {
-  .partners-container {
-    width: min(100%, 960px);
-  }
-
-  .partners-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+  .partners-strip__viewport {
+    cursor: grab;
   }
 
   .partner-card {
-    min-height: 156px;
+    width: clamp(148px, 72vw, 220px);
+    min-height: 112px;
+    border-radius: 18px;
   }
 
   .partner-logo {
-    height: clamp(84px, 12vw, 104px);
-  }
-
-  .partner-card--large-logo .partner-logo {
-    height: clamp(94px, 13vw, 118px);
+    height: clamp(64px, 18vw, 80px);
   }
 }
 
 @media (max-width: 600px) {
   .partners-section {
-    padding: 64px 16px 78px;
+    padding-bottom: 72px;
+  }
+
+  .partners-container {
+    padding-inline: 16px;
   }
 
   .partners-heading {
     padding: 24px 38px;
-    margin-bottom: 38px;
+    margin-bottom: 28px;
   }
 
   .partners-heading h2 {
     font-size: clamp(42px, 15vw, 64px);
-    letter-spacing: -0.075em;
   }
 
-  .partners-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+  .partners-strip__dots {
+    gap: 5px;
   }
 
-  .partner-card {
-    min-height: 148px;
-    border-radius: 22px;
-    padding: 22px 20px;
-    box-shadow: 6px 6px 0 rgba(var(--palette-navy-rgb), 0.1);
-  }
-
-  .partner-card::before {
-    left: max(22px, calc(var(--cut-left) * 0.65));
-    width: calc(var(--cut-width-a) * 0.82);
-    height: calc(var(--cut-height-a) * 0.86);
-  }
-
-  .partner-card::after {
-    right: max(24px, calc(var(--cut-right) * 0.65));
-    width: calc(var(--cut-width-b) * 0.82);
-    height: calc(var(--cut-height-b) * 0.86);
-  }
-
-  .partner-logo {
-    height: clamp(78px, 22vw, 96px);
-  }
-
-  .partner-card--large-logo .partner-logo {
-    height: clamp(88px, 24vw, 108px);
+  .partners-strip__dot {
+    width: 7px;
+    height: 7px;
   }
 }
 
-@media (max-width: 480px) {
-  .partners-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .partner-card {
-    min-height: 140px;
-    padding: 24px 28px;
-  }
-
-  .partner-logo {
-    height: clamp(82px, 24vw, 100px);
-  }
-
-  .partner-card--large-logo .partner-logo {
-    height: clamp(92px, 26vw, 112px);
-  }
-}
-
-@media (max-width: 380px) {
-  .partners-section {
-    padding-left: 12px;
-    padding-right: 12px;
+@media (max-width: 360px) {
+  .partners-container {
+    padding-inline: 12px;
   }
 
   .partners-heading {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
   }
 
   .partners-heading h2 {
-    font-size: 40px;
+    font-size: clamp(36px, 14vw, 52px);
   }
+}
 
-  .partner-card {
-    min-height: 132px;
-    padding: 20px 18px;
-  }
-
-  .partner-logo {
-    height: 76px;
-  }
-
-  .partner-card--large-logo .partner-logo {
-    height: 88px;
+@media (prefers-reduced-motion: reduce) {
+  .partners-strip__viewport {
+    scroll-behavior: auto;
   }
 }
 </style>

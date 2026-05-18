@@ -142,6 +142,17 @@ defineProps({
   }
 }
 
+/* ~820px: компактнее, ближе к краю (hero/footer переопределяют при необходимости) */
+@media (max-width: 980px) and (min-width: 761px) {
+  .wave-decor--lg .wave-decor__icon {
+    width: clamp(56px, 7.5vw, 72px);
+  }
+
+  .wave-decor--md .wave-decor__icon {
+    width: clamp(48px, 6.5vw, 64px);
+  }
+}
+
 /* Телефон: одна иконка у края, слабее */
 @media (max-width: 760px) {
   .wave-decor {

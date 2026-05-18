@@ -2,9 +2,8 @@
 import { ref } from 'vue'
 import RegistrationModal from './RegistrationModal.vue'
 import WaveDecor from './WaveDecor.vue'
-import { useVolnaLogo } from '../composables/useVolnaLogo'
-
-const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'hero' })
+// import { useVolnaLogo } from '../composables/useVolnaLogo'
+// const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'hero' })
 
 const isRegistrationOpen = ref(false)
 
@@ -16,9 +15,6 @@ const closeRegistration = () => {
   isRegistrationOpen.value = false
 }
 
-const handleRegistrationSubmit = (data) => {
-  console.log('Данные регистрации:', data)
-}
 </script>
 
 <template>
@@ -27,6 +23,7 @@ const handleRegistrationSubmit = (data) => {
     <WaveDecor placement="right" size="lg" />
 
     <div class="hero-container">
+      <!-- ВОЛНА (логотип) — временно скрыто
       <div class="hero-brand">
         <img
           class="hero-brand__logo"
@@ -38,8 +35,11 @@ const handleRegistrationSubmit = (data) => {
           @error="onLogoError"
         />
       </div>
+      -->
 
-      <h2 class="hero-kicker">региональный</h2>
+      <!-- РЕГИОНАЛЬНЫЙ — временно скрыто
+      <h2 class="hero-kicker">РЕГИОНАЛЬНЫЙ</h2>
+      -->
 
       <div class="hero-title-fit">
         <h1 class="hero-title" aria-label="форум молодежного предпринимательства">
@@ -60,8 +60,12 @@ const handleRegistrationSubmit = (data) => {
       <div class="hero-bottom">
         <div class="hero-actions">
           <div class="hero-date">
-            <p class="hero-date__where">ХМАО-Югра Сургут</p>
             <p class="hero-date__when">29 мая 2026</p>
+            <p class="hero-date__where">
+              <span class="hero-date__region">ХМАО-ЮГРА</span>
+              <span class="hero-date__sep" aria-hidden="true">|</span>
+              <span class="hero-date__city">Сургут</span>
+            </p>
           </div>
 
           <button
@@ -79,16 +83,16 @@ const handleRegistrationSubmit = (data) => {
     <div class="hero-marquee" aria-hidden="true">
       <div class="hero-marquee__track">
         <div class="hero-marquee__group">
-          <span>создай наше</span>
+          <span>волна</span>
           <span>форум молодежного предпринимательства</span>
-          <span>создай наше</span>
+          <span>волна</span>
           <span>форум молодежного предпринимательства</span>
         </div>
 
         <div class="hero-marquee__group">
-          <span>создай наше</span>
+          <span>волна</span>
           <span>форум молодежного предпринимательства</span>
-          <span>создай наше</span>
+          <span>волна</span>
           <span>форум молодежного предпринимательства</span>
         </div>
       </div>
@@ -97,7 +101,6 @@ const handleRegistrationSubmit = (data) => {
     <RegistrationModal
       :is-open="isRegistrationOpen"
       @close="closeRegistration"
-      @submit="handleRegistrationSubmit"
     />
   </section>
 </template>
@@ -109,6 +112,8 @@ const handleRegistrationSubmit = (data) => {
   --hero-top-gap: clamp(12px, 2.4vw, 28px);
   --hero-marquee-h: 54px;
   --hero-bottom-gap: clamp(16px, 3vw, 24px);
+  --hero-title-to-actions-gap: clamp(-14px, -2.4vh, 0px);
+  --hero-actions-gap: clamp(20px, 3.2vw, 32px);
   padding-top: calc(
     var(--site-header-offset, 172px) + env(safe-area-inset-top, 0px) + var(--hero-top-gap)
   );
@@ -134,6 +139,7 @@ const handleRegistrationSubmit = (data) => {
   container-type: inline-size;
   container-name: hero;
   overflow: visible;
+  isolation: isolate;
   --hero-logo-delay: 0.08s;
   --hero-kicker-delay: 0.52s;
   /* после штампа (~0.52s) — пауза, затем заголовок */
@@ -141,7 +147,7 @@ const handleRegistrationSubmit = (data) => {
   --hero-logo-max-h: min(clamp(148px, 26vw, 228px), 30vh);
   --hero-logo-max-w: min(840px, 98vw);
   /* зазор «региональный» → заголовок; на узких экранах только положительный */
-  --hero-kicker-title-gap: clamp(10px, 2.4vw, 16px);
+  --hero-kicker-title-gap: 0;
 }
 
 .hero-brand {
@@ -167,7 +173,6 @@ const handleRegistrationSubmit = (data) => {
 .hero-kicker {
   position: relative;
   width: max-content;
-  max-width: calc(100vw - 24px);
   margin: clamp(4px, 0.8vw, 10px) auto 0;
   z-index: 2;
   padding: clamp(7px, 1.4vw, 12px) clamp(14px, 2.8vw, 26px) clamp(5px, 1vw, 8px);
@@ -182,9 +187,11 @@ const handleRegistrationSubmit = (data) => {
   font-size: clamp(17px, 3.6vw, 38px);
   line-height: 1.15;
   font-weight: 800;
-  text-transform: lowercase;
+  text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
+  max-width: min(100%, calc(100cqi - 32px));
+  box-sizing: border-box;
   overflow-wrap: normal;
   word-break: keep-all;
   hyphens: none;
@@ -252,7 +259,7 @@ const handleRegistrationSubmit = (data) => {
   padding-inline: clamp(12px, 3vw, 32px);
   padding-block: 0;
   margin-top: var(--hero-kicker-title-gap);
-  margin-bottom: 0;
+  margin-bottom: clamp(-6px, -0.8vh, 0px);
   box-sizing: border-box;
   position: relative;
   z-index: 3;
@@ -268,9 +275,9 @@ const handleRegistrationSubmit = (data) => {
   flex-direction: column;
   align-items: stretch;
   gap: clamp(2px, 0.45cqi, 6px);
-  font-size: clamp(40px, min(7.8cqi, 8.2vw), 132px);
+  font-size: clamp(36px, min(7.1cqi, 7.5vw), 118px);
   line-height: 1.06;
-  font-weight: 900;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   isolation: isolate;
@@ -339,6 +346,7 @@ const handleRegistrationSubmit = (data) => {
 .hero-title__line--first span,
 .hero-title__line--second span,
 .hero-title__line--third span {
+  font-weight: inherit;
   line-height: 1.12;
   padding-block: 0.02em;
   background-image: var(--hero-title-primary-gradient, none);
@@ -357,7 +365,7 @@ const handleRegistrationSubmit = (data) => {
 .hero-bottom {
   width: 100%;
   max-width: 100%;
-  margin-top: clamp(-12px, -1.5vh, -4px);
+  margin-top: var(--hero-title-to-actions-gap);
   display: flex;
   justify-content: center;
 }
@@ -366,62 +374,71 @@ const handleRegistrationSubmit = (data) => {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: clamp(10px, 2.2vw, 14px);
+  gap: var(--hero-actions-gap);
   width: min(100%, 420px);
   max-width: 100%;
 }
 
 .hero-date {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2vw, 16px);
   margin: 0;
   width: 100%;
   max-width: 100%;
-  box-sizing: border-box;
-  padding: clamp(6px, 1.2vw, 10px) clamp(18px, 3.6vw, 26px);
-  border: none;
-  border-radius: 999px;
-  background: transparent;
+  padding: 0;
   text-align: center;
-  box-shadow: none;
-  isolation: isolate;
-}
-
-.hero-date::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2px;
-  pointer-events: none;
-  z-index: -1;
-  background: var(--hero-date-border, var(--hero-kicker-border, var(--volna-brand-gradient)));
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
 }
 
 .hero-date__when,
-.hero-date__where {
-  margin: 0;
-  color: var(--hero-date-text, var(--palette-navy));
-  font-size: clamp(24px, 3.2vw, 38px);
-  line-height: 1.05;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+.hero-date__where,
+.hero-date__where span {
+  color: var(--hero-date-accent, var(--volna-brand-mid, #ff4f6a));
 }
 
 .hero-date__when {
-  margin-top: clamp(2px, 0.4vw, 4px);
+  margin: 0;
+  font-size: clamp(30px, 4.8vw, 56px);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.05em;
   text-transform: lowercase;
 }
 
 .hero-date__where {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.15em 0.4em;
+  margin: 0;
+  font-size: clamp(19px, 2.55vw, 28px);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: 0.04em;
   text-transform: none;
+}
+
+.hero-date__region {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-date__city {
+  text-transform: none;
+  letter-spacing: -0.02em;
+  font-weight: 900;
+}
+
+.hero-date__sep {
+  font-weight: 900;
+  font-size: clamp(26px, 3.45vw, 38px);
+  line-height: 0.8;
+  letter-spacing: 0;
+  opacity: 1;
+  padding-inline: 0.06em;
+  transform: translateY(-0.06em);
 }
 
 .hero-button {
@@ -477,14 +494,7 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-button::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: -2;
-  background: var(--hero-button-fill, rgba(var(--palette-peach-rgb), 0.5));
-  transition: background-color 0.25s ease;
+  content: none;
 }
 
 .hero-button:hover {
@@ -494,10 +504,6 @@ const handleRegistrationSubmit = (data) => {
   box-shadow:
     6px 6px 0 rgba(var(--hero-button-wash-rgb, 252, 82, 108), 0.18),
     0 18px 34px rgba(var(--palette-navy-rgb), 0.1);
-}
-
-.hero-button:hover::after {
-  background: var(--hero-button-fill-hover, var(--hero-button-fill));
 }
 
 .hero-button:active {
@@ -510,15 +516,50 @@ const handleRegistrationSubmit = (data) => {
   outline-offset: 4px;
 }
 
-.hero-section :deep(.wave-decor--left) {
-  left: 6%;
-  top: 22%;
+/* Десктоп: иконки у внешних краёв, обрезаются overflow — не на заголовок */
+@media (min-width: 981px) {
+  .hero-section :deep(.wave-decor) {
+    opacity: 0.48;
+  }
+
+  .hero-section :deep(.wave-decor--left) {
+    left: max(-56px, -3.5vw);
+    top: 18%;
+    bottom: auto;
+  }
+
+  .hero-section :deep(.wave-decor--right) {
+    right: max(-56px, -3.5vw);
+    left: auto;
+    bottom: 14%;
+    top: auto;
+  }
 }
 
-.hero-section :deep(.wave-decor--right) {
-  right: 8%;
-  bottom: 22%;
-  top: auto;
+/* Планшет (~820px): иконки у краёв за контентом, правую убираем */
+@media (max-width: 980px) and (min-width: 761px) {
+  .hero-section :deep(.wave-decor) {
+    opacity: 0.42;
+  }
+
+  .hero-section :deep(.wave-decor--right) {
+    display: none;
+  }
+
+  .hero-section :deep(.wave-decor--left) {
+    left: max(-40px, -5vw);
+    top: auto;
+    bottom: 14%;
+    transform: rotate(-10deg);
+  }
+
+  .hero-section :deep(.wave-decor--md .wave-decor__icon) {
+    width: clamp(52px, 7vw, 64px);
+  }
+
+  .hero-title-fit {
+    padding-inline: clamp(20px, 5vw, 40px);
+  }
 }
 
 @media (max-width: 760px) {
@@ -673,7 +714,7 @@ const handleRegistrationSubmit = (data) => {
 
 @media (max-width: 1280px) and (min-width: 981px) {
   .hero-title {
-    font-size: clamp(38px, 6.8cqi, 118px);
+    font-size: clamp(34px, 6.2cqi, 106px);
   }
 }
 
@@ -681,11 +722,19 @@ const handleRegistrationSubmit = (data) => {
   .hero-section {
     min-height: 100vh;
     min-height: 100dvh;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    --hero-top-gap: clamp(4px, 1vh, 12px);
+    --hero-title-to-actions-gap: clamp(-20px, -3.2vh, -4px);
+    --hero-actions-gap: clamp(24px, 3.6vw, 36px);
   }
 
   .hero-container {
-    --hero-kicker-title-gap: clamp(-2px, -0.4vh, 4px);
+    --hero-kicker-title-gap: 0;
+  }
+
+  .hero-title-fit {
+    margin-top: 0;
   }
 }
 
@@ -695,17 +744,29 @@ const handleRegistrationSubmit = (data) => {
     --hero-bottom-gap: 14px;
   }
 
-  .hero-date__when,
+  .hero-date__when {
+    font-size: clamp(26px, 4.2vw, 44px);
+  }
+
   .hero-date__where {
-    font-size: clamp(22px, 3.4vw, 34px);
+    font-size: clamp(17px, 2.3vw, 23px);
+  }
+
+  .hero-date__sep {
+    font-size: clamp(22px, 3vw, 30px);
   }
 
   .hero-container {
     --hero-logo-max-h: min(clamp(132px, 27vw, 196px), 28vh);
   }
 
+  .hero-section {
+    --hero-title-to-actions-gap: clamp(-16px, -2.6vh, 0px);
+    --hero-actions-gap: clamp(18px, 3vw, 28px);
+  }
+
   .hero-container {
-    --hero-kicker-title-gap: clamp(8px, 1.8vw, 12px);
+    --hero-kicker-title-gap: 0;
   }
 
   .hero-kicker {
@@ -715,17 +776,17 @@ const handleRegistrationSubmit = (data) => {
 
   .hero-title {
     gap: clamp(2px, 0.5cqi, 6px);
-    font-size: clamp(34px, 7.2cqi, 88px);
+    font-size: clamp(31px, 6.6cqi, 80px);
   }
 
   .hero-title__line--third {
-    font-size: min(0.76em, calc((100cqi - 1.25rem) / 16.8));
+    font-size: min(0.76em, calc((100cqi - 1.25rem) / 17.2));
   }
 }
 
 @container hero (max-width: 720px) {
   .hero-title {
-    font-size: clamp(28px, min(8.5cqi, 9.2vw), 68px);
+    font-size: clamp(26px, min(7.8cqi, 8.4vw), 62px);
   }
 
   .hero-title__line--second {
@@ -759,17 +820,26 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-title {
-    font-size: clamp(26px, min(8.8cqi, 9.4vw), 52px);
+    font-size: clamp(24px, min(8.2cqi, 8.6vw), 48px);
   }
 
   .hero-title__line--third {
-    font-size: min(0.72em, calc((100cqi - 0.5rem) / 17));
+    font-size: min(0.72em, calc((100cqi - 0.5rem) / 17.4));
   }
 }
 
 @container hero (max-width: 390px) {
   .hero-title__line--third {
-    font-size: min(0.7em, calc((100cqi - 0.65rem) / 17.1));
+    font-size: min(0.7em, calc((100cqi - 0.65rem) / 17.3));
+  }
+}
+
+@container hero (max-width: 380px) {
+  .hero-kicker {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -784,12 +854,12 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-title {
-    font-size: clamp(22px, min(8.2cqi, 8.8vw), 40px);
+    font-size: clamp(21px, min(7.6cqi, 8.2vw), 38px);
     letter-spacing: 0.02em;
   }
 
   .hero-title__line--third {
-    font-size: min(0.68em, calc((100cqi - 0.5rem) / 17.2));
+    font-size: min(0.68em, calc((100cqi - 0.5rem) / 17.5));
   }
 }
 
@@ -827,10 +897,13 @@ const handleRegistrationSubmit = (data) => {
     margin-top: clamp(4px, 0.8vw, 8px);
     padding: 8px 16px 7px;
     border-radius: 5px;
-    font-size: clamp(14px, 3.6vw, 26px);
-    letter-spacing: 0.07em;
+    font-size: clamp(13px, 3.4vw, 24px);
+    letter-spacing: 0.06em;
     text-align: center;
     transform: rotate(-1deg);
+    max-width: calc(100% - 8px);
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .hero-title-fit {
@@ -841,33 +914,31 @@ const handleRegistrationSubmit = (data) => {
 
   .hero-title {
     gap: clamp(2px, 0.5cqi, 6px);
-    font-size: clamp(25px, min(8.8cqi, 9vw), 52px);
+    font-size: clamp(23px, min(8.2cqi, 8.4vw), 48px);
     letter-spacing: 0.02em;
   }
 
   .hero-title__line--second {
-    font-size: min(0.92em, calc((100cqi - 0.75rem) / 11.2));
+    font-size: min(0.92em, calc((100cqi - 0.75rem) / 11.4));
   }
 
   .hero-title__line--third {
-    font-size: min(
-      0.74em,
-      calc((100cqi - 0.75rem) / 17),
-      calc((100vw - 3rem) / 17)
-    );
+    font-size: min(0.74em, calc((100cqi - 0.75rem) / 17.4));
   }
 
   .hero-title__line--third span {
     letter-spacing: 0.02em;
   }
 
-  .hero-actions {
-    gap: 12px;
-    width: min(100%, 360px);
+  .hero-section {
+    --hero-title-to-actions-gap: clamp(-12px, -2.2vh, 2px);
+    --hero-actions-gap: clamp(16px, 3.5vw, 24px);
   }
 
-  .hero-bottom {
-    margin-top: 0;
+  .hero-actions {
+    width: min(100%, 360px);
+    max-width: 100%;
+    padding-inline: 0;
   }
 
   .hero-button {
@@ -880,14 +951,20 @@ const handleRegistrationSubmit = (data) => {
     text-align: center;
   }
 
-  .hero-date {
-    padding: 11px 20px;
-    max-width: 100%;
+  .hero-section {
+    --hero-title-to-actions-gap: clamp(-10px, -2vh, 4px);
   }
 
-  .hero-date__when,
+  .hero-date__when {
+    font-size: clamp(24px, 6.2vw, 34px);
+  }
+
   .hero-date__where {
-    font-size: clamp(21px, 5.8vw, 30px);
+    font-size: clamp(16px, 3.9vw, 21px);
+  }
+
+  .hero-date__sep {
+    font-size: clamp(22px, 5.4vw, 28px);
   }
 
   .hero-marquee__group span {
@@ -910,26 +987,43 @@ const handleRegistrationSubmit = (data) => {
     --hero-kicker-title-gap: 11px;
   }
 
-  .hero-date {
-    padding: 10px 18px;
+  .hero-kicker {
+    font-size: clamp(12px, 3.1vw, 20px);
+    padding: 7px 14px 6px;
+    letter-spacing: 0.05em;
   }
 
-  .hero-date__when,
+  .hero-date__when {
+    font-size: clamp(22px, 5.8vw, 28px);
+  }
+
   .hero-date__where {
-    font-size: clamp(20px, 5.4vw, 28px);
+    font-size: clamp(15px, 3.7vw, 18px);
+  }
+
+  .hero-date__sep {
+    font-size: clamp(20px, 5vw, 24px);
   }
 
   .hero-button {
     min-height: 60px;
-    font-size: 18px;
+    font-size: clamp(16px, 4.4vw, 18px);
     width: 100%;
     max-width: 100%;
+    padding-inline: 24px;
   }
 }
 
 @media (max-width: 380px) {
   .hero-container {
     --hero-kicker-title-gap: 10px;
+  }
+
+  .hero-kicker {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -938,52 +1032,54 @@ const handleRegistrationSubmit = (data) => {
     --hero-top-gap: 10px;
   }
 
-  .hero-date {
-    padding: 10px 16px;
+  .hero-date__when {
+    font-size: clamp(20px, 5.2vw, 24px);
+    letter-spacing: -0.04em;
   }
 
-  .hero-date__when,
   .hero-date__where {
-    font-size: clamp(19px, 5.2vw, 24px);
-    letter-spacing: -0.03em;
+    font-size: clamp(14px, 3.5vw, 16px);
+    letter-spacing: 0.05em;
+  }
+
+  .hero-date__sep {
+    font-size: clamp(18px, 4.6vw, 22px);
   }
 
   .hero-container {
     --hero-logo-max-h: min(clamp(96px, 32vw, 132px), 25vh);
+    --hero-kicker-title-gap: 9px;
   }
 
-  .hero-container {
-    --hero-kicker-title-gap: 9px;
+  .hero-kicker {
+    font-size: clamp(11px, 2.85vw, 16px);
+    padding: 6px 12px 5px;
+    letter-spacing: 0.04em;
   }
 
   .hero-button {
     min-height: 56px;
-    font-size: 17px;
+    padding-inline: 20px;
+    font-size: clamp(15px, 4.2vw, 17px);
+    letter-spacing: -0.035em;
   }
 }
 
-/* Низкий экран (ландшафт / маленький телефон) — не даём логотипу вытеснить заголовок */
+/* Низкий экран (ландшафт / маленький телефон) */
 @media (max-height: 680px) {
+  .hero-section {
+    --hero-title-to-actions-gap: clamp(-8px, -1.6vh, 4px);
+    --hero-actions-gap: clamp(14px, 2.5vh, 20px);
+  }
+
   .hero-container {
     --hero-logo-max-h: min(clamp(100px, 22vw, 140px), 24vh);
-  }
-
-  .hero-bottom {
-    margin-top: clamp(-4px, -0.8vh, 4px);
-    gap: 12px;
-  }
-
-  .hero-container {
-    --hero-kicker-title-gap: 10px;
+    --hero-kicker-title-gap: 0;
   }
 
   .hero-kicker {
     margin-top: 6px;
     transform: rotate(-1deg);
-  }
-
-  .hero-bottom {
-    margin-top: -6px;
   }
 }
 

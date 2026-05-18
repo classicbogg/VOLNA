@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-const targetDate = new Date('2026-05-29T00:00:00')
+const targetDate = new Date('2026-05-29T10:00:00')
 
 const now = ref(new Date())
 const sparks = ref([])
@@ -126,8 +126,9 @@ onUnmounted(() => {
 
     <div class="countdown-container">
       <div class="countdown-label">
-        До начала форума
+        29 мая 10:00
       </div>
+      <p class="countdown-caption">до начала форума</p>
 
       <div class="countdown-grid">
         <div class="countdown-item">
@@ -164,22 +165,15 @@ onUnmounted(() => {
 .countdown-section {
   position: relative;
   isolation: isolate;
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  padding: 96px 40px 104px;
+  width: 100%;
+  max-width: 100%;
+  padding: 96px var(--layout-gutter-wide, 40px) 104px;
   background: var(--color-countdown-bg);
   color: var(--color-countdown-text, var(--palette-pink));
   transition:
     background-color 0.35s ease,
     color 0.35s ease;
   overflow: hidden;
-}
-
-:global(html),
-:global(body) {
-  overflow-x: clip;
 }
 
 .countdown-decor {
@@ -243,7 +237,7 @@ onUnmounted(() => {
 
 .countdown-label {
   width: fit-content;
-  margin: 0 0 52px;
+  margin: 0 auto 12px;
   padding: 16px 30px 14px;
   border-radius: 999px;
   background: var(--color-countdown-label-bg, var(--color-yellow));
@@ -251,8 +245,19 @@ onUnmounted(() => {
   font-size: clamp(22px, 3vw, 44px);
   line-height: 0.9;
   font-weight: 900;
-  text-transform: uppercase;
+  text-transform: lowercase;
   letter-spacing: -0.06em;
+}
+
+.countdown-caption {
+  width: fit-content;
+  margin: 0 auto 40px;
+  color: var(--color-countdown-text, var(--palette-pink));
+  font-size: clamp(16px, 2.2vw, 22px);
+  line-height: 1.1;
+  font-weight: 800;
+  text-transform: lowercase;
+  letter-spacing: -0.04em;
 }
 
 .countdown-grid {
@@ -318,9 +323,23 @@ onUnmounted(() => {
   }
 }
 
+@media (min-width: 1920px) {
+  .countdown-section {
+    padding: 112px var(--layout-gutter-wide, 80px) 120px;
+  }
+
+  .countdown-decor--left {
+    left: clamp(48px, 4vw, 96px);
+  }
+
+  .countdown-decor--right {
+    right: clamp(48px, 4vw, 96px);
+  }
+}
+
 @media (max-width: 900px) {
   .countdown-section {
-    padding: 56px 24px 72px;
+    padding: 56px var(--layout-gutter, 24px) 72px;
   }
 
   .countdown-decor svg {
@@ -337,7 +356,11 @@ onUnmounted(() => {
   }
 
   .countdown-label {
-    margin-bottom: 42px;
+    margin-bottom: 10px;
+  }
+
+  .countdown-caption {
+    margin-bottom: 32px;
   }
 
   .countdown-grid {
@@ -362,7 +385,12 @@ onUnmounted(() => {
 
   .countdown-label {
     padding: 14px 22px 12px;
-    margin-bottom: 34px;
+    margin-bottom: 8px;
+  }
+
+  .countdown-caption {
+    margin-bottom: 28px;
+    font-size: 15px;
   }
 
   .countdown-grid {

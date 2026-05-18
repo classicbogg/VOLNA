@@ -105,7 +105,7 @@ const toggleCards = () => {
 .in-program-section {
   position: relative;
   width: 100%;
-  padding: 92px 40px 100px;
+  padding: 92px var(--layout-gutter-wide, 40px) 100px;
   background: var(--color-in-program-bg);
   color: var(--color-in-program-text);
   overflow: hidden;
@@ -124,6 +124,7 @@ const toggleCards = () => {
 .in-program-heading {
   position: relative;
   width: fit-content;
+  max-width: 100%;
   margin: 0 0 58px;
   padding: 0 26px 18px 0;
 }
@@ -352,7 +353,7 @@ const toggleCards = () => {
 
 @media (max-width: 460px) {
   .in-program-heading h2 {
-    font-size: 42px;
+    font-size: clamp(36px, 11vw, 42px);
   }
 
   .in-program-card__image-wrap {
@@ -363,6 +364,29 @@ const toggleCards = () => {
     min-height: 52px;
     padding: 0 26px;
     font-size: 17px;
+  }
+}
+
+@media (max-width: 360px) {
+  .in-program-section {
+    padding: 60px 12px 68px;
+  }
+
+  .in-program-heading {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 32px;
+    padding: 0 0 14px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 320px) {
+  .in-program-toggle {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: 20px;
   }
 }
 </style>

@@ -40,16 +40,19 @@
   --hero-date-bg: var(--palette-peach);
   --hero-date-border: var(--volna-brand-gradient);
   --hero-date-text: var(--palette-navy);
-  --hero-date-place: var(--palette-purple);
+  --hero-date-place: var(--palette-pink);
+  --hero-date-accent: var(--volna-brand-mid);
+  --hero-date-accent-gradient: var(--volna-brand-gradient);
+  --hero-date-place-gradient: var(--hero-date-accent-gradient);
   --hero-date-shadow-offset: rgba(var(--palette-navy-rgb), 0.08);
   --hero-date-shadow: rgba(var(--palette-navy-rgb), 0.16);
 
   --hero-button-ring: var(--hero-date-border);
-  --hero-button-text: var(--hero-date-text);
-  --hero-button-text-hover: var(--hero-date-text);
+  --hero-button-text: var(--volna-brand-start);
+  --hero-button-text-hover: var(--palette-pink);
   --hero-button-wash-rgb: var(--hero-kicker-ink-rgb, 252, 82, 108);
-  --hero-button-fill: rgba(var(--palette-peach-rgb), 0.5);
-  --hero-button-fill-hover: rgba(var(--palette-peach-rgb), 0.68);
+  --hero-button-fill: transparent;
+  --hero-button-fill-hover: transparent;
   --hero-focus-outline: var(--palette-purple);
 
   --color-header-accent: var(--palette-orange);
@@ -137,21 +140,24 @@
   --hero-kicker-shadow-rgb: 252, 82, 108;
   --color-hero-kicker-end: var(--palette-navy-mid);
   --color-hero-line-accent: var(--palette-orange);
-  --color-hero-button-text: var(--palette-navy);
+  --color-hero-button-text: var(--volna-brand-start);
 
   --hero-date-bg: var(--palette-peach);
   --hero-date-border: var(--volna-brand-gradient);
   --hero-date-text: var(--palette-navy);
-  --hero-date-place: var(--palette-purple);
+  --hero-date-place: var(--palette-pink);
+  --hero-date-accent: var(--volna-brand-mid);
+  --hero-date-accent-gradient: var(--volna-brand-gradient);
+  --hero-date-place-gradient: var(--hero-date-accent-gradient);
   --hero-date-shadow-offset: rgba(var(--palette-navy-rgb), 0.08);
   --hero-date-shadow: rgba(var(--palette-navy-rgb), 0.16);
 
   --hero-button-ring: var(--hero-date-border);
-  --hero-button-text: var(--hero-date-text);
-  --hero-button-text-hover: var(--hero-date-text);
+  --hero-button-text: var(--volna-brand-start);
+  --hero-button-text-hover: var(--palette-pink);
   --hero-button-wash-rgb: var(--hero-kicker-ink-rgb, 252, 82, 108);
-  --hero-button-fill: rgba(var(--palette-peach-rgb), 0.5);
-  --hero-button-fill-hover: rgba(var(--palette-peach-rgb), 0.68);
+  --hero-button-fill: transparent;
+  --hero-button-fill-hover: transparent;
   --hero-focus-outline: var(--palette-purple);
 
   --color-hero-glitch: rgba(var(--palette-navy-rgb), 0.32);
@@ -286,6 +292,7 @@
   --color-speakers-more-shadow: rgba(var(--palette-navy-rgb), 0.16);
 
   --color-partners-section-bg: var(--palette-cream);
+  --color-partners-strip-bg: var(--palette-cream);
   --color-partners-heading: var(--palette-navy);
   --color-partners-marker: var(--palette-purple);
   --color-partners-card-bg: var(--palette-white);
@@ -355,21 +362,24 @@
   --color-hero-line2-shadow: rgba(var(--palette-peach-rgb), 0.2);
   --color-hero-line2-before: var(--palette-peach);
   --color-hero-line-accent: var(--palette-orange);
-  --color-hero-button-text: var(--palette-navy);
+  --color-hero-button-text: var(--palette-orange);
 
   --hero-date-bg: var(--palette-peach);
   --hero-date-border: var(--palette-white);
   --hero-date-text: var(--palette-cream);
-  --hero-date-place: var(--palette-peach);
+  --hero-date-place: var(--palette-pink);
+  --hero-date-accent: var(--volna-brand-mid);
+  --hero-date-accent-gradient: var(--volna-brand-gradient);
+  --hero-date-place-gradient: var(--hero-date-accent-gradient);
   --hero-date-shadow-offset: rgba(var(--palette-peach-rgb), 0.14);
   --hero-date-shadow: rgba(0, 0, 0, 0.28);
 
   --hero-button-ring: var(--hero-date-border);
-  --hero-button-text: var(--hero-date-text);
-  --hero-button-text-hover: var(--hero-date-text);
+  --hero-button-text: var(--palette-orange);
+  --hero-button-text-hover: var(--palette-orange);
   --hero-button-wash-rgb: var(--palette-cream-rgb);
-  --hero-button-fill: rgba(var(--palette-cream-rgb), 0.14);
-  --hero-button-fill-hover: rgba(var(--palette-cream-rgb), 0.24);
+  --hero-button-fill: transparent;
+  --hero-button-fill-hover: transparent;
   --hero-focus-outline: var(--palette-peach);
 
   --color-hero-decor-student: rgba(var(--palette-pink-rgb), 0.16);
@@ -510,6 +520,7 @@
   --color-speakers-more-shadow: rgba(0, 0, 0, 0.32);
 
   --color-partners-section-bg: var(--palette-navy);
+  --color-partners-strip-bg: var(--palette-navy);
   --color-partners-heading: var(--palette-cream);
   --color-partners-marker: var(--palette-peach);
   --color-partners-card-bg: var(--palette-cream);
@@ -558,6 +569,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: clip;
+  scrollbar-gutter: stable;
   color-scheme: light dark;
 }
 
@@ -571,6 +583,23 @@ html[data-theme='dark'] {
 
 :root {
   --site-header-offset: 92px;
+  --layout-gutter: clamp(16px, 4vw, 48px);
+  --layout-gutter-wide: clamp(24px, 5vw, 96px);
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --layout-gutter: clamp(40px, 3.2vw, 80px);
+    --layout-gutter-wide: clamp(48px, 4vw, 128px);
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --layout-gutter: 12px;
+    --layout-gutter-wide: 14px;
+    --site-header-offset: 84px;
+  }
 }
 
 body {

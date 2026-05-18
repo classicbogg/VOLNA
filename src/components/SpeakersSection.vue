@@ -4,15 +4,18 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 const AUTOPLAY_MS = 5000
 const CAROUSEL_GAP_PX = 16
 const MIN_CARD_WIDTH_DESKTOP_PX = 260
-const MIN_CARD_WIDTH_TABLET_PX = 220
-const MIN_CARD_WIDTH_MOBILE_PX = 200
+const MIN_CARD_WIDTH_TABLET_PX = 240
+const SINGLE_COLUMN_MAX_WIDTH = 560
+const TWO_COLUMN_MAX_WIDTH = 920
+const THREE_COLUMN_MAX_WIDTH = 1200
+const MAX_COLUMNS_DESKTOP = 4
 
-const getMinCardWidth = (viewportWidth) => {
-  if (viewportWidth <= 480) {
-    return MIN_CARD_WIDTH_MOBILE_PX
+const getMinCardWidth = (layoutWidth) => {
+  if (layoutWidth <= SINGLE_COLUMN_MAX_WIDTH) {
+    return layoutWidth
   }
 
-  if (viewportWidth <= 900) {
+  if (layoutWidth <= TWO_COLUMN_MAX_WIDTH) {
     return MIN_CARD_WIDTH_TABLET_PX
   }
 
@@ -22,11 +25,13 @@ const getMinCardWidth = (viewportWidth) => {
 const theme = ref('light')
 const activePage = ref(0)
 const slidesPerView = ref(1)
+const slideWidthPx = ref(0)
 const viewportRef = ref(null)
 let htmlObserver = null
 let bodyObserver = null
 let autoplayTimer = null
 let viewportResizeObserver = null
+let scrollRaf = null
 
 const speakers = [
   {
@@ -110,13 +115,13 @@ const visibleSpeakers = computed(() => {
 const visibleSpeakerLabel = computed(() => visibleSpeakers.value.map((speaker) => speaker.name).join(', '))
 
 const trackStyle = computed(() => {
-  const width = viewportRef.value?.clientWidth ?? 0
+  const width = measureLayoutWidth()
   const gap = getCarouselGap(width)
 
   return {
     '--slides-per-view': slidesPerView.value,
-    '--page-index': activePage.value,
     '--carousel-gap': `${gap}px`,
+    '--slide-width': slideWidthPx.value > 0 ? `${slideWidthPx.value}px` : '100%',
   }
 })
 
@@ -126,26 +131,118 @@ const isSpeakerVisible = (index) => {
   return index >= start && index < end
 }
 
-const getCarouselGap = (viewportWidth) => (viewportWidth <= 380 ? 12 : CAROUSEL_GAP_PX)
+const getCarouselGap = (layoutWidth) => (layoutWidth <= SINGLE_COLUMN_MAX_WIDTH ? 12 : CAROUSEL_GAP_PX)
+
+const measureLayoutWidth = () => {
+  const viewportWidth = viewportRef.value?.clientWidth ?? 0
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : viewportWidth
+
+  if (!viewportWidth && !screenWidth) {
+    return 0
+  }
+
+  if (!viewportWidth) {
+    return screenWidth
+  }
+
+  if (!screenWidth) {
+    return viewportWidth
+  }
+
+  return Math.min(viewportWidth, screenWidth)
+}
+
+const computeSlidesPerView = (layoutWidth) => {
+  if (!layoutWidth) {
+    return 1
+  }
+
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : layoutWidth
+
+  if (screenWidth <= SINGLE_COLUMN_MAX_WIDTH) {
+    return 1
+  }
+
+  const gap = getCarouselGap(layoutWidth)
+  const minCardWidth = getMinCardWidth(layoutWidth)
+  let perView = Math.max(1, Math.floor((layoutWidth + gap) / (minCardWidth + gap)))
+
+  if (screenWidth <= TWO_COLUMN_MAX_WIDTH) {
+    perView = Math.min(perView, 2)
+  } else if (screenWidth <= THREE_COLUMN_MAX_WIDTH) {
+    perView = Math.min(perView, 3)
+  } else {
+    perView = Math.min(perView, MAX_COLUMNS_DESKTOP)
+  }
+
+  return Math.min(totalSpeakers, perView)
+}
+
+const getPageScrollLeft = (page) => {
+  const gap = getCarouselGap(measureLayoutWidth())
+  const stride = slidesPerView.value * (slideWidthPx.value + gap)
+
+  if (!stride) {
+    return 0
+  }
+
+  return page * stride
+}
+
+const syncPageFromScroll = () => {
+  const viewport = viewportRef.value
+
+  if (!viewport || !slideWidthPx.value) {
+    return
+  }
+
+  const gap = getCarouselGap(viewport.clientWidth)
+  const stride = slidesPerView.value * (slideWidthPx.value + gap)
+
+  if (!stride) {
+    return
+  }
+
+  const page = Math.round(viewport.scrollLeft / stride)
+  activePage.value = Math.min(Math.max(0, page), pageCount.value - 1)
+}
+
+const onViewportScroll = () => {
+  if (scrollRaf) {
+    return
+  }
+
+  scrollRaf = requestAnimationFrame(() => {
+    scrollRaf = null
+    syncPageFromScroll()
+  })
+}
 
 const updateSlidesPerView = () => {
-  const width = viewportRef.value?.clientWidth ?? 0
+  const width = measureLayoutWidth()
   if (!width) {
     return
   }
 
+  const perView = computeSlidesPerView(width)
   const gap = getCarouselGap(width)
-  const minCardWidth = getMinCardWidth(width)
-  const perView = Math.min(
-    totalSpeakers,
-    Math.max(1, Math.floor((width + gap) / (minCardWidth + gap))),
-  )
-
   const previousPerView = slidesPerView.value
   const firstVisibleIndex = activePage.value * previousPerView
   slidesPerView.value = perView
+  slideWidthPx.value = (width - gap * (perView - 1)) / perView
+
   const newPageCount = Math.max(1, Math.ceil(totalSpeakers / perView))
   activePage.value = Math.min(Math.floor(firstVisibleIndex / perView), newPageCount - 1)
+
+  const viewport = viewportRef.value
+
+  if (viewport) {
+    viewport.scrollLeft = getPageScrollLeft(activePage.value)
+  }
+}
+
+const handleLayoutChange = () => {
+  updateSlidesPerView()
 }
 
 watch(pageCount, (count) => {
@@ -189,7 +286,19 @@ const normalizePage = (page) => {
 }
 
 const goToPage = (page) => {
-  activePage.value = normalizePage(page)
+  const normalized = normalizePage(page)
+  activePage.value = normalized
+
+  const viewport = viewportRef.value
+
+  if (!viewport) {
+    return
+  }
+
+  viewport.scrollTo({
+    left: getPageScrollLeft(normalized),
+    behavior: 'smooth',
+  })
 }
 
 const next = () => {
@@ -235,14 +344,16 @@ onMounted(async () => {
   updateTheme()
   await nextTick()
   updateSlidesPerView()
+  requestAnimationFrame(() => updateSlidesPerView())
   startAutoplay()
 
   if (viewportRef.value && typeof ResizeObserver !== 'undefined') {
-    viewportResizeObserver = new ResizeObserver(updateSlidesPerView)
+    viewportResizeObserver = new ResizeObserver(handleLayoutChange)
     viewportResizeObserver.observe(viewportRef.value)
-  } else {
-    window.addEventListener('resize', updateSlidesPerView)
   }
+
+  window.addEventListener('resize', handleLayoutChange)
+  window.addEventListener('orientationchange', handleLayoutChange)
 
   htmlObserver = new MutationObserver(updateTheme)
   htmlObserver.observe(document.documentElement, {
@@ -262,9 +373,14 @@ onMounted(async () => {
 onUnmounted(() => {
   stopAutoplay()
   viewportResizeObserver?.disconnect()
-  window.removeEventListener('resize', updateSlidesPerView)
+  window.removeEventListener('resize', handleLayoutChange)
+  window.removeEventListener('orientationchange', handleLayoutChange)
   htmlObserver?.disconnect()
   bodyObserver?.disconnect()
+
+  if (scrollRaf) {
+    cancelAnimationFrame(scrollRaf)
+  }
 })
 </script>
 
@@ -324,7 +440,7 @@ onUnmounted(() => {
           </svg>
         </button>
 
-        <div ref="viewportRef" class="speakers-carousel__viewport">
+        <div ref="viewportRef" class="speakers-carousel__viewport" @scroll.passive="onViewportScroll">
           <div class="speakers-carousel__track" :style="trackStyle">
             <article
               v-for="(speaker, index) in speakers"
@@ -399,15 +515,16 @@ onUnmounted(() => {
   --speakers-card-radius: 22px;
   --speakers-card-media-radius: 16px;
   --speakers-card-shadow: 0 10px 28px rgba(26, 43, 90, 0.1);
-  --speakers-nav-text: var(--color-speakers-more-text);
+  --speakers-nav-bg: var(--palette-cream);
+  --speakers-nav-icon: var(--palette-navy);
+  --speakers-nav-border: rgba(var(--palette-navy-rgb), 0.1);
+  --speakers-nav-shadow: 0 6px 20px rgba(var(--palette-navy-rgb), 0.12);
 
   position: relative;
   isolation: isolate;
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  padding: 104px 40px 120px;
+  width: 100%;
+  max-width: 100%;
+  padding: 104px var(--layout-gutter-wide, 40px) 120px;
   background: var(--speakers-section-bg);
   color: var(--speakers-heading);
   overflow-x: clip;
@@ -452,21 +569,28 @@ onUnmounted(() => {
 }
 
 .speakers-carousel__viewport {
-  container-type: inline-size;
-  container-name: speakers-carousel;
   width: 100%;
-  overflow: hidden;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
   border-radius: clamp(22px, 4vw, 30px);
-  contain: inline-size layout style;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.speakers-carousel__viewport::-webkit-scrollbar {
+  display: none;
 }
 
 .speakers-carousel__track {
   display: flex;
   align-items: stretch;
   gap: var(--carousel-gap, 16px);
-  transform: translate3d(calc(-100cqw * var(--page-index, 0)), 0, 0);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
+  width: max-content;
 }
 
 .speakers-carousel__nav {
@@ -480,15 +604,17 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 1px solid var(--speakers-nav-border);
   border-radius: 50%;
-  background: #fff;
-  color: var(--speakers-nav-text);
+  background: var(--speakers-nav-bg);
+  color: var(--speakers-nav-icon);
   cursor: pointer;
-  box-shadow: none;
+  box-shadow: var(--speakers-nav-shadow);
   transition:
     transform 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .speakers-carousel__nav--prev {
@@ -501,7 +627,9 @@ onUnmounted(() => {
 
 .speakers-carousel__nav:hover {
   transform: translateY(-50%) scale(1.05);
-  background: #fff;
+  background: var(--palette-white);
+  border-color: rgba(var(--palette-purple-rgb), 0.35);
+  box-shadow: 0 8px 24px rgba(var(--palette-navy-rgb), 0.16);
 }
 
 .speakers-carousel__nav:active {
@@ -569,23 +697,22 @@ onUnmounted(() => {
 
 .speaker-card {
   position: relative;
-  container-type: inline-size;
-  container-name: speaker-card;
-  flex: 0 0
-    calc(
-      (100cqw - (var(--slides-per-view, 1) - 1) * var(--carousel-gap, 16px)) / var(--slides-per-view, 1)
-    );
+  flex: 0 0 var(--slide-width, 280px);
+  width: var(--slide-width, 280px);
+  max-width: 100%;
   min-width: 0;
   height: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 2.5cqw, 16px);
-  padding: clamp(10px, 2.5cqw, 16px);
+  gap: 12px;
+  padding: 12px;
   border: none;
   border-radius: var(--speakers-card-radius);
   background: var(--speakers-card-surface);
   box-shadow: var(--speakers-card-shadow);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .speakers-section--dark {
@@ -594,6 +721,10 @@ onUnmounted(() => {
   --speakers-card-name: var(--palette-cream);
   --speakers-card-role: rgba(var(--palette-cream-rgb), 0.82);
   --speakers-card-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+  --speakers-nav-bg: var(--palette-cream);
+  --speakers-nav-icon: var(--palette-navy);
+  --speakers-nav-border: rgba(var(--palette-navy-rgb), 0.14);
+  --speakers-nav-shadow: 0 8px 26px rgba(0, 0, 0, 0.32);
 }
 
 .speaker-card__photo-wrap {
@@ -624,52 +755,95 @@ onUnmounted(() => {
 .speaker-card__info {
   display: flex;
   flex-direction: column;
-  gap: clamp(6px, 1vw, 8px);
-  padding: 0 clamp(2px, 0.6vw, 6px) clamp(2px, 0.6vw, 8px);
+  gap: 8px;
+  padding: 0 4px 4px;
   text-align: left;
+  min-width: 0;
 }
 
 .speaker-card__info h3 {
   margin: 0;
   color: var(--speakers-card-name);
-  font-size: clamp(15px, 7.5cqw, 22px);
-  line-height: 1.15;
+  font-size: clamp(17px, 4.2vw, 22px);
+  line-height: 1.2;
   font-weight: 800;
   letter-spacing: -0.03em;
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .speaker-card__info p {
   margin: 0;
   color: var(--speakers-card-role);
-  font-size: clamp(12px, 5.2cqw, 15px);
-  line-height: 1.38;
+  font-size: clamp(13px, 3.4vw, 15px);
+  line-height: 1.4;
   font-weight: 500;
   letter-spacing: -0.01em;
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
-@container speaker-card (max-width: 240px) {
-  .speaker-card__info p {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
+@media (min-width: 1920px) {
+  .speakers-section {
+    padding: 120px var(--layout-gutter-wide, 80px) 132px;
   }
 }
 
 @media (max-width: 900px) {
   .speakers-section {
-    padding: 80px 24px 92px;
+    padding: 80px var(--layout-gutter, 24px) 92px;
   }
 
   .speakers-heading {
     margin-bottom: 36px;
     padding: 26px 56px 32px;
   }
+}
 
+@media (max-width: 560px) {
+  .speakers-carousel {
+    padding-inline: 0;
+    gap: 10px;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    grid-template-rows: auto auto;
+    align-items: center;
+  }
+
+  .speakers-carousel__nav {
+    position: static;
+    transform: none;
+    width: 40px;
+    height: 40px;
+    grid-row: 1;
+  }
+
+  .speakers-carousel__nav--prev {
+    grid-column: 1;
+    justify-self: center;
+  }
+
+  .speakers-carousel__nav--next {
+    grid-column: 3;
+    justify-self: center;
+  }
+
+  .speakers-carousel__nav:hover,
+  .speakers-carousel__nav:active {
+    transform: scale(1.05);
+  }
+
+  .speakers-carousel__nav:active {
+    transform: scale(0.98);
+  }
+
+  .speakers-carousel__viewport {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+    scroll-snap-type: x mandatory;
+  }
 }
 
 @media (max-width: 600px) {
@@ -681,10 +855,6 @@ onUnmounted(() => {
     margin-bottom: 28px;
     padding: 26px clamp(20px, 6vw, 44px) 32px;
     max-width: 100%;
-  }
-
-  .speakers-carousel {
-    padding-inline: 36px;
   }
 
   .speakers-heading h2 {
@@ -741,13 +911,8 @@ onUnmounted(() => {
   }
 
   .speakers-heading {
-    padding-left: clamp(16px, 5vw, 34px);
-    padding-right: clamp(16px, 5vw, 34px);
-  }
-
-  .speakers-carousel {
-    padding-inline: 32px;
-    --carousel-gap: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .speakers-heading h2 {
@@ -770,8 +935,8 @@ onUnmounted(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .speakers-carousel__track {
-    transition-duration: 0.01ms;
+  .speakers-carousel__viewport {
+    scroll-behavior: auto;
   }
 
   .speakers-carousel__nav,

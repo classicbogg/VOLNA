@@ -18,8 +18,8 @@ import PartnersSection from './components/PartnersSection.vue'
     <HeroSection />
     <CountdownSection />
     <AudienceSection />
-    <SpeakersSection />
     <InProgramSection />
+    <SpeakersSection />
     <ProgramSection />
     <LocationSection />
     <PartnersSection/>

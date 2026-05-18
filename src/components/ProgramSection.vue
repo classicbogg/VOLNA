@@ -30,6 +30,8 @@
         </h2>
       </div>
 
+      <p class="program-date">29 мая 10:00</p>
+
       <div class="program-timeline">
         <div 
           v-for="(item, index) in programItems" 
@@ -97,7 +99,7 @@ const programItems = ref([
   {
     time: '14:45',
     title: 'Торжественное открытие форума',
-    description: 'Официальный старт третьего форума «Создай НАШЕ». Энергия зала, приветственные слова и настрой на большой день.',
+    description: 'Официальный старт форума ВОЛНА. Энергия зала, приветственные слова и настрой на большой день.',
     type: 'opening'
   },
   {
@@ -136,7 +138,7 @@ const programItems = ref([
   {
     time: '19:30',
     title: 'Завершение форума',
-    description: 'Закрытие третьего форума «Создай НАШЕ»',
+    description: 'Закрытие форума ВОЛНА',
     type: 'closing'
   }
 ])
@@ -146,7 +148,7 @@ const programItems = ref([
 .program-section {
   position: relative;
   width: 100%;
-  padding: 90px 40px 110px;
+  padding: 90px var(--layout-gutter-wide, 40px) 110px;
   background: var(--color-program-section-bg, var(--color-bg-soft));
   color: var(--color-program-heading, var(--color-text));
   transition:
@@ -255,6 +257,21 @@ const programItems = ref([
   text-transform: lowercase;
   letter-spacing: -0.08em;
   color: var(--color-program-heading, var(--color-text));
+}
+
+.program-date {
+  width: fit-content;
+  margin: -36px auto 40px;
+  padding: 12px 24px 11px;
+  border-radius: 999px;
+  background: var(--color-program-accent, var(--color-yellow));
+  color: var(--color-program-heading, var(--color-text));
+  font-size: clamp(18px, 2.4vw, 28px);
+  line-height: 1;
+  font-weight: 900;
+  text-transform: lowercase;
+  letter-spacing: -0.05em;
+  text-align: center;
 }
 
 .program-timeline {
@@ -387,10 +404,16 @@ const programItems = ref([
   margin-right: 6px;
 }
 
+@media (min-width: 1920px) {
+  .program-section {
+    padding: 104px var(--layout-gutter-wide, 80px) 120px;
+  }
+}
+
 /* Адаптивность */
 @media (max-width: 900px) {
   .program-section {
-    padding: 70px 24px 90px;
+    padding: 70px var(--layout-gutter, 24px) 90px;
   }
 
   .program-heading {
@@ -491,8 +514,17 @@ const programItems = ref([
   }
 
   .program-heading {
+    width: 100%;
+    max-width: 100%;
     padding: 12px 16px 16px;
     margin-bottom: 28px;
+    box-sizing: border-box;
+  }
+
+  .program-date {
+    max-width: calc(100% - 24px);
+    margin-inline: auto;
+    padding-inline: 18px;
   }
 
   .program-heading h2 {
@@ -504,8 +536,9 @@ const programItems = ref([
   }
 
   .program-note {
-    font-size: 10px;
+    font-size: 11px;
     padding: 14px 12px;
+    line-height: 1.35;
   }
 }
 </style>
