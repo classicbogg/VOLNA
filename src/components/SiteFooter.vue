@@ -1,0 +1,368 @@
+<template>
+  <footer class="footer">
+    <WaveDecor placement="left" size="sm" />
+    <WaveDecor placement="right" size="md" />
+    <WaveDecor placement="bottom" size="sm" />
+
+    <div class="footer-container">
+      <div class="footer-main">
+        <a class="footer-logo-wrap" href="#" :aria-label="logoAlt">
+          <img
+            :src="logoSrc"
+            :alt="logoAlt"
+            class="footer-logo"
+            width="520"
+            height="120"
+            decoding="async"
+            @error="onLogoError"
+          />
+        </a>
+
+        <p class="footer-tagline">
+          Форум молодых предпринимателей, где идеи превращаются в проекты,
+          а проекты — в реальные возможности.
+        </p>
+
+        <div class="footer-contacts-wrap">
+          <div class="footer-panel footer-contacts">
+            <h4>Контакты</h4>
+            <ul>
+              <li><a href="mailto:info@sozdainashe.ru">info@sozdainashe.ru</a></li>
+              <li><a href="tel:+74951234567">+7 (495) 123-45-67</a></li>
+              <li class="footer-address">
+                г. Сургут,<br>
+                проспект Пролетарский, 3
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">
+          © 2026 Форум ВОЛНА. Все права защищены.
+        </p>
+
+        <div class="footer-legal">
+          <a href="#privacy">Политика конфиденциальности</a>
+          <span class="footer-legal-separator" aria-hidden="true">|</span>
+          <a href="#terms">Условия использования</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</template>
+
+<script setup>
+import WaveDecor from './WaveDecor.vue'
+import { useVolnaLogo } from '../composables/useVolnaLogo'
+
+const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
+</script>
+
+<style scoped>
+.footer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  color: var(--color-footer-text);
+  background: linear-gradient(135deg, var(--color-footer-bg), var(--color-footer-bg-2));
+  border-top: 1px solid var(--color-footer-border);
+  isolation: isolate;
+}
+
+.footer-container {
+  position: relative;
+  z-index: 2;
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 72px var(--layout-gutter-wide, 56px) 40px;
+}
+
+.footer-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(22px, 3.5vw, 32px);
+  margin-bottom: 36px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--color-footer-border);
+  text-align: center;
+}
+
+.footer-logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: min(560px, 92vw);
+  margin-inline: auto;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.footer-logo-wrap:hover {
+  opacity: 0.92;
+  transform: scale(1.01);
+}
+
+.footer-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: clamp(52px, 10vw, 96px);
+  object-fit: contain;
+  object-position: center;
+}
+
+.footer-tagline {
+  margin: 0;
+  width: 100%;
+  max-width: min(40rem, 100%);
+  color: var(--color-footer-text-muted);
+  font-size: clamp(17px, 1.35vw, 22px);
+  line-height: 1.35;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+.footer-contacts-wrap {
+  width: 100%;
+  max-width: min(420px, 100%);
+  margin-inline: auto;
+}
+
+.footer-panel {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 22px 26px;
+  border: 1px solid var(--color-footer-border-strong);
+  border-radius: 24px;
+}
+
+.footer-contacts {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  background: var(--color-footer-card);
+}
+
+.footer-contacts h4 {
+  margin: 0 0 16px;
+  color: var(--color-footer-accent);
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 0.95;
+  font-weight: 900;
+  text-transform: lowercase;
+  letter-spacing: -0.06em;
+}
+
+.footer-contacts ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-contacts li {
+  margin: 0;
+}
+
+.footer-contacts a,
+.footer-address {
+  display: inline-block;
+  color: var(--color-footer-text-muted);
+  text-decoration: none;
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.4;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  transition: color 0.2s ease;
+}
+
+.footer-contacts a:hover {
+  color: var(--color-footer-accent);
+}
+
+.footer-address {
+  font-style: normal;
+}
+
+.footer-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px 24px;
+  width: 100%;
+  color: var(--color-footer-bottom);
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.footer-copyright {
+  margin: 0;
+}
+
+.footer-legal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-legal a {
+  color: var(--color-footer-bottom);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-legal a:hover {
+  color: var(--color-footer-accent);
+}
+
+.footer-legal-separator {
+  color: var(--color-footer-separator);
+}
+
+/* Планшет ~820px: декор не заходит на слоган и блок контактов */
+@media (max-width: 980px) and (min-width: 761px) {
+  .footer :deep(.wave-decor) {
+    opacity: 0.32;
+  }
+
+  .footer :deep(.wave-decor--right),
+  .footer :deep(.wave-decor--bottom) {
+    display: none;
+  }
+
+  .footer :deep(.wave-decor--left) {
+    left: max(-44px, -5.5vw);
+    top: auto;
+    bottom: 12%;
+    transform: rotate(-8deg);
+  }
+
+  .footer :deep(.wave-decor--sm .wave-decor__icon) {
+    width: clamp(44px, 6vw, 56px);
+  }
+
+  .footer-container {
+    padding: 64px var(--layout-gutter, 28px) 36px;
+  }
+
+  .footer-main {
+    gap: 24px;
+  }
+
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .footer-legal {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1180px) {
+  .footer-container {
+    padding: 64px 34px 36px;
+  }
+}
+
+@media (max-width: 760px) {
+  .footer :deep(.wave-decor) {
+    display: none;
+  }
+
+  .footer-panel {
+    padding: 20px 22px;
+  }
+
+  .footer-logo {
+    max-height: clamp(48px, 12vw, 72px);
+  }
+
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .footer-legal {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 680px) {
+  .footer-container {
+    padding: 56px 18px 32px;
+  }
+
+  .footer-main {
+    gap: 20px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+  }
+
+  .footer-tagline {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 420px) {
+  .footer-container {
+    padding: 48px 14px 28px;
+  }
+
+  .footer-panel {
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  .footer-contacts a,
+  .footer-address {
+    font-size: 15px;
+  }
+
+  .footer-bottom {
+    font-size: 12px;
+  }
+
+  .footer-legal {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-legal-separator {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-container {
+    padding: 44px 12px 24px;
+  }
+
+  .footer-panel {
+    padding: 16px;
+  }
+
+  .footer-tagline {
+    font-size: 16px;
+  }
+
+  .footer-contacts a,
+  .footer-address {
+    font-size: 14px;
+  }
+}
+</style>
