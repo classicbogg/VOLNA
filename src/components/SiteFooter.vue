@@ -23,18 +23,20 @@
           а проекты — в реальные возможности.
         </p>
 
-        <div class="footer-contacts-wrap">
-          <div class="footer-panel footer-contacts">
-            <h4>Контакты</h4>
-            <ul>
-              <li><a href="mailto:info@sozdainashe.ru">info@sozdainashe.ru</a></li>
-              <li><a href="tel:+74951234567">+7 (495) 123-45-67</a></li>
-              <li class="footer-address">
-                г. Сургут,<br>
-                проспект Пролетарский, 3
-              </li>
-            </ul>
-          </div>
+        <div class="footer-contacts">
+          <h4 class="footer-contacts__heading">Контакты</h4>
+          <ul class="footer-contacts__list">
+            <li>
+              <a href="mailto:sielom@yandex.ru">sielom@yandex.ru</a>
+            </li>
+            <li>
+              <a href="tel:+79935230421">+7 993 523 0421</a>
+            </li>
+            <li class="footer-contacts__address">
+              г. Сургут,
+              проспект Пролетарский, 3
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -126,68 +128,60 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   letter-spacing: -0.035em;
 }
 
-.footer-contacts-wrap {
-  width: 100%;
-  max-width: min(420px, 100%);
-  margin-inline: auto;
-}
-
-.footer-panel {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 22px 26px;
-  border: 1px solid var(--color-footer-border-strong);
-  border-radius: 24px;
-}
-
 .footer-contacts {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  text-align: left;
-  background: var(--color-footer-card);
+  align-items: center;
+  gap: clamp(12px, 2vw, 16px);
+  width: 100%;
+  max-width: min(36rem, 100%);
+  margin-inline: auto;
+  padding-top: clamp(4px, 1vw, 8px);
+  text-align: center;
 }
 
-.footer-contacts h4 {
-  margin: 0 0 16px;
+.footer-contacts__heading {
+  margin: 0;
   color: var(--color-footer-accent);
-  font-size: clamp(22px, 2vw, 28px);
-  line-height: 0.95;
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1;
   font-weight: 900;
   text-transform: lowercase;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.05em;
 }
 
-.footer-contacts ul {
+.footer-contacts__list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 12px);
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.footer-contacts li {
+.footer-contacts__list li {
   margin: 0;
 }
 
-.footer-contacts a,
-.footer-address {
+.footer-contacts__list a,
+.footer-contacts__address {
   display: inline-block;
   color: var(--color-footer-text-muted);
   text-decoration: none;
-  font-size: clamp(15px, 1.15vw, 17px);
-  line-height: 1.4;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.35;
   font-weight: 750;
   letter-spacing: -0.03em;
   transition: color 0.2s ease;
 }
 
-.footer-contacts a:hover {
+.footer-contacts__list a:hover {
   color: var(--color-footer-accent);
 }
 
-.footer-address {
+.footer-contacts__address {
+  margin-top: 4px;
   font-style: normal;
 }
 
@@ -242,7 +236,7 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   }
 
   .footer :deep(.wave-decor--left) {
-    left: max(-44px, -5.5vw);
+    left: max(12px, min(32px, 3.8vw));
     top: auto;
     bottom: 12%;
     transform: rotate(-8deg);
@@ -254,6 +248,16 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
   .footer-container {
     padding: 64px var(--layout-gutter, 28px) 36px;
+  }
+
+  .footer-tagline {
+    font-size: clamp(17px, 1.8vw, 20px);
+    line-height: 1.4;
+  }
+
+  .footer-contacts__list a,
+  .footer-contacts__address {
+    font-size: clamp(15px, 1.5vw, 17px);
   }
 
   .footer-main {
@@ -272,19 +276,36 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   }
 }
 
-@media (max-width: 1180px) {
+@media (min-width: 1025px) and (max-width: 1439px) {
   .footer-container {
-    padding: 64px 34px 36px;
+    width: min(1040px, 100%);
+    padding: 68px var(--layout-gutter-wide) 38px;
   }
 }
 
-@media (max-width: 760px) {
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .footer-container {
+    width: min(1200px, 100%);
+    padding: 72px var(--layout-gutter-wide) 40px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .footer-container {
+    width: min(1280px, 100%);
+    padding: 80px var(--layout-gutter-wide) 44px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .footer-container {
+    padding: 64px var(--layout-gutter-wide) 36px;
+  }
+}
+
+@media (max-width: 768px) {
   .footer :deep(.wave-decor) {
     display: none;
-  }
-
-  .footer-panel {
-    padding: 20px 22px;
   }
 
   .footer-logo {
@@ -304,7 +325,7 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
 @media (max-width: 680px) {
   .footer-container {
-    padding: 56px 18px 32px;
+    padding: 56px var(--layout-gutter) 32px;
   }
 
   .footer-main {
@@ -318,18 +339,24 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   }
 }
 
+@media (max-width: 480px) {
+  .footer-logo {
+    max-height: clamp(44px, 11vw, 60px);
+  }
+
+  .footer-tagline {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+}
+
 @media (max-width: 420px) {
   .footer-container {
-    padding: 48px 14px 28px;
+    padding: 48px var(--layout-gutter) 28px;
   }
 
-  .footer-panel {
-    border-radius: 20px;
-    padding: 18px;
-  }
-
-  .footer-contacts a,
-  .footer-address {
+  .footer-contacts__list a,
+  .footer-contacts__address {
     font-size: 15px;
   }
 
@@ -349,19 +376,15 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
 @media (max-width: 360px) {
   .footer-container {
-    padding: 44px 12px 24px;
-  }
-
-  .footer-panel {
-    padding: 16px;
+    padding: 44px var(--layout-gutter) 24px;
   }
 
   .footer-tagline {
     font-size: 16px;
   }
 
-  .footer-contacts a,
-  .footer-address {
+  .footer-contacts__list a,
+  .footer-contacts__address {
     font-size: 14px;
   }
 }

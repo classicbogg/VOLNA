@@ -8,7 +8,7 @@
 
 - Django backend в папке `backend/`.
 - DRF endpoint `POST /api/registrations/`.
-- Модель `Registration` для заявок.
+- Модель `Registration` для заявок с актуальными полями новой формы: ФИО, организация, направление обучения/должность, телефон, ВК и направление форума.
 - Django Admin для просмотра и фильтрации регистраций.
 - PostgreSQL-настройки через `.env`.
 - CORS/CSRF/ALLOWED_HOSTS/SECRET_KEY через переменные окружения.
@@ -112,20 +112,25 @@ POST /api/registrations/
 Content-Type: application/json
 ```
 
-Тело запроса:
+Тело запроса актуальной формы:
 
 ```json
 {
   "first_name": "Иван",
   "last_name": "Иванов",
   "patronymic": "Иванович",
-  "company": "ООО ВОЛНА",
+  "organization": "СИЭУиП",
+  "study_or_position": "Информационные системы",
   "phone": "+7 (999) 123-45-67",
-  "email": "ivanov@example.ru",
+  "vk_url": "https://vk.com/username",
+  "forum_direction": "tech",
+  "forum_direction_label": "Технологии и инновации",
   "info_consent": true,
   "personal_data_consent": true
 }
 ```
+
+Поле `forum_direction_label` принимается от frontend для совместимости интерфейса, но backend сам перепроверяет `forum_direction` и сохраняет корректное название направления. Старые поля `company` и `email` оставлены в модели как совместимые/исторические поля, чтобы миграция не была разрушительной для уже существующих данных.
 
 Успешный ответ:
 

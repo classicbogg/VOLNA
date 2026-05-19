@@ -1,103 +1,104 @@
-const DEFAULT_PATH = '/api/registrations/'
+/**
+ * Контракт для Django API (ожидаемый бэкенд):
+ * POST {baseUrl}/api/registrations/
+ * Content-Type: application/json
+ *
+ * Тело запроса (snake_case):
+ * {
+ *   last_name, first_name, patronymic?,
+ *   organization, study_or_position, phone, vk_url,
+ *   forum_direction, forum_direction_label,
+ *   info_consent, personal_data_consent
+ * }
+ */
 
-const FIELD_LIMITS = {
-  firstName: 80,
-  lastName: 80,
-  patronymic: 80,
-  company: 180,
-  phone: 32,
-  email: 254,
-}
+import { getForumDirectionLabel } from '@/data/forumDirections.js'
+
+const DEFAULT_PATH = '/api/registrations/'
 
 function getApiBaseUrl() {
   const base = import.meta.env.VITE_API_BASE_URL ?? ''
   return base.replace(/\/$/, '')
 }
 
-function normalizeText(value) {
-  return String(value ?? '').replace(/\s+/g, ' ').trim()
-}
+/**
+ * @typedef {Object} RegistrationFormData
+ * @property {string} lastName
+ * @property {string} firstName
+ * @property {string} [patronymic]
+ * @property {string} organization
+ * @property {string} studyOrPosition
+ * @property {string} phone
+ * @property {string} vkUrl
+ * @property {string} forumDirection
+ * @property {boolean} infoConsent
+ * @property {boolean} personalDataConsent
+ */
 
-function hasControlChars(value) {
-  return /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(value)
-}
-
-function hasHtml(value) {
-  return /<[^>]*>/.test(value)
-}
-
-function validateSafeText(value, label) {
-  if (hasControlChars(value) || hasHtml(value)) {
-    return { valid: false, message: `Поле «${label}» содержит недопустимые символы` }
-  }
-
-  return { valid: true }
-}
-
+/**
+ * @param {RegistrationFormData} form
+ * @returns {{ valid: boolean, message?: string }}
+ */
 export function validateRegistrationForm(form) {
   const required = [
-    ['firstName', 'Имя'],
     ['lastName', 'Фамилия'],
-    ['company', 'Компания / учебное заведение'],
+    ['firstName', 'Имя'],
+    ['organization', 'Учебное заведение / организация'],
+    ['studyOrPosition', 'Направления обучения / должность'],
     ['phone', 'Номер телефона'],
-    ['email', 'Электронная почта'],
+    ['vkUrl', 'Ссылка в ВК'],
+    ['forumDirection', 'Направление форума'],
   ]
 
   for (const [key, label] of required) {
-    if (!normalizeText(form[key])) {
+    if (!String(form[key] ?? '').trim()) {
       return { valid: false, message: `Заполните поле «${label}»` }
     }
-  }
-
-  const lengthChecks = [
-    ['firstName', 'Имя'],
-    ['lastName', 'Фамилия'],
-    ['patronymic', 'Отчество'],
-    ['company', 'Компания / учебное заведение'],
-    ['phone', 'Номер телефона'],
-    ['email', 'Электронная почта'],
-  ]
-
-  for (const [key, label] of lengthChecks) {
-    const value = normalizeText(form[key])
-    if (value.length > FIELD_LIMITS[key]) {
-      return { valid: false, message: `Поле «${label}» слишком длинное` }
-    }
-
-    const safe = validateSafeText(value, label)
-    if (!safe.valid) return safe
   }
 
   if (!form.infoConsent || !form.personalDataConsent) {
     return { valid: false, message: 'Нужно дать согласие на обработку данных' }
   }
 
-  const email = normalizeText(form.email)
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { valid: false, message: 'Укажите корректный адрес электронной почты' }
+  const vk = String(form.vkUrl).trim()
+  const vkOk = /(?:^https?:\/\/)?(?:www\.)?vk\.com\//i.test(vk)
+
+  if (!vkOk) {
+    return { valid: false, message: 'Укажите корректную ссылку на профиль ВКонтакте' }
   }
 
-  const phone = normalizeText(form.phone)
-  if (!/^\+?[0-9\s()\-]{7,32}$/.test(phone)) {
-    return { valid: false, message: 'Укажите корректный номер телефона' }
+  if (!getForumDirectionLabel(form.forumDirection)) {
+    return { valid: false, message: 'Выберите направление форума' }
   }
 
   return { valid: true }
 }
 
+/**
+ * @param {RegistrationFormData} form
+ */
 export function toRegistrationPayload(form) {
+  const forumDirection = form.forumDirection.trim()
+
   return {
-    first_name: normalizeText(form.firstName),
-    last_name: normalizeText(form.lastName),
-    patronymic: normalizeText(form.patronymic),
-    company: normalizeText(form.company),
-    phone: normalizeText(form.phone),
-    email: normalizeText(form.email).toLowerCase(),
+    last_name: form.lastName.trim(),
+    first_name: form.firstName.trim(),
+    patronymic: String(form.patronymic ?? '').trim(),
+    organization: form.organization.trim(),
+    study_or_position: form.studyOrPosition.trim(),
+    phone: form.phone.trim(),
+    vk_url: form.vkUrl.trim(),
+    forum_direction: forumDirection,
+    forum_direction_label: getForumDirectionLabel(forumDirection),
     info_consent: Boolean(form.infoConsent),
     personal_data_consent: Boolean(form.personalDataConsent),
   }
 }
 
+/**
+ * @param {unknown} body
+ * @returns {string}
+ */
 function parseApiError(body) {
   if (!body || typeof body !== 'object') {
     return 'Не удалось отправить заявку. Попробуйте позже.'
@@ -123,14 +124,20 @@ function parseApiError(body) {
     if (parts.length) return parts.join(' ')
   }
 
-  for (const value of Object.values(body)) {
-    if (Array.isArray(value) && value[0]) return String(value[0])
-    if (typeof value === 'string') return value
+  const firstKey = Object.keys(body)[0]
+  const firstVal = firstKey ? body[firstKey] : null
+  if (Array.isArray(firstVal) && firstVal[0]) {
+    return String(firstVal[0])
   }
 
   return 'Не удалось отправить заявку. Попробуйте позже.'
 }
 
+/**
+ * @param {RegistrationFormData} form
+ * @param {{ signal?: AbortSignal }} [options]
+ * @returns {Promise<{ ok: true, data: unknown } | { ok: false, message: string }>}
+ */
 export async function submitRegistration(form, options = {}) {
   const validation = validateRegistrationForm(form)
   if (!validation.valid) {
@@ -166,7 +173,6 @@ export async function submitRegistration(form, options = {}) {
     if (error?.name === 'AbortError') {
       return { ok: false, message: 'Отправка отменена' }
     }
-
     return {
       ok: false,
       message: 'Сервер недоступен. Проверьте подключение и попробуйте снова.',

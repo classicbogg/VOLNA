@@ -11,9 +11,12 @@ class RegistrationApiTests(TestCase):
             'first_name': 'Иван',
             'last_name': 'Иванов',
             'patronymic': 'Иванович',
-            'company': 'ООО ВОЛНА',
+            'organization': 'СИЭУиП',
+            'study_or_position': 'Информационные системы',
             'phone': '+7 (999) 123-45-67',
-            'email': 'ivanov@example.ru',
+            'vk_url': 'https://vk.com/ivanov_test',
+            'forum_direction': 'tech',
+            'forum_direction_label': 'Технологии и инновации',
             'info_consent': True,
             'personal_data_consent': True,
         }
@@ -23,8 +26,12 @@ class RegistrationApiTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Registration.objects.count(), 1)
+        registration = Registration.objects.first()
+        self.assertEqual(registration.organization, 'СИЭУиП')
+        self.assertEqual(registration.study_or_position, 'Информационные системы')
+        self.assertEqual(registration.forum_direction, 'tech')
         self.assertNotIn('phone', response.data)
-        self.assertNotIn('email', response.data)
+        self.assertNotIn('vk_url', response.data)
 
     def test_registration_requires_personal_data_consent(self):
         payload = {**self.payload, 'personal_data_consent': False}
@@ -33,7 +40,7 @@ class RegistrationApiTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(Registration.objects.count(), 0)
 
-    def test_duplicate_email_rejected(self):
+    def test_duplicate_vk_url_rejected(self):
         self.client.post('/api/registrations/', self.payload, format='json')
         response = self.client.post('/api/registrations/', self.payload, format='json')
 

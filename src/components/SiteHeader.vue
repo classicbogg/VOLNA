@@ -9,50 +9,42 @@
     <div ref="headerShellRef" class="site-header__wrap">
       <div class="site-header__cluster">
         <div class="site-header__bar">
-        <a class="site-header__brand" href="#" :aria-label="logoAlt" @click="closeMenu">
-          <img
-            class="site-header__logo"
-            :src="logoSrc"
-            :alt="logoAlt"
-            width="605"
-            height="219"
-            decoding="async"
-            @error="onLogoError"
-          />
-          <img
-            class="site-header__emblem"
-            :src="sielomEmblemUrl"
-            alt="Символ СиелоМ"
-            width="120"
-            height="120"
-            decoding="async"
-          />
-        </a>
+          <a class="site-header__brand" href="#" :aria-label="logoAlt" @click="closeMenu">
+            <img
+              class="site-header__logo"
+              :src="logoSrc"
+              :alt="logoAlt"
+              width="605"
+              height="219"
+              decoding="async"
+              @error="onLogoError"
+            />
+          </a>
 
-        <div class="site-header__end">
-          <nav class="site-header__nav" aria-label="Главная навигация">
-            <a href="#program" @click="closeMenu">В программе</a>
-            <a href="#speakers" @click="closeMenu">Спикеры</a>
-            <a href="#schedule" @click="closeMenu">Программа</a>
-            <a href="#partners" @click="closeMenu">Партнёры</a>
-            <a href="#contacts" @click="closeMenu">Как добраться</a>
-          </nav>
+          <div class="site-header__end">
+            <nav class="site-header__nav" aria-label="Главная навигация">
+              <a href="#program" @click="closeMenu">В программе</a>
+              <a href="#speakers" @click="closeMenu">Спикеры</a>
+              <a href="#directions" @click="closeMenu">Направления</a>
+              <a href="#partners" @click="closeMenu">Партнёры</a>
+              <a href="#contacts" @click="closeMenu">Как добраться</a>
+            </nav>
 
-          <div class="site-header__tools">
-            <button
-              class="site-header__burger"
-            :class="{ 'site-header__burger--active': menuOpen }"
-            type="button"
-            aria-label="Открыть меню"
-            :aria-expanded="menuOpen"
-            @click="toggleMenu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-            </button>
+            <div class="site-header__tools">
+              <button
+                class="site-header__burger"
+                :class="{ 'site-header__burger--active': menuOpen }"
+                type="button"
+                aria-label="Открыть меню"
+                :aria-expanded="menuOpen"
+                @click="toggleMenu"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            </div>
           </div>
-        </div>
         </div>
 
         <button
@@ -80,13 +72,13 @@
         <nav class="site-header__mobile-nav" aria-label="Мобильная навигация">
           <a href="#program" @click="closeMenu">В программе</a>
           <a href="#speakers" @click="closeMenu">Спикеры</a>
-          <a href="#schedule" @click="closeMenu">Программа форума</a>
+          <a href="#directions" @click="closeMenu">Направления</a>
           <a href="#partners" @click="closeMenu">Партнёры</a>
           <a href="#contacts" @click="closeMenu">Как добраться</a>
         </nav>
 
         <div class="site-header__mobile-bottom">
-          <span>ЦДП, Москва</span>
+          <span>Сургут, проспект Пролетарский, 3</span>
         </div>
       </div>
     </div>
@@ -97,7 +89,6 @@
 import { h, onMounted, onUnmounted, ref } from 'vue'
 import { useTheme } from '../composables/useTheme'
 import { useVolnaLogo } from '../composables/useVolnaLogo'
-import sielomEmblemUrl from '../assets/sielom.svg'
 
 const ThemeIcon = (props) => {
   if (props.isDark) {
@@ -271,51 +262,29 @@ onUnmounted(() => {
   max-height: clamp(40px, 5.2vw, 48px);
 }
 
-.site-header__emblem {
-  display: block;
-  flex-shrink: 0;
-  width: auto;
-  height: clamp(48px, 5vw, 64px);
-  max-width: min(64px, 12vw);
-  object-fit: contain;
-  object-position: center;
-}
-
-[data-theme='light'] .site-header__emblem {
-  filter: brightness(0);
-}
-
-[data-theme='dark'] .site-header__emblem {
-  filter: brightness(0) invert(1);
-}
-
-.site-header--scrolled .site-header__emblem {
-  height: clamp(40px, 4.2vw, 50px);
-}
-
 .site-header__end {
   flex: 1;
   min-width: 0;
   margin-left: clamp(8px, 1.2vw, 16px);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: clamp(12px, 2vw, 28px);
+  justify-content: center;
+  gap: clamp(12px, 1.8vw, 24px);
 }
 
 .site-header__nav {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: nowrap;
-  gap: clamp(4px, 0.6vw, 10px);
-  padding-inline: clamp(4px, 1vw, 16px);
+  gap: clamp(26px, 3.1vw, 54px);
+  padding-inline: clamp(8px, 1.4vw, 20px);
 }
 
 .site-header__nav a {
-  flex: 1 1 0;
+  flex: 0 0 auto;
   min-width: 0;
   text-align: center;
   color: var(--header-nav-link);
@@ -325,11 +294,15 @@ onUnmounted(() => {
   font-weight: 600;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .site-header__nav a:hover {
   color: var(--header-nav-link-hover);
+  transform: translateY(-1px);
 }
 
 .site-header__tools {
@@ -431,11 +404,11 @@ onUnmounted(() => {
   transform: rotate(-45deg);
 }
 
-/* Mobile menu */
 .site-header__mobile {
   position: fixed;
   inset: 0;
   z-index: 999;
+  overflow: clip;
   background: transparent;
   opacity: 0;
   visibility: hidden;
@@ -539,13 +512,66 @@ onUnmounted(() => {
 .site-header__mobile-bottom > span {
   font-size: 18px;
   font-weight: 800;
-  color: var(--palette-peach);
+  color: var(--header-nav-link);
+}
+
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .site-header__wrap {
+    max-width: 1400px;
+    padding-inline: var(--layout-gutter-wide);
+  }
+
+  .site-header__bar {
+    min-height: 80px;
+    padding-inline: clamp(20px, 2.4vw, 36px);
+  }
+
+  .site-header__nav {
+    gap: clamp(18px, 1.8vw, 32px);
+  }
+
+  .site-header__nav a {
+    font-size: clamp(14px, 0.95vw, 16px);
+  }
+
+  .site-header__logo {
+    max-width: min(188px, 22vw);
+    max-height: 50px;
+  }
+
+  .site-header__theme {
+    width: 72px;
+    min-height: 72px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .site-header__wrap {
+    max-width: 1720px;
+    padding-inline: var(--layout-gutter-wide);
+  }
+}
+
+@media (max-width: 1360px) {
+  .site-header__nav {
+    gap: clamp(20px, 2.5vw, 40px);
+  }
 }
 
 @media (max-width: 1200px) {
   .site-header__bar {
     padding-inline: clamp(12px, 2vw, 28px);
     gap: 10px;
+  }
+
+  .site-header__end {
+    margin-left: 6px;
+    gap: 10px;
+  }
+
+  .site-header__nav {
+    gap: clamp(16px, 2vw, 30px);
+    padding-inline: 6px;
   }
 
   .site-header__nav a {
@@ -559,6 +585,38 @@ onUnmounted(() => {
   }
 }
 
+@media (max-width: 1024px) {
+  .site-header__wrap {
+    padding-inline: var(--layout-gutter-wide);
+  }
+
+  .site-header__bar {
+    justify-content: space-between;
+  }
+
+  .site-header__end {
+    flex: 0 0 auto;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .site-header__logo {
+    max-width: min(168px, 26vw);
+    max-height: 44px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 641px) {
+  .site-header__cluster {
+    gap: 10px;
+  }
+
+  .site-header__theme {
+    width: 68px;
+    min-height: 68px;
+  }
+}
+
 @media (max-width: 960px) {
   .site-header__nav {
     display: none;
@@ -569,7 +627,6 @@ onUnmounted(() => {
   }
 
   .site-header__end {
-    flex: 0 0 auto;
     gap: 4px;
   }
 }
@@ -600,11 +657,6 @@ onUnmounted(() => {
   .site-header__logo {
     max-width: min(128px, 36vw);
     max-height: 40px;
-  }
-
-  .site-header__emblem {
-    height: 38px;
-    max-width: 38px;
   }
 
   .site-header__theme {
@@ -655,9 +707,25 @@ onUnmounted(() => {
   }
 }
 
+@media (max-width: 480px) {
+  .site-header__bar {
+    min-height: 60px;
+  }
+
+  .site-header__theme {
+    width: 60px;
+    min-height: 60px;
+  }
+
+  .site-header__burger {
+    width: 50px;
+    height: 50px;
+  }
+}
+
 @media (max-width: 380px) {
   .site-header__wrap {
-    padding: 6px 8px 0;
+    padding: 6px var(--layout-gutter) 0;
     padding-top: max(6px, env(safe-area-inset-top, 0px));
   }
 
@@ -675,11 +743,6 @@ onUnmounted(() => {
   .site-header__logo {
     max-width: min(108px, 34vw);
     max-height: 36px;
-  }
-
-  .site-header__emblem {
-    height: 32px;
-    max-width: 32px;
   }
 
   .site-header__theme {

@@ -27,7 +27,7 @@ services:
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     volumes:
@@ -45,7 +45,13 @@ services:
     working_dir: /app
     env_file:
       - .env
-    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    environment:
+      NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+      NPM_CONFIG_AUDIT: "false"
+      NPM_CONFIG_FUND: "false"
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      CHOKIDAR_USEPOLLING: "true"
+    command: sh -c "npm ci --no-audit --no-fund --legacy-peer-deps && npm run dev -- --host 0.0.0.0"
     ports:
       - "5173:5173"
     volumes:

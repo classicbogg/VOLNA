@@ -66,30 +66,35 @@ const showAllCards = ref(false)
 
 const programCards = [
   {
+    title: 'Предпринимательская игра',
+    text: 'Интерактивный бизнес-симулятор, который моделирует рыночные условия, распределение ресурсов и принятие управленческих решений',
+    image: '/program_card_bg_6.jpg',
+  },
+  {
     title: 'Выступления спикеров',
-    text: 'Практический опыт от предпринимателей, которые уже прошли путь от идеи до результата',
-    image: '/program_card_bg_5.png'
+    text: 'Практический опыт от действующих предпринимателей, которые уже прошли путь от идеи до результата',
+    image: '/program_card_bg_4.jpg',
   },
   {
-    title: 'Награждение победителей Конкурса «Создай НAШЕ»',
-    text: 'Лучшие проекты получат признание экспертного сообщества и поддержку для развития',
-    image: '/program_card_bg_1.png'
+    title: 'Консультации экспертов',
+    text: 'Встречи с экспертами, которые дадут рекомендации по развитию проекта, поиску финансирования и масштабированию дела',
+    image: '/program_card_bg_2.jpg',
   },
   {
-    title: 'Консультации менторов',
-    text: 'Индивидуальные сессии с экспертами, которые дадут конкретные шаги именно для вашей ситуации',
-    image: '/program_card_bg_2.png'
+    title: 'Выставка проектов',
+    text: 'Зона презентации бизнес-идей и стартапов участников форума с возможностью получения обратной связи, консультаций по мерам поддержки',
+    image: '/program_card_bg_1.jpg',
   },
   {
-    title: 'Зона «нетворкинг» с модератором',
-    text: 'Возможность расширения сети контактов в интерактивном формате будет доступна в течение всего времени проведения форума',
-    image: '/program_card_bg_3.png'
+    title: 'Круглые столы',
+    text: 'Дискуссионные встречи, посвящённые актуальным вопросам развития предпринимательства и отраслевым трендам',
+    image: '/program_card_bg_3.jpg',
   },
   {
-    title: 'Зона «Вайб-кодинг здесь и сейчас»',
-    text: 'Эксперт в режиме реальной демонстрации создаст цифровой продукт с нуля, используя языковые модели и no-code-решения',
-    image: '/program_card_bg_4.png'
-  }
+    title: 'Нетворкинг зона',
+    text: 'Возможность расширения сети контактов в интерактивном формате на протяжении всего форума',
+    image: '/program_card_bg_5.jpg',
+  },
 ]
 
 const visibleCards = computed(() => {
@@ -123,10 +128,8 @@ const toggleCards = () => {
 
 .in-program-heading {
   position: relative;
-  width: fit-content;
-  max-width: 100%;
   margin: 0 0 58px;
-  padding: 0 26px 18px 0;
+  padding: 0 clamp(12px, 3vw, 26px) 18px;
 }
 
 .in-program-heading h2 {
@@ -134,7 +137,6 @@ const toggleCards = () => {
   z-index: 2;
   margin: 0;
   color: var(--color-in-program-text);
-  font-size: clamp(46px, 5.4vw, 78px);
   line-height: 0.9;
   font-weight: 900;
   text-transform: lowercase;
@@ -240,6 +242,7 @@ const toggleCards = () => {
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-width: 0;
   min-height: 188px;
   margin-top: -28px;
   padding: 28px 24px 30px;
@@ -249,12 +252,17 @@ const toggleCards = () => {
 }
 
 .in-program-card__content h3 {
+  width: 100%;
+  max-width: 100%;
   margin: 0 0 16px;
   color: var(--color-in-program-card-content-text, var(--color-in-program-text));
   font-size: clamp(24px, 1.8vw, 31px);
   line-height: 1.12;
   font-weight: 900;
   letter-spacing: -0.045em;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .in-program-card__content p {
@@ -300,19 +308,95 @@ const toggleCards = () => {
   box-shadow: 5px 5px 0 rgba(var(--color-in-program-accent-rgb), 0.24);
 }
 
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .in-program-section {
+    padding: 84px var(--layout-gutter-wide) 92px;
+  }
+
+  .in-program-container {
+    width: min(1280px, 100%);
+  }
+
+  .in-program-heading {
+    margin-bottom: 48px;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .in-program-container {
+    width: min(1540px, 100%);
+  }
+
+}
+
+@media (min-width: 1920px) {
+  .in-program-section {
+    padding: 96px var(--layout-gutter-wide) 104px;
+  }
+
+}
+
 @media (max-width: 1200px) {
   .in-program-section {
-    padding: 82px 28px 90px;
+    padding: 82px var(--layout-gutter-wide) 90px;
   }
 
   .in-program-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 22px;
   }
 }
 
-@media (max-width: 760px) {
+@media (min-width: 1201px) and (max-width: 1439px) {
+  .in-program-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px 24px;
+  }
+
+  .in-program-card {
+    min-height: 420px;
+  }
+
+  .in-program-card__image-wrap {
+    height: 248px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 761px) {
   .in-program-section {
-    padding: 68px 18px 76px;
+    padding: 76px var(--layout-gutter-wide) 84px;
+  }
+
+  .in-program-heading {
+    margin-bottom: 44px;
+  }
+
+  .in-program-card {
+    min-height: 400px;
+    border-radius: 24px;
+  }
+
+  .in-program-card__image-wrap {
+    height: 220px;
+  }
+
+  .in-program-card__content {
+    min-height: 168px;
+    padding: 26px 22px 28px;
+  }
+
+  .in-program-card__content h3 {
+    font-size: clamp(22px, 2.2vw, 28px);
+  }
+
+  .in-program-card__content p {
+    font-size: clamp(16px, 1.5vw, 19px);
+  }
+}
+
+@media (max-width: 768px) {
+  .in-program-section {
+    padding: 68px var(--layout-gutter) 76px;
   }
 
   .in-program-heading {
@@ -345,39 +429,69 @@ const toggleCards = () => {
     padding: 25px 20px 26px;
   }
 
+  .in-program-card__content h3 {
+    font-size: clamp(20px, 5.4vw, 24px);
+    line-height: 1.14;
+    letter-spacing: -0.04em;
+  }
+
   .in-program-card__content p {
     font-size: 16px;
     line-height: 1.42;
   }
 }
 
-@media (max-width: 460px) {
-  .in-program-heading h2 {
-    font-size: clamp(36px, 11vw, 42px);
+@media (max-width: 480px) {
+  .in-program-section {
+    padding: 60px var(--layout-gutter) 68px;
   }
 
+  .in-program-heading {
+    margin-bottom: 32px;
+  }
+
+}
+
+@media (max-width: 460px) {
   .in-program-card__image-wrap {
-    height: 200px;
+    height: 190px;
+  }
+
+  .in-program-card__content {
+    min-height: 140px;
+    padding: 22px 18px 24px;
+  }
+
+  .in-program-card__content h3 {
+    font-size: clamp(18px, 5.6vw, 22px);
+    line-height: 1.16;
+    letter-spacing: -0.035em;
+  }
+
+  .in-program-card__content p {
+    font-size: 15px;
   }
 
   .in-program-toggle {
-    min-height: 52px;
-    padding: 0 26px;
-    font-size: 17px;
+    min-height: 48px;
+    padding: 0 22px;
+    font-size: 16px;
   }
 }
 
 @media (max-width: 360px) {
   .in-program-section {
-    padding: 60px 12px 68px;
+    padding: 60px var(--layout-gutter) 68px;
   }
 
   .in-program-heading {
-    width: 100%;
-    max-width: 100%;
     margin-bottom: 32px;
     padding: 0 0 14px;
     box-sizing: border-box;
+  }
+
+  .in-program-card__content h3 {
+    font-size: clamp(17px, 5.2vw, 20px);
   }
 }
 

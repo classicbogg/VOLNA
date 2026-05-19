@@ -1,6 +1,13 @@
 .git
+.gitignore
+.vscode
 node_modules
 dist
+coverage
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
 backend/.venv
 backend/media
 backend/staticfiles

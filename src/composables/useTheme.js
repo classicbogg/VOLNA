@@ -15,6 +15,7 @@ export function getStoredTheme() {
 
 export function applyTheme(value) {
   document.documentElement.setAttribute('data-theme', value)
+  document.documentElement.style.colorScheme = value === 'dark' ? 'only dark' : 'only light'
 }
 
 export function initTheme() {

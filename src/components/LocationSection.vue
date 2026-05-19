@@ -7,23 +7,8 @@
     <div class="route-container">
       <div class="route-heading">
         <h2>
-          <span class="phrase-marker">
-            <span class="phrase-marker__text">как добраться до корпуса</span>
-            <svg
-              class="phrase-marker__svg"
-              viewBox="0 0 760 190"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M70 112C65 63 126 31 230 20C356 7 580 1 674 39C750 70 711 128 609 150C490 176 262 174 128 150C47 136 15 96 51 64"
-                stroke="currentColor"
-                stroke-width="8"
-                stroke-linecap="round"
-              />
-            </svg>
-          </span>
+          <span class="route-heading__line">место</span>
+          <span class="route-heading__line">проведения</span>
         </h2>
       </div>
 
@@ -32,7 +17,7 @@
 
           <iframe
             class="route-map"
-            title="Карта: СИЭУиП институт, проспект Пролетарский, 3, Сургут"
+            title="Карта: институт экономики, управления и права, проспект Пролетарский, 3, Сургут"
             src="https://www.openstreetmap.org/export/embed.html?bbox=73.435845%2C61.250863%2C73.439845%2C61.254863&layer=mapnik&marker=61.252863%2C73.437845"
             loading="lazy"
           ></iframe>
@@ -42,8 +27,8 @@
           <div class="route-badge">Локация</div>
 
           <h3 class="route-info-card__title">
-            <span class="route-info-card__title-abbr">СИЭУиП</span>
-            <span class="route-info-card__title-name">институт</span>
+            <span class="route-info-card__title-line">Сургутский институт</span>
+            <span class="route-info-card__title-line">экономики, управления и права</span>
           </h3>
 
           <p>
@@ -51,8 +36,8 @@
           </p>
 
           <p>
-            Доберитесь на общественном транспорте или такси до здания с адресом
-            проспект Пролетарский, 3. Ориентир — СИЭУиП институт на карте.
+            Структурное подразделение №7 педагогических и информационных технологий,
+            с современным оснащением и большим конференц-залом.
           </p>
 
           <div class="route-actions">
@@ -63,15 +48,6 @@
               rel="noopener noreferrer"
             >
               открыть в картах
-            </a>
-
-            <a
-              class="route-button route-button--ghost"
-              href="https://www.openstreetmap.org/?mlat=61.252863&mlon=73.437845#map=19/61.252863/73.437845"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              маршрут
             </a>
           </div>
         </article>
@@ -86,12 +62,19 @@ import WaveDecor from './WaveDecor.vue'
 
 <style scoped>
 .route-section {
+  --route-card-shadow-hard: 6px 8px 0 rgba(var(--palette-navy-rgb), 0.12);
+  --route-card-shadow-soft: 0 18px 36px rgba(var(--palette-navy-rgb), 0.1);
   position: relative;
   width: 100%;
   padding: 96px var(--layout-gutter-wide, 40px) 112px;
   background: var(--color-bg);
   color: var(--color-text);
   overflow: hidden;
+}
+
+:global(html[data-theme='dark']) .route-section {
+  --route-card-shadow-hard: 6px 8px 0 rgba(0, 0, 0, 0.22);
+  --route-card-shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.26);
 }
 
 .route-pixels {
@@ -192,9 +175,8 @@ import WaveDecor from './WaveDecor.vue'
 
 .route-heading {
   position: relative;
-  width: fit-content;
   margin: 0 auto 64px;
-  padding: 34px 68px 38px;
+  padding: 34px clamp(16px, 5vw, 68px) 38px;
 }
 
 .route-heading h2 {
@@ -202,12 +184,21 @@ import WaveDecor from './WaveDecor.vue'
   z-index: 2;
   margin: 0;
   color: var(--color-text);
-  font-size: clamp(46px, 6.5vw, 92px);
-  line-height: 0.9;
+  line-height: 1;
   font-weight: 900;
   text-align: center;
   text-transform: lowercase;
   letter-spacing: -0.08em;
+}
+
+.route-heading__line {
+  display: block;
+  white-space: nowrap;
+  line-height: 1.06;
+}
+
+.route-heading__line + .route-heading__line {
+  margin-top: 0.03em;
 }
 
 .route-layout {
@@ -225,9 +216,7 @@ import WaveDecor from './WaveDecor.vue'
   border-radius: 34px;
   overflow: hidden;
   background: var(--color-surface-card);
-  box-shadow:
-    12px 12px 0 rgba(var(--color-accent-rgb), 0.35),
-    0 24px 46px var(--color-shadow);
+  box-shadow: var(--route-card-shadow-hard), var(--route-card-shadow-soft);
 }
 
 .route-map-card {
@@ -257,7 +246,10 @@ import WaveDecor from './WaveDecor.vue'
 }
 
 .route-info-card {
-  padding: 48px 42px 44px;
+  --route-card-pad-x: 42px;
+  container-type: inline-size;
+  container-name: route-info-card;
+  padding: 48px var(--route-card-pad-x) 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -330,32 +322,38 @@ import WaveDecor from './WaveDecor.vue'
 }
 
 .route-info-card__title {
+  --route-title-chars: 19.4;
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.22em;
+  display: grid;
+  gap: 0.14em;
+  width: 100%;
+  max-width: 100%;
   margin: 0 0 26px;
-  padding-right: clamp(56px, 14vw, 84px);
+  padding-right: 0;
   color: var(--color-text);
-  font-size: clamp(40px, 4.6vw, 68px);
-  line-height: 0.95;
+  font-size: clamp(13px, 2.6vw, 36px);
+  line-height: 1.1;
   font-weight: 900;
   text-transform: none;
-  letter-spacing: -0.06em;
-}
-
-.route-info-card__title-abbr {
-  font-size: 1em;
-  line-height: 0.92;
-}
-
-.route-info-card__title-name {
-  font-size: 0.58em;
-  line-height: 1.1;
-  font-weight: 850;
   letter-spacing: -0.04em;
+}
+
+.route-info-card__title-line {
+  display: block;
+  white-space: nowrap;
+}
+
+@supports (width: 1cqw) {
+  @container route-info-card (width >= 0) {
+    .route-info-card__title {
+      font-size: clamp(
+        13px,
+        calc((100cqw - 2 * var(--route-card-pad-x)) / var(--route-title-chars)),
+        36px
+      );
+    }
+  }
 }
 
 .route-info-card p {
@@ -405,35 +403,60 @@ import WaveDecor from './WaveDecor.vue'
   border: 2px solid var(--color-yellow);
 }
 
-.route-button--ghost {
-  background: transparent;
-  color: var(--color-text);
-  border: 2px solid rgba(var(--color-accent-rgb), 0.75);
-}
-
 .route-button:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 30px rgba(var(--color-accent-rgb), 0.12);
 }
 
-.route-button--ghost:hover {
-  background: var(--color-yellow);
-  color: var(--color-purple);
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .route-section {
+    padding: 88px var(--layout-gutter-wide) 100px;
+  }
+
+  .route-container {
+    width: min(1280px, 100%);
+  }
+
+  .route-heading {
+    margin-bottom: 52px;
+    padding: 30px 56px 34px;
+  }
+
+  .route-layout {
+    gap: 30px;
+  }
+
+  .route-map-card,
+  .route-info-card {
+    min-height: 480px;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .route-container {
+    width: min(1440px, 100%);
+  }
+
 }
 
 @media (min-width: 1920px) {
   .route-section {
     padding: 108px var(--layout-gutter-wide, 80px) 124px;
   }
+
+  .route-container {
+    width: min(1520px, 100%);
+  }
 }
 
 @media (max-width: 1050px) {
   .route-section {
-    padding: 82px var(--layout-gutter, 28px) 96px;
+    padding: 82px var(--layout-gutter-wide, 28px) 96px;
   }
 
   .route-layout {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .route-map-card,
@@ -447,9 +470,45 @@ import WaveDecor from './WaveDecor.vue'
   }
 }
 
+@media (max-width: 1024px) and (min-width: 761px) {
+  .route-section {
+    padding: 76px var(--layout-gutter-wide) 88px;
+  }
+
+  .route-heading {
+    margin-bottom: 36px;
+    padding: 28px 44px 32px;
+  }
+
+  .route-map-card {
+    min-height: min(52vh, 420px);
+  }
+
+  .route-info-card {
+    --route-card-pad-x: 28px;
+    padding: 32px var(--route-card-pad-x) 28px;
+  }
+
+  .route-actions {
+    gap: 14px;
+  }
+
+  .route-button {
+    min-height: 54px;
+    font-size: 17px;
+  }
+}
+
 @media (max-width: 680px) {
   .route-section {
-    padding: 62px 16px 76px;
+    --route-card-shadow-hard: 5px 6px 0 rgba(var(--palette-navy-rgb), 0.1);
+    --route-card-shadow-soft: 0 14px 28px rgba(var(--palette-navy-rgb), 0.08);
+    padding: 62px var(--layout-gutter) 76px;
+  }
+
+  :global(html[data-theme='dark']) .route-section {
+    --route-card-shadow-hard: 5px 6px 0 rgba(0, 0, 0, 0.18);
+    --route-card-shadow-soft: 0 16px 32px rgba(0, 0, 0, 0.22);
   }
 
   .route-pixels {
@@ -467,10 +526,6 @@ import WaveDecor from './WaveDecor.vue'
     padding: 24px 28px 30px;
   }
 
-  .route-heading h2 {
-    font-size: clamp(42px, 15vw, 66px);
-  }
-
   .route-info-card p {
     font-size: 17px;
     line-height: 1.4;
@@ -486,13 +541,9 @@ import WaveDecor from './WaveDecor.vue'
   }
 
   .route-info-card {
-    padding: 34px 24px 30px;
+    --route-card-pad-x: 24px;
+    padding: 34px var(--route-card-pad-x) 30px;
     border-radius: 26px;
-  }
-
-  .route-info-card__title {
-    font-size: clamp(36px, 11vw, 52px);
-    padding-right: clamp(48px, 12vw, 72px);
   }
 
   .route-info-card p {
@@ -508,9 +559,29 @@ import WaveDecor from './WaveDecor.vue'
   }
 }
 
+@media (max-width: 480px) {
+  .route-section {
+    padding: 56px var(--layout-gutter) 68px;
+  }
+
+  .route-heading {
+    margin-bottom: 32px;
+    padding: 20px var(--layout-gutter) 26px;
+  }
+
+  .route-map-card {
+    min-height: min(72vw, 300px);
+  }
+
+  .route-info-card {
+    --route-card-pad-x: 20px;
+    padding: 28px var(--route-card-pad-x) 26px;
+  }
+}
+
 @media (max-width: 440px) {
   .route-map-card {
-    min-height: 320px;
+    min-height: min(70vw, 280px);
   }
 
   .route-badge {
@@ -521,22 +592,12 @@ import WaveDecor from './WaveDecor.vue'
 
 @media (max-width: 360px) {
   .route-section {
-    padding: 52px 12px 64px;
+    padding: 52px var(--layout-gutter) 64px;
   }
 
   .route-heading {
-    width: 100%;
-    max-width: 100%;
-    padding: 20px 16px 24px;
+    padding: 20px 12px 24px;
     box-sizing: border-box;
-  }
-
-  .route-heading h2 {
-    font-size: clamp(34px, 12vw, 48px);
-  }
-
-  .route-info-card__title {
-    font-size: clamp(32px, 10vw, 44px);
   }
 
   .route-button {

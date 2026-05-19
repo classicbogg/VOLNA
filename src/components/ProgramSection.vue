@@ -1,17 +1,14 @@
 <template>
-  <section class="program-section" id="schedule">
+  <section class="directions" id="directions">
     <WaveDecor placement="left" size="md" />
-    <WaveDecor placement="right" size="sm" />
+    <WaveDecor placement="right" size="lg" />
     <WaveDecor placement="top" size="sm" />
 
-    <div class="program-container">
-      <div class="program-heading">
+    <div ref="sectionRef" class="directions__inner">
+      <header class="directions__header">
         <h2>
-          <span class="phrase-marker">
-            <span class="phrase-marker__text">
-              <span class="phrase-marker__line">программа</span>
-              <span class="phrase-marker__line">форума</span>
-            </span>
+          <span class="phrase-marker directions-heading">
+            <span class="phrase-marker__text">направления</span>
             <svg
               class="phrase-marker__svg"
               viewBox="0 0 760 190"
@@ -28,517 +25,614 @@
             </svg>
           </span>
         </h2>
-      </div>
+        <p class="directions__lead">
+          Восемь направлений форума — выбери тему, которая тебе откликается
+        </p>
+      </header>
 
-      <p class="program-date">29 мая 10:00</p>
-
-      <div class="program-timeline">
-        <div 
-          v-for="(item, index) in programItems" 
-          :key="index"
-          class="program-card"
-          :class="[`program-card--${item.type}`, { 'program-card--expanded': expandedIndex === index }]"
-          @click="toggleExpand(index)"
+      <ul
+        class="directions-list"
+        :class="{ 'directions-list--visible': sectionVisible }"
+      >
+        <li
+          v-for="(direction, index) in directions"
+          :key="direction.key"
+          class="directions-list__item"
+          :style="{ '--enter-delay': `${index * 60}ms` }"
         >
-          <div class="program-card__time">
-            {{ item.time }}
-          </div>
-          
-          <div class="program-card__content">
-            <h3 class="program-card__title">{{ item.title }}</h3>
-            
-            <div v-if="item.description" class="program-card__description">
-              <p>{{ item.description }}</p>
+          <article
+            class="directions-row"
+            :class="{ 'directions-row--active': activeKey === direction.key }"
+            :style="{
+              '--row-accent': direction.accent,
+              '--row-accent-rgb': direction.accentRgb,
+            }"
+            tabindex="0"
+            @mouseenter="setActive(direction.key)"
+            @mouseleave="clearActive"
+            @focusin="setActive(direction.key)"
+            @focusout="clearActive"
+          >
+            <span
+              class="directions-row__icon"
+              role="img"
+              :aria-label="direction.shortName"
+            >
+              <component :is="direction.icon" />
+            </span>
+
+            <div class="directions-row__main">
+              <h3 class="directions-row__name">{{ direction.shortName }}</h3>
+              <p v-if="direction.points[0]" class="directions-row__lead">{{ direction.points[0] }}</p>
             </div>
 
-            <div v-if="item.speakers && item.speakers.length" class="program-card__speakers">
-              <span class="program-card__speakers-label">Спикеры:</span>
-              <span class="program-card__speakers-list">{{ item.speakers.join(', ') }}</span>
+            <div
+              class="directions-row__tags-wrap"
+            >
+              <ul
+                class="directions-row__tags"
+                :aria-label="`Темы: ${direction.shortName}`"
+              >
+                <li v-for="tag in visibleTagsFor(direction)" :key="tag">{{ tag }}</li>
+              </ul>
             </div>
-
-            <div v-if="item.theme" class="program-card__theme">
-              <span class="program-card__theme-label">Тема:</span>
-              <span class="program-card__theme-text">{{ item.theme }}</span>
-            </div>
-
-            <button class="program-card__more">
-              <span>{{ expandedIndex === index ? 'Свернуть' : 'Подробнее' }}</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="program-note">
-        <span>*</span> Организаторы оставляют за собой право вносить изменения в программу
-      </div>
+          </article>
+        </li>
+      </ul>
     </div>
   </section>
 </template>
 
 <script setup>
+import { onMounted, onUnmounted, ref } from 'vue'
 import WaveDecor from './WaveDecor.vue'
+import { directions } from '../data/directions.js'
 
-import { ref } from 'vue'
+/** До 1024px — компактные плашки; до 560px — 2 шт., от 560px — 3 шт. */
+const TAGS_COMPACT_MQ = '(max-width: 1024px)'
+const TAGS_TWO_MAX_MQ = '(max-width: 559px)'
 
-const expandedIndex = ref(null)
+const sectionRef = ref(null)
+const sectionVisible = ref(false)
+const activeKey = ref(null)
+/** Сбрасывается при смене брейкпоинта плашек — перерисовка списка тегов */
+const tagsLayoutVersion = ref(0)
+let observer = null
+let tagsCompactMq = null
+let tagsTwoMaxMq = null
+let teardownTagsLayout = null
 
-const toggleExpand = (index) => {
-  expandedIndex.value = expandedIndex.value === index ? null : index
+const isCompactTagsViewport = () => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  return (tagsCompactMq ?? window.matchMedia(TAGS_COMPACT_MQ)).matches
 }
 
-const programItems = ref([
-  {
-    time: '13:30',
-    title: 'Зона регистрации',
-    description: 'Открытие регистрации участников. Тематические активности и фуршет.',
-    type: 'registration'
-  },
-  {
-    time: '14:45',
-    title: 'Торжественное открытие форума',
-    description: 'Официальный старт форума ВОЛНА. Энергия зала, приветственные слова и настрой на большой день.',
-    type: 'opening'
-  },
-  {
-    time: '15:00',
-    title: 'Выступления приглашенных спикеров',
-    description: 'Что важно знать предпринимателю на старте? Как пройти путь от первого клиента до устойчивой компании, сохранив себя и команду? На этой сессии основатели известных российских компаний поделятся честными историями построения бизнеса — о решениях, которые сработали, и о сложностях, ставших точкой роста.',
-    speakers: ['Михаил Каптюг (Sciencely)', 'Анна Давидова (5YES!)', 'Мария Лапук (Vinci Agency)', 'Александр Мутовин («Много Лосося»)'],
-    type: 'speakers'
-  },
-  {
-    time: '16:00',
-    title: 'Пленарное заседание и награждение победителей Федерального конкурса «Создай НАШЕ»',
-    description: 'В рамках пленарного заседания участники обсудят, как молодые предприниматели меняют экономику, задают новые тренды в бизнесе, технологиях и креативных индустриях. Сегодня молодежь до 25 лет активнее остальных вовлекается в экономику предложения: за три года число ИП в научно-технической деятельности в этой возрастной группе выросло в 3 раза, а в сфере ИТ — в 2 раза.',
-    theme: 'Не в найме: будущее за развитием молодежного предпринимательства',
-    type: 'plenary'
-  },
-  {
-    time: '18:00',
-    title: 'Из спорта в предпринимательство: какие принципы забрать с собой в бизнес',
-    description: 'Хедлайнер форума, мастер спорта международного класса, предприниматель, поделится личной историей трансформации из профессиональной спортсменки в основателя компании международного масштаба. Самира расскажет, как принципы спортивной подготовки помогают выстроить устойчивый бизнес? Что важнее — дисциплина, команда или способность рисковать?',
-    speakers: ['Самира'],
-    type: 'keynote'
-  },
-  {
-    time: '18:30',
-    title: 'Что нужно стартапу, чтобы заинтересовать инвестора',
-    description: 'Практический разбор того, как стартапу подготовиться к встрече с инвестором: на что смотрят на венчурном рынке, какие ошибки команды совершают чаще всего и какие сигналы помогают проекту выделиться на фоне других',
-    type: 'practical'
-  },
-  {
-    time: '19:00',
-    title: 'Тематические активности',
-    description: 'Общение, кофе-брейк',
-    type: 'networking'
-  },
-  {
-    time: '19:30',
-    title: 'Завершение форума',
-    description: 'Закрытие форума ВОЛНА',
-    type: 'closing'
+const maxVisibleTags = () => {
+  if (!isCompactTagsViewport()) {
+    return Number.POSITIVE_INFINITY
   }
-])
+  if ((tagsTwoMaxMq ?? window.matchMedia(TAGS_TWO_MAX_MQ)).matches) {
+    return 2
+  }
+  return 3
+}
+
+const setActive = (key) => {
+  activeKey.value = key
+}
+
+const clearActive = () => {
+  activeKey.value = null
+}
+
+const visibleTagsFor = (direction) => {
+  void tagsLayoutVersion.value
+
+  const limit = maxVisibleTags()
+  if (!Number.isFinite(limit)) {
+    return direction.tags
+  }
+
+  return direction.tags.slice(0, Math.min(limit, direction.tags.length))
+}
+
+const setupTagsLayout = () => {
+  tagsCompactMq = window.matchMedia(TAGS_COMPACT_MQ)
+  tagsTwoMaxMq = window.matchMedia(TAGS_TWO_MAX_MQ)
+
+  const onTagsLayoutChange = () => {
+    tagsLayoutVersion.value += 1
+  }
+
+  tagsCompactMq.addEventListener('change', onTagsLayoutChange)
+  tagsTwoMaxMq.addEventListener('change', onTagsLayoutChange)
+
+  return () => {
+    tagsCompactMq?.removeEventListener('change', onTagsLayoutChange)
+    tagsTwoMaxMq?.removeEventListener('change', onTagsLayoutChange)
+  }
+}
+
+onMounted(() => {
+  teardownTagsLayout = setupTagsLayout()
+
+  if (!('IntersectionObserver' in window)) {
+    sectionVisible.value = true
+    return
+  }
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) {
+        sectionVisible.value = true
+        observer?.disconnect()
+      }
+    },
+    { threshold: 0.08, rootMargin: '0px 0px -60px 0px' },
+  )
+
+  if (sectionRef.value) {
+    observer.observe(sectionRef.value)
+  }
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+  teardownTagsLayout?.()
+})
 </script>
 
 <style scoped>
-.program-section {
+.directions {
   position: relative;
   width: 100%;
-  padding: 90px var(--layout-gutter-wide, 40px) 110px;
-  background: var(--color-program-section-bg, var(--color-bg-soft));
-  color: var(--color-program-heading, var(--color-text));
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease;
+  padding: clamp(80px, 9vw, 112px) var(--layout-gutter-wide, 40px) clamp(96px, 11vw, 128px);
   overflow: hidden;
 }
 
-.program-pixels {
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.4;
-}
-
-.program-pixels--left {
-  left: -60px;
-  top: 200px;
-  width: 48px;
-  height: 48px;
-  background: rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.15);
-  box-shadow:
-    48px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.12),
-    96px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
-    0 48px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.10),
-    48px 48px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
-    96px 48px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.06),
-    0 96px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
-    48px 96px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.06);
-  transform: rotate(-10deg);
-  animation: pixelFloatLeft 7s ease-in-out infinite;
-}
-
-.program-pixels--right {
-  right: -80px;
-  bottom: 150px;
-  width: 56px;
-  height: 56px;
-  background: rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.12);
-  box-shadow:
-    -56px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.10),
-    -112px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
-    0 -56px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.09),
-    -56px -56px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
-    -112px -56px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.05),
-    0 -112px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
-    -56px -112px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.05);
-  transform: rotate(8deg);
-  animation: pixelFloatRight 9s ease-in-out infinite;
-}
-
-.program-pixels--top {
-  right: 15%;
-  top: 80px;
-  width: 32px;
-  height: 32px;
-  background: rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.10);
-  box-shadow:
-    32px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.08),
-    64px 0 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.05),
-    0 32px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.07),
-    32px 32px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.06),
-    64px 32px 0 rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.04);
-  transform: rotate(12deg);
-  animation: pixelFloatTop 6s ease-in-out infinite;
-}
-
-@keyframes pixelFloatLeft {
-  0%, 100% { transform: translateY(0) rotate(-10deg); }
-  50% { transform: translateY(-20px) rotate(-7deg); }
-}
-
-@keyframes pixelFloatRight {
-  0%, 100% { transform: translateY(0) rotate(8deg); }
-  50% { transform: translateY(18px) rotate(5deg); }
-}
-
-@keyframes pixelFloatTop {
-  0%, 100% { transform: translateY(0) rotate(12deg); }
-  50% { transform: translateY(-14px) rotate(16deg); }
-}
-
-.program-container {
+.directions__inner {
   position: relative;
   z-index: 2;
-  max-width: 1200px;
+  width: min(1540px, 100%);
   margin: 0 auto;
 }
 
-.program-heading {
+.directions__header {
   position: relative;
-  width: fit-content;
-  margin: 0 auto 60px;
-  padding: 34px 84px 42px;
-  isolation: isolate;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto clamp(40px, 5vw, 56px);
+  padding: 0 clamp(20px, 4vw, 80px);
+  text-align: center;
 }
 
-.program-heading h2 {
-  position: relative;
-  z-index: 3;
+.directions__header h2 {
   margin: 0;
-  font-size: clamp(44px, 6vw, 82px);
+  color: var(--color-directions-heading, var(--palette-cream));
+  font-weight: 950;
   line-height: 0.9;
-  font-weight: 900;
-  text-align: center;
-  text-transform: lowercase;
   letter-spacing: -0.08em;
-  color: var(--color-program-heading, var(--color-text));
-}
-
-.program-date {
-  width: fit-content;
-  margin: -36px auto 40px;
-  padding: 12px 24px 11px;
-  border-radius: 999px;
-  background: var(--color-program-accent, var(--color-yellow));
-  color: var(--color-program-heading, var(--color-text));
-  font-size: clamp(18px, 2.4vw, 28px);
-  line-height: 1;
-  font-weight: 900;
   text-transform: lowercase;
-  letter-spacing: -0.05em;
-  text-align: center;
 }
 
-.program-timeline {
+.directions__lead {
+  position: relative;
+  z-index: 2;
+  max-width: 780px;
+  margin: clamp(18px, 2.5vw, 28px) auto 0;
+  color: var(--color-directions-muted, rgba(var(--palette-cream-rgb), 0.8));
+  font-size: clamp(18px, 1.85vw, 28px);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.directions-list {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: stretch;
+  gap: 12px;
+  width: min(100%, 720px);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
 }
 
-.program-card {
+.directions-list__item {
+  width: 100%;
+}
+
+.directions-row {
+  --row-border: var(--color-directions-row-border, rgba(var(--palette-navy-rgb), 0.14));
+
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
   display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 30px;
-  padding: 28px 32px;
-  background: var(--color-program-card-bg, var(--color-surface-card));
-  border: 1px solid var(--color-program-card-border, var(--color-border));
-  border-radius: 28px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(4px);
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: start;
+  gap: 10px 16px;
+  padding: clamp(16px, 1.8vw, 20px) clamp(18px, 2vw, 24px);
+  border: 2px solid var(--row-border);
+  border-left: 4px solid var(--row-accent);
+  border-radius: 20px;
+  color: var(--color-directions-row-text, var(--palette-navy));
+  background: var(--color-directions-row-bg, var(--palette-cream));
+  opacity: 0;
+  translate: 0 16px;
+  box-shadow: 0 10px 28px var(--color-directions-row-shadow, rgba(var(--palette-navy-rgb), 0.12));
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    translate 220ms ease;
+  outline: none;
 }
 
-.program-card:hover {
-  background: var(--color-program-card-bg-hover, var(--color-surface-card-hover));
-  border-color: var(--color-program-card-border-hover);
-  transform: translateX(8px);
+.directions-list--visible .directions-row {
+  animation: directionsRowEnter 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--enter-delay, 0ms);
 }
 
-.program-card--expanded {
-  background: var(--color-program-card-bg-expanded, var(--color-surface-expanded));
-  border-color: var(--color-program-accent);
-  box-shadow: 0 8px 32px var(--color-shadow-strong);
+.directions-row:hover,
+.directions-row--active,
+.directions-row:focus-visible {
+  --row-border: rgba(var(--row-accent-rgb), 0.35);
+  border-left-color: var(--row-accent);
+  box-shadow: 0 14px 32px rgba(var(--row-accent-rgb), 0.16);
+  translate: 0 0;
 }
 
-.program-card__time {
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--color-program-time, var(--color-program-accent));
-  letter-spacing: -0.05em;
-  line-height: 1;
-  padding-top: 4px;
+.directions-row__icon {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid rgba(var(--row-accent-rgb), 0.55);
+  background: var(--color-directions-row-badge-bg, var(--palette-white));
+  color: var(--color-directions-row-badge-fg, var(--row-accent));
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
 }
 
-.program-card__content {
-  flex: 1;
+.directions-row__icon :deep(svg) {
+  display: block;
+  width: 34px;
+  height: 34px;
 }
 
-.program-card__title {
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.3;
-  letter-spacing: -0.03em;
-  margin: 0 0 12px;
-  color: var(--color-program-card-text, var(--color-text));
+.directions-row__main {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
 }
 
-.program-card--expanded .program-card__title {
-  color: var(--color-program-card-text, var(--color-text));
-}
-
-.program-card__description {
-  font-size: 16px;
-  line-height: 1.45;
-  color: var(--color-program-card-text-muted, var(--color-text-muted));
-  margin-bottom: 16px;
-}
-
-.program-card__description p {
+.directions-row__name {
   margin: 0;
+  color: var(--color-directions-row-text, var(--palette-navy));
+  font-size: clamp(20px, 1.8vw, 28px);
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+  text-transform: none;
+  text-wrap: balance;
 }
 
-.program-card__speakers,
-.program-card__theme {
-  margin-bottom: 12px;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.program-card__speakers-label,
-.program-card__theme-label {
+.directions-row__lead {
+  margin: 8px 0 0;
+  color: var(--color-directions-row-lead, rgba(var(--palette-navy-rgb), 0.78));
+  font-size: clamp(14px, 1.2vw, 16px);
   font-weight: 700;
-  color: var(--color-program-accent);
-  margin-right: 8px;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
 }
 
-.program-card__speakers-list,
-.program-card__theme-text {
-  color: var(--color-program-card-text-muted, var(--color-text-muted));
+.directions-row__tags-wrap {
+  position: relative;
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  max-width: 100%;
+  margin: 6px 0 0;
+  overflow: hidden;
 }
 
-.program-card__more {
+.directions-row__tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.directions-row__tags li {
+  flex-shrink: 0;
+}
+
+.directions-row__tags li {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 8px 0;
-  background: none;
-  border: none;
-  color: var(--color-program-accent);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: lowercase;
+  justify-content: center;
+  box-sizing: border-box;
+  width: fit-content;
+  padding: 6px 16px;
+  border-radius: 999px;
+  color: var(--color-directions-row-text, var(--palette-navy));
+  background: var(--color-directions-row-chip-bg, transparent);
+  border: 2px solid rgba(var(--row-accent-rgb), 0.52);
+  box-shadow: none;
+  outline: none;
+  font-size: clamp(12px, 1.15vw, 14px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
 }
 
-.program-card__more svg {
-  transition: transform 0.2s ease;
+@media (min-width: 1025px) {
+  .directions-row__tags-wrap {
+    overflow: visible;
+  }
+
+  .directions-row__tags {
+    overflow: visible;
+  }
+
+  .directions-row__tags {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+    overflow: visible;
+  }
+
+  .directions-row__tags li {
+    width: 100%;
+    padding-inline: 10px;
+    text-align: center;
+  }
 }
 
-.program-card--expanded .program-card__more svg {
-  transform: rotate(45deg);
+.directions-row:hover .directions-row__tags li,
+.directions-row--active .directions-row__tags li {
+  background: transparent;
+  border-color: var(--row-accent);
 }
 
-.program-card__more:hover {
-  gap: 12px;
-  color: var(--color-program-card-text, var(--color-text));
+@keyframes directionsRowEnter {
+  0% {
+    opacity: 0;
+    translate: 0 20px;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 
-.program-note {
-  margin-top: 48px;
-  padding: 20px 24px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--color-program-note, var(--color-text-muted));
-  border-top: 1px solid var(--color-program-card-border, var(--color-border));
+@media (prefers-reduced-motion: reduce) {
+  .directions-row,
+  .directions-list--visible .directions-row {
+    opacity: 1;
+    translate: 0;
+  }
+
+  .directions-row:hover,
+  .directions-row--active {
+    translate: 0;
+  }
 }
 
-.program-note span {
-  color: var(--color-program-accent);
-  margin-right: 6px;
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .directions__inner {
+    width: min(1200px, 100%);
+  }
+
+  .directions__lead {
+    font-size: clamp(18px, 1.5vw, 24px);
+  }
+
+  .directions-list {
+    width: min(100%, 680px);
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .directions__inner {
+    width: min(1400px, 100%);
+  }
+
+  .directions-list {
+    width: min(100%, 720px);
+  }
 }
 
 @media (min-width: 1920px) {
-  .program-section {
-    padding: 104px var(--layout-gutter-wide, 80px) 120px;
+  .directions {
+    padding-inline: var(--layout-gutter-wide, 80px);
+  }
+
+  .directions__inner {
+    width: min(1540px, 100%);
+  }
+
+}
+
+@media (max-width: 559px) {
+  .directions-row__tags {
+    gap: 6px;
+  }
+
+  .directions-row__tags li {
+    padding: 6px 10px;
+    font-size: clamp(11px, 3.25vw, 12px);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
   }
 }
 
-/* Адаптивность */
+@media (max-width: 1024px) {
+  .directions {
+    padding:
+      clamp(72px, 8vw, 88px)
+      var(--layout-gutter-wide)
+      clamp(80px, 9vw, 96px);
+  }
+
+  .directions__header {
+    padding-inline: clamp(12px, 3vw, 40px);
+    margin-bottom: clamp(32px, 4vw, 44px);
+  }
+
+  .directions__lead {
+    font-size: clamp(17px, 1.8vw, 21px);
+    max-width: 36em;
+    margin-inline: auto;
+  }
+
+  .directions-row__tags-wrap {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 8px;
+    padding-top: 2px;
+  }
+
+  .directions-row__tags {
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  .directions-row__tags li {
+    font-size: clamp(11px, 2.1vw, 13px);
+    padding: 6px 11px;
+  }
+
+  .directions-row__lead {
+    font-size: clamp(14px, 1.45vw, 16px);
+  }
+}
+
 @media (max-width: 900px) {
-  .program-section {
-    padding: 70px var(--layout-gutter, 24px) 90px;
+  .directions {
+    padding-inline: var(--layout-gutter);
+  }
+}
+
+@media (max-width: 720px) and (min-width: 560px) {
+  .directions-row__tags {
+    gap: 6px;
   }
 
-  .program-heading {
-    margin-bottom: 45px;
-    padding: 24px 62px 30px;
-  }
-
-  .program-card {
-    grid-template-columns: 90px 1fr;
-    gap: 20px;
-    padding: 22px 24px;
-  }
-
-  .program-card__time {
-    font-size: 22px;
-  }
-
-  .program-card__title {
-    font-size: 19px;
+  .directions-row__tags li {
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
   }
 }
 
 @media (max-width: 680px) {
-  .program-section {
-    padding: 55px 16px 70px;
+  .directions-list__item,
+  .directions-row {
+    width: 100%;
+    max-width: 100%;
   }
 
-  .program-pixels {
-    opacity: 0.25;
+  .directions-row__main {
+    min-width: 0;
+    max-width: none;
   }
 
-  .program-pixels--left,
-  .program-pixels--right,
-  .program-pixels--top {
-    display: none;
+  .directions__header {
+    padding-inline: 8px;
   }
 
-  .program-heading {
-    padding: 18px 34px 24px;
-    margin-bottom: 35px;
+  .directions-row__icon {
+    width: 52px;
+    height: 52px;
   }
 
-  .program-card__description {
-    font-size: 15px;
-    line-height: 1.48;
+  .directions-row__icon :deep(svg) {
+    width: 30px;
+    height: 30px;
   }
 
-  .program-card {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 18px 20px;
-    border-radius: 20px;
+  .directions-row__name {
+    font-size: clamp(18px, 5.2vw, 24px);
+    line-height: 1.1;
   }
 
-  .program-card__time {
-    font-size: 20px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(var(--color-program-pixel-rgb, var(--color-accent-rgb)), 0.2);
-  }
-
-  .program-card__title {
-    font-size: 18px;
-  }
-
-  .program-card__description {
-    font-size: 14px;
-  }
-
-  .program-card__speakers,
-  .program-card__theme {
-    font-size: 13px;
-  }
-
-  .program-note {
-    margin-top: 32px;
-    padding: 16px 16px;
-    font-size: 11px;
+  .directions-row__lead {
+    font-size: clamp(14px, 3.6vw, 16px);
+    line-height: 1.5;
   }
 }
 
 @media (max-width: 480px) {
-  .program-card {
-    padding: 14px 16px;
+  .directions {
+    padding:
+      clamp(56px, 10vw, 72px)
+      var(--layout-gutter)
+      clamp(64px, 12vw, 80px);
   }
 
-  .program-card__title {
-    font-size: 16px;
+  .directions__header {
+    margin-bottom: 28px;
+    padding-inline: 0;
   }
 
-  .program-card__description {
-    font-size: 13px;
+  .directions__lead {
+    font-size: clamp(16px, 4.2vw, 20px);
   }
+
+  .directions-row {
+    padding: 16px 12px;
+    gap: 10px 12px;
+  }
+
+  .directions-row__lead {
+    margin-top: 6px;
+  }
+
+  .directions-row__icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+  }
+
 }
 
 @media (max-width: 360px) {
-  .program-section {
-    padding: 48px 12px 64px;
+  .directions-row__name {
+    font-size: clamp(16px, 4.8vw, 20px);
   }
 
-  .program-heading {
-    width: 100%;
-    max-width: 100%;
-    padding: 12px 16px 16px;
-    margin-bottom: 28px;
-    box-sizing: border-box;
+  .directions-row__lead {
+    font-size: 14px;
+    line-height: 1.5;
   }
 
-  .program-date {
-    max-width: calc(100% - 24px);
-    margin-inline: auto;
-    padding-inline: 18px;
-  }
-
-  .program-heading h2 {
-    font-size: clamp(32px, 11vw, 42px);
-  }
-
-  .program-card__time {
-    font-size: 18px;
-  }
-
-  .program-note {
+  .directions-row__tags li {
+    padding: 6px 9px;
     font-size: 11px;
-    padding: 14px 12px;
-    line-height: 1.35;
   }
 }
 </style>

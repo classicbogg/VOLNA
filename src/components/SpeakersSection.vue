@@ -2,13 +2,13 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 const AUTOPLAY_MS = 5000
-const CAROUSEL_GAP_PX = 16
-const MIN_CARD_WIDTH_DESKTOP_PX = 260
-const MIN_CARD_WIDTH_TABLET_PX = 240
-const SINGLE_COLUMN_MAX_WIDTH = 560
-const TWO_COLUMN_MAX_WIDTH = 920
-const THREE_COLUMN_MAX_WIDTH = 1200
-const MAX_COLUMNS_DESKTOP = 4
+const CAROUSEL_GAP_PX = 18
+const MIN_CARD_WIDTH_DESKTOP_PX = 300
+const MIN_CARD_WIDTH_TABLET_PX = 270
+const SINGLE_COLUMN_MAX_WIDTH = 640
+const TWO_COLUMN_MAX_WIDTH = 960
+const THREE_COLUMN_MAX_WIDTH = 1280
+const MAX_COLUMNS_DESKTOP = 3
 
 const getMinCardWidth = (layoutWidth) => {
   if (layoutWidth <= SINGLE_COLUMN_MAX_WIDTH) {
@@ -27,6 +27,7 @@ const activePage = ref(0)
 const slidesPerView = ref(1)
 const slideWidthPx = ref(0)
 const viewportRef = ref(null)
+
 let htmlObserver = null
 let bodyObserver = null
 let autoplayTimer = null
@@ -36,68 +37,83 @@ let scrollRaf = null
 const speakers = [
   {
     image: '/speaker_1.png',
-    name: 'Максим Орешкин',
-    role: 'Заместитель Руководителя Администрации Президента Российской Федерации',
+    name: 'Ирина Каск',
+    role: 'Уполномоченный по защите прав предпринимателей в ХМАО — Югре',
+  },
+  {
+    image: '/speaker_2.png',
+    name: 'Дмитрий Суханов',
+    role: 'Менеджер компетенции «Предпринимательство» движения «Профессионалы»',
   },
   {
     image: '/speaker_3.png',
-    name: 'Алексей Репик',
-    role: 'Основатель фонда «Молодежная предпринимательская инициатива», председатель Общероссийской общественной организации «Деловая Россия»',
+    name: 'Эльмира Ибрагимова',
+    role: 'Предприниматель, владелец салона красоты «Dipael», главный врач стоматологии «Salve»',
   },
   {
     image: '/speaker_4.png',
-    name: 'Светлана Чупшева',
-    role: 'Генеральный директор АНО «Агентство стратегических инициатив по продвижению новых проектов»',
+    name: 'Александра Таранова',
+    role: 'Владелец студии эстетики лица и тела «Философия»',
   },
   {
-    image: '/speaker_5.png',
-    name: 'Александр Исаевич',
-    role: 'Генеральный директор АО «Корпорация «МСП»',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_7.png',
-    name: 'Кристина Кострома',
-    role: 'Руководитель Департамента предпринимательства и инновационного развития города Москвы',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_6.png',
-    name: 'Юрий Максимов',
-    role: 'Основатель фонда Сайберус и компании Positive Technologies',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_8.png',
-    name: 'Мария Папук',
-    role: 'Основатель коммуникационной группы Vinci Agency с международной экспертизой, совладелец журнала Инк',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_9.png',
-    name: 'Михаил Каптюг',
-    role: 'Основатель проекта Sciencely, эксперт в сфере научно-просветительских и образовательных продуктов для детей',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_10.png',
-    name: 'Анна Давыдова',
-    role: 'Основатель и сооснователь компании 5YES! — производителя растительного молока для бариста и ритейла',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_11.png',
-    name: 'Александр Мутовин',
-    role: 'Основатель сервиса доставки еды «Много Лосося»',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_12.png',
-    name: 'Кирилл Токарев',
-    role: 'Телеведущий, шеф-редактор телеканала РБК-ТВ по экономической аналитике',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_14.png',
-    name: 'Самира Мустафаева',
-    role: 'Основатель сети студий растяжки и фитнеса SM Stretching; мастер спорта международного класса по художественной гимнастике; многократный призер чемпионатов России и Европы',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
   {
-    image: '/speaker_15.png',
-    name: 'Глеб Белявский',
-    role: 'Руководитель направления инвестиций акселераторов Сбера и сообщества инвесторов SberUnity',
+    image: '/speaker_0.png',
+    name: 'Анонс',
+    role: 'Имя эксперта появится позже',
+    isPlaceholder: true,
   },
 ]
 
@@ -114,24 +130,17 @@ const visibleSpeakers = computed(() => {
 
 const visibleSpeakerLabel = computed(() => visibleSpeakers.value.map((speaker) => speaker.name).join(', '))
 
-const trackStyle = computed(() => {
-  const width = measureLayoutWidth()
-  const gap = getCarouselGap(width)
-
-  return {
-    '--slides-per-view': slidesPerView.value,
-    '--carousel-gap': `${gap}px`,
-    '--slide-width': slideWidthPx.value > 0 ? `${slideWidthPx.value}px` : '100%',
+const getCarouselGap = (layoutWidth) => {
+  if (layoutWidth <= 360) {
+    return 10
   }
-})
 
-const isSpeakerVisible = (index) => {
-  const start = activePage.value * slidesPerView.value
-  const end = start + slidesPerView.value
-  return index >= start && index < end
+  if (layoutWidth <= SINGLE_COLUMN_MAX_WIDTH) {
+    return 12
+  }
+
+  return CAROUSEL_GAP_PX
 }
-
-const getCarouselGap = (layoutWidth) => (layoutWidth <= SINGLE_COLUMN_MAX_WIDTH ? 12 : CAROUSEL_GAP_PX)
 
 const measureLayoutWidth = () => {
   const viewportWidth = viewportRef.value?.clientWidth ?? 0
@@ -150,6 +159,24 @@ const measureLayoutWidth = () => {
   }
 
   return Math.min(viewportWidth, screenWidth)
+}
+
+const trackStyle = computed(() => {
+  const width = measureLayoutWidth()
+  const gap = getCarouselGap(width)
+
+  return {
+    '--slides-per-view': slidesPerView.value,
+    '--carousel-gap': `${gap}px`,
+    '--slide-width': slideWidthPx.value > 0 ? `${slideWidthPx.value}px` : '100%',
+  }
+})
+
+const isSpeakerVisible = (index) => {
+  const start = activePage.value * slidesPerView.value
+  const end = start + slidesPerView.value
+
+  return index >= start && index < end
 }
 
 const computeSlidesPerView = (layoutWidth) => {
@@ -220,6 +247,7 @@ const onViewportScroll = () => {
 
 const updateSlidesPerView = () => {
   const width = measureLayoutWidth()
+
   if (!width) {
     return
   }
@@ -228,8 +256,9 @@ const updateSlidesPerView = () => {
   const gap = getCarouselGap(width)
   const previousPerView = slidesPerView.value
   const firstVisibleIndex = activePage.value * previousPerView
+
   slidesPerView.value = perView
-  slideWidthPx.value = (width - gap * (perView - 1)) / perView
+  slideWidthPx.value = Math.max(0, (width - gap * (perView - 1)) / perView)
 
   const newPageCount = Math.max(1, Math.ceil(totalSpeakers / perView))
   activePage.value = Math.min(Math.floor(firstVisibleIndex / perView), newPageCount - 1)
@@ -319,6 +348,10 @@ const stopAutoplay = () => {
 const startAutoplay = () => {
   stopAutoplay()
 
+  if (pageCount.value <= 1) {
+    return
+  }
+
   if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return
   }
@@ -337,6 +370,7 @@ const onManualNav = (direction) => {
   } else {
     prev()
   }
+
   restartAutoplay()
 }
 
@@ -392,9 +426,10 @@ onUnmounted(() => {
   >
     <div class="speakers-container">
       <div class="speakers-heading">
+
         <h2>
           <span class="phrase-marker">
-            <span class="phrase-marker__text">кто выступит?</span>
+            <span class="phrase-marker__text">эксперты</span>
             <svg
               class="phrase-marker__svg"
               viewBox="0 0 760 190"
@@ -411,6 +446,10 @@ onUnmounted(() => {
             </svg>
           </span>
         </h2>
+
+        <p class="speakers-lead">
+          Спикеры форума, которые поделятся опытом, практикой и реальными историями развития.
+        </p>
       </div>
 
       <div
@@ -424,6 +463,7 @@ onUnmounted(() => {
         @focusout="startAutoplay"
       >
         <button
+          v-if="pageCount > 1"
           class="speakers-carousel__nav speakers-carousel__nav--prev"
           type="button"
           aria-label="Предыдущий спикер"
@@ -444,28 +484,36 @@ onUnmounted(() => {
           <div class="speakers-carousel__track" :style="trackStyle">
             <article
               v-for="(speaker, index) in speakers"
-              :key="speaker.name"
+              :key="`${speaker.name}-${index}`"
               class="speaker-card"
+              :class="{ 'speaker-card--placeholder': speaker.isPlaceholder }"
               :aria-hidden="!isSpeakerVisible(index)"
             >
               <div class="speaker-card__photo-wrap">
                 <img
                   class="speaker-card__photo"
+                  :class="{ 'speaker-card__photo--blurred': speaker.isPlaceholder }"
                   :src="speaker.image"
                   :alt="speaker.name"
                   :loading="isSpeakerVisible(index) ? 'eager' : 'lazy'"
                 />
+
+                <div v-if="speaker.isPlaceholder" class="speaker-card__veil">
+                  <span>скоро</span>
+                </div>
               </div>
 
               <div class="speaker-card__info">
                 <h3>{{ speaker.name }}</h3>
-                <p>{{ speaker.role }}</p>
+
+                <p v-if="speaker.role">{{ speaker.role }}</p>
               </div>
             </article>
           </div>
         </div>
 
         <button
+          v-if="pageCount > 1"
           class="speakers-carousel__nav speakers-carousel__nav--next"
           type="button"
           aria-label="Следующий спикер"
@@ -487,7 +535,12 @@ onUnmounted(() => {
         {{ visibleSpeakerLabel }}
       </p>
 
-      <div class="speakers-carousel__dots" role="tablist" aria-label="Страницы спикеров">
+      <div
+        v-if="pageCount > 1"
+        class="speakers-carousel__dots"
+        role="tablist"
+        aria-label="Страницы спикеров"
+      >
         <button
           v-for="page in pageIndices"
           :key="`page-${page}`"
@@ -508,23 +561,25 @@ onUnmounted(() => {
   --speakers-section-bg: var(--color-speakers-section-bg);
   --speakers-heading: var(--color-speakers-heading);
   --speakers-marker: var(--color-speakers-marker);
-  --speakers-card-surface: #fff;
-  --speakers-card-media-bg: #e6e9ef;
-  --speakers-card-name: #1a2b6d;
-  --speakers-card-role: #171717;
-  --speakers-card-radius: 22px;
-  --speakers-card-media-radius: 16px;
-  --speakers-card-shadow: 0 10px 28px rgba(26, 43, 90, 0.1);
+  --speakers-card-surface: rgba(255, 255, 255, 0.92);
+  --speakers-card-media-bg: rgba(var(--palette-cream-rgb), 0.82);
+  --speakers-card-name: var(--palette-navy);
+  --speakers-card-role: rgba(var(--palette-navy-rgb), 0.74);
+  --speakers-card-border: rgba(var(--palette-purple-rgb), 0.14);
+  --speakers-card-radius: 30px;
+  --speakers-card-media-radius: 22px;
+  --speakers-card-shadow: 0 24px 56px rgba(var(--palette-navy-rgb), 0.14);
+  --speakers-card-shadow-hover: 0 34px 76px rgba(var(--palette-navy-rgb), 0.2);
   --speakers-nav-bg: var(--palette-cream);
   --speakers-nav-icon: var(--palette-navy);
-  --speakers-nav-border: rgba(var(--palette-navy-rgb), 0.1);
-  --speakers-nav-shadow: 0 6px 20px rgba(var(--palette-navy-rgb), 0.12);
+  --speakers-nav-border: rgba(var(--palette-navy-rgb), 0.12);
+  --speakers-nav-shadow: 0 14px 34px rgba(var(--palette-navy-rgb), 0.16);
 
   position: relative;
   isolation: isolate;
   width: 100%;
   max-width: 100%;
-  padding: 104px var(--layout-gutter-wide, 40px) 120px;
+  padding: 108px var(--layout-gutter-wide, 40px) 122px;
   background: var(--speakers-section-bg);
   color: var(--speakers-heading);
   overflow-x: clip;
@@ -534,16 +589,33 @@ onUnmounted(() => {
     color 0.35s ease;
 }
 
+.speakers-section--dark {
+  --speakers-card-surface: rgba(var(--palette-navy-rgb), 0.72);
+  --speakers-card-media-bg: rgba(var(--palette-cream-rgb), 0.1);
+  --speakers-card-name: var(--palette-cream);
+  --speakers-card-role: rgba(var(--palette-cream-rgb), 0.78);
+  --speakers-card-border: rgba(var(--palette-peach-rgb), 0.16);
+  --speakers-card-shadow: 0 26px 64px rgba(0, 0, 0, 0.32);
+  --speakers-card-shadow-hover: 0 36px 82px rgba(0, 0, 0, 0.46);
+  --speakers-nav-bg: var(--palette-cream);
+  --speakers-nav-icon: var(--palette-navy);
+  --speakers-nav-border: rgba(var(--palette-navy-rgb), 0.16);
+  --speakers-nav-shadow: 0 18px 42px rgba(0, 0, 0, 0.36);
+}
+
 .speakers-container {
-  width: min(100%, 1360px);
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1400px);
   margin: 0 auto;
 }
 
 .speakers-heading {
   position: relative;
-  width: fit-content;
-  margin: 0 auto 48px;
-  padding: 34px 86px 42px;
+  max-width: 980px;
+  margin: 0 auto 54px;
+  padding: 0 clamp(12px, 4vw, 48px);
+  text-align: center;
   isolation: isolate;
 }
 
@@ -552,7 +624,6 @@ onUnmounted(() => {
   z-index: 3;
   margin: 0;
   color: var(--speakers-heading);
-  font-size: clamp(44px, 6.6vw, 92px);
   line-height: 0.9;
   font-weight: 950;
   text-align: center;
@@ -560,11 +631,29 @@ onUnmounted(() => {
   letter-spacing: -0.075em;
 }
 
+.speakers-heading .phrase-marker {
+  --phrase-marker-pad-x: 0.64em;
+  --phrase-marker-pad-y-top: 0.4em;
+  --phrase-marker-pad-y-bottom: 0.44em;
+  --phrase-marker-ring-x: 2.1em;
+  --phrase-marker-ring-y: 1.76em;
+}
+
+.speakers-lead {
+  max-width: 720px;
+  margin: clamp(20px, 2.2vw, 28px) auto 0;
+  color: var(--speakers-card-role);
+  font-size: clamp(17px, 1.65vw, 23px);
+  line-height: 1.32;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
 .speakers-carousel {
   position: relative;
   width: 100%;
   max-width: 100%;
-  padding-inline: clamp(40px, 5vw, 52px);
+  padding-inline: clamp(52px, 5vw, 70px);
   box-sizing: border-box;
 }
 
@@ -573,7 +662,8 @@ onUnmounted(() => {
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  border-radius: clamp(22px, 4vw, 30px);
+  padding: 6px;
+  border-radius: clamp(28px, 3vw, 42px);
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -589,7 +679,7 @@ onUnmounted(() => {
 .speakers-carousel__track {
   display: flex;
   align-items: stretch;
-  gap: var(--carousel-gap, 16px);
+  gap: var(--carousel-gap, 18px);
   width: max-content;
 }
 
@@ -598,8 +688,8 @@ onUnmounted(() => {
   top: 50%;
   z-index: 4;
   transform: translateY(-50%);
-  width: clamp(44px, 10vw, 56px);
-  height: clamp(44px, 10vw, 56px);
+  width: clamp(46px, 4.2vw, 60px);
+  height: clamp(46px, 4.2vw, 60px);
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -611,10 +701,10 @@ onUnmounted(() => {
   cursor: pointer;
   box-shadow: var(--speakers-nav-shadow);
   transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.22s ease,
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .speakers-carousel__nav--prev {
@@ -626,10 +716,10 @@ onUnmounted(() => {
 }
 
 .speakers-carousel__nav:hover {
-  transform: translateY(-50%) scale(1.05);
+  transform: translateY(-50%) scale(1.06);
   background: var(--palette-white);
-  border-color: rgba(var(--palette-purple-rgb), 0.35);
-  box-shadow: 0 8px 24px rgba(var(--palette-navy-rgb), 0.16);
+  border-color: rgba(var(--palette-purple-rgb), 0.36);
+  box-shadow: 0 18px 42px rgba(var(--palette-navy-rgb), 0.22);
 }
 
 .speakers-carousel__nav:active {
@@ -638,7 +728,7 @@ onUnmounted(() => {
 
 .speakers-carousel__nav:focus-visible {
   outline: 3px solid var(--palette-purple);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
 .speakers-carousel__dots {
@@ -646,23 +736,24 @@ onUnmounted(() => {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: clamp(6px, 1.2vw, 10px);
+  gap: clamp(7px, 1vw, 10px);
   width: 100%;
-  margin-top: clamp(14px, 2.5vw, 20px);
+  margin-top: clamp(18px, 2.6vw, 26px);
   padding-inline: clamp(4px, 2vw, 12px);
 }
 
 .speakers-carousel__dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: 999px;
   background: rgba(var(--palette-navy-rgb), 0.22);
   cursor: pointer;
   transition:
-    transform 0.2s ease,
-    background-color 0.2s ease;
+    width 0.22s ease,
+    transform 0.22s ease,
+    background-color 0.22s ease;
 }
 
 .speakers-section--dark .speakers-carousel__dot {
@@ -670,8 +761,8 @@ onUnmounted(() => {
 }
 
 .speakers-carousel__dot[aria-selected='true'] {
+  width: 30px;
   background: var(--palette-orange);
-  transform: scale(1.2);
 }
 
 .speakers-section--dark .speakers-carousel__dot[aria-selected='true'] {
@@ -680,7 +771,181 @@ onUnmounted(() => {
 
 .speakers-carousel__dot:focus-visible {
   outline: 2px solid var(--palette-purple);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+.speaker-card {
+  position: relative;
+  flex: 0 0 var(--slide-width, 300px);
+  width: var(--slide-width, 300px);
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(12px, 1.5vw, 16px);
+  border: 1px solid var(--speakers-card-border);
+  border-radius: var(--speakers-card-radius);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.46), transparent 42%),
+    var(--speakers-card-surface);
+  box-shadow: var(--speakers-card-shadow);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  transform: translateY(0);
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.speaker-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(var(--palette-orange-rgb), 0.45);
+  box-shadow: var(--speakers-card-shadow-hover);
+}
+
+.speaker-card::after {
+  content: '';
+  position: absolute;
+  inset: auto -24% -44% -24%;
+  height: 72%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(var(--palette-orange-rgb), 0.16), transparent 68%);
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease;
+}
+
+.speaker-card:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.speaker-card--placeholder {
+  border-style: dashed;
+}
+
+.speaker-card__photo-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  flex-shrink: 0;
+  border-radius: var(--speakers-card-media-radius);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(var(--palette-orange-rgb), 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent),
+    var(--speakers-card-media-bg);
+  overflow: hidden;
+}
+
+.speaker-card__photo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  z-index: 0;
+  border: 1px solid rgba(var(--palette-purple-rgb), 0.1);
+  border-radius: calc(var(--speakers-card-media-radius) - 8px);
+  pointer-events: none;
+}
+
+.speaker-card__photo {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  width: 96%;
+  height: 100%;
+  max-width: none;
+  display: block;
+  transform: translateX(-50%);
+  transform-origin: center bottom;
+  object-fit: contain;
+  object-position: center bottom;
+  transition:
+    filter 0.28s ease,
+    opacity 0.28s ease,
+    transform 0.28s ease;
+}
+
+.speaker-card:hover .speaker-card__photo {
+  transform: translateX(-50%) scale(1.025);
+}
+
+.speaker-card__photo--blurred {
+  width: 104%;
+  opacity: 0.74;
+  filter: blur(10px) brightness(0.72) saturate(0.72);
+  transform: translateX(-50%) scale(1.06);
+}
+
+.speaker-card:hover .speaker-card__photo--blurred {
+  transform: translateX(-50%) scale(1.08);
+  filter: blur(12px) brightness(0.68) saturate(0.68);
+}
+
+.speaker-card__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, transparent 35%, rgba(0, 0, 0, 0.22)),
+    rgba(var(--palette-navy-rgb), 0.08);
+  pointer-events: none;
+}
+
+.speaker-card__veil span {
+  padding: 9px 14px 8px;
+  border-radius: 999px;
+  background: rgba(var(--palette-cream-rgb), 0.92);
+  color: var(--palette-navy);
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.speaker-card__info {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 0 4px 4px;
+  text-align: left;
+  min-width: 0;
+}
+
+.speaker-card__info h3 {
+  margin: 0;
+  color: var(--speakers-card-name);
+  font-size: clamp(20px, 1.7vw, 25px);
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.speaker-card__info p {
+  margin: 0;
+  color: var(--speakers-card-role);
+  font-size: clamp(14px, 1.08vw, 16px);
+  line-height: 1.38;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .visually-hidden {
@@ -695,126 +960,136 @@ onUnmounted(() => {
   border: 0;
 }
 
-.speaker-card {
-  position: relative;
-  flex: 0 0 var(--slide-width, 280px);
-  width: var(--slide-width, 280px);
-  max-width: 100%;
-  min-width: 0;
-  height: auto;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  border: none;
-  border-radius: var(--speakers-card-radius);
-  background: var(--speakers-card-surface);
-  box-shadow: var(--speakers-card-shadow);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.speakers-section--dark {
-  --speakers-card-surface: var(--color-speakers-card-bg);
-  --speakers-card-media-bg: rgba(var(--palette-cream-rgb), 0.1);
-  --speakers-card-name: var(--palette-cream);
-  --speakers-card-role: rgba(var(--palette-cream-rgb), 0.82);
-  --speakers-card-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
-  --speakers-nav-bg: var(--palette-cream);
-  --speakers-nav-icon: var(--palette-navy);
-  --speakers-nav-border: rgba(var(--palette-navy-rgb), 0.14);
-  --speakers-nav-shadow: 0 8px 26px rgba(0, 0, 0, 0.32);
-}
-
-.speaker-card__photo-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  flex-shrink: 0;
-  border-radius: var(--speakers-card-media-radius);
-  background: var(--speakers-card-media-bg);
-  overflow: hidden;
-}
-
-.speaker-card__photo {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  z-index: 1;
-  width: 94%;
-  height: 100%;
-  max-width: none;
-  display: block;
-  transform: translateX(-50%);
-  transform-origin: center bottom;
-  object-fit: contain;
-  object-position: center bottom;
-}
-
-.speaker-card__info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 0 4px 4px;
-  text-align: left;
-  min-width: 0;
-}
-
-.speaker-card__info h3 {
-  margin: 0;
-  color: var(--speakers-card-name);
-  font-size: clamp(17px, 4.2vw, 22px);
-  line-height: 1.2;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-}
-
-.speaker-card__info p {
-  margin: 0;
-  color: var(--speakers-card-role);
-  font-size: clamp(13px, 3.4vw, 15px);
-  line-height: 1.4;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-}
-
 @media (min-width: 1920px) {
   .speakers-section {
-    padding: 120px var(--layout-gutter-wide, 80px) 132px;
+    padding: 128px var(--layout-gutter-wide, 80px) 142px;
   }
-}
 
-@media (max-width: 900px) {
-  .speakers-section {
-    padding: 80px var(--layout-gutter, 24px) 92px;
+  .speakers-container {
+    width: min(1560px, 100%);
   }
 
   .speakers-heading {
-    margin-bottom: 36px;
-    padding: 26px 56px 32px;
+    margin-bottom: 64px;
+  }
+
+  .speakers-carousel {
+    padding-inline: 78px;
+  }
+
+  .speaker-card {
+    --speakers-card-radius: 34px;
+    --speakers-card-media-radius: 24px;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .speaker-card__photo-wrap {
+    aspect-ratio: 4 / 5.15;
+  }
+
+  .speaker-card__info h3 {
+    font-size: clamp(23px, 1.35vw, 28px);
+  }
+
+  .speaker-card__info p {
+    font-size: 16px;
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 1280px) {
+  .speakers-container {
+    width: min(1180px, 100%);
+  }
+
+  .speakers-carousel {
+    padding-inline: 58px;
+  }
+}
+
+@media (max-width: 960px) {
+  .speakers-section {
+    padding: 86px var(--layout-gutter-wide, 32px) 98px;
+  }
+
+  .speakers-container {
+    width: min(900px, 100%);
+  }
+
+  .speakers-heading {
+    margin-bottom: 40px;
+    padding-inline: clamp(10px, 3vw, 32px);
+  }
+
+  .speakers-lead {
+    max-width: 620px;
+    font-size: clamp(16px, 2.1vw, 20px);
+  }
+
+  .speakers-carousel {
+    padding-inline: 50px;
+  }
+
+  .speaker-card {
+    --speakers-card-radius: 26px;
+    --speakers-card-media-radius: 20px;
+    padding: 13px;
+  }
+
+  .speaker-card__info h3 {
+    font-size: clamp(19px, 2.5vw, 23px);
+  }
+
+  .speaker-card__info p {
+    font-size: clamp(14px, 1.8vw, 15px);
+  }
+}
+
+@media (max-width: 640px) {
+  .speakers-section {
+    padding: 74px var(--layout-gutter, 20px) 86px;
+  }
+
+  .speakers-heading {
+    margin-bottom: 30px;
+    padding-inline: 0;
+  }
+
+  .speakers-heading h2 {
+    line-height: 0.92;
+    letter-spacing: -0.065em;
+  }
+
+  .speakers-heading .phrase-marker {
+    --phrase-marker-pad-x: 0.58em;
+    --phrase-marker-pad-y-top: 0.38em;
+    --phrase-marker-pad-y-bottom: 0.42em;
+    --phrase-marker-pad-y-top: 0.5em;
+    --phrase-marker-pad-y-bottom: 0.54em;
+    --phrase-marker-ring-x: 1.95em;
+    --phrase-marker-ring-y: 1.62em;
+  }
+
+  .speakers-lead {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.34;
+  }
+
   .speakers-carousel {
     padding-inline: 0;
-    gap: 10px;
     display: grid;
-    grid-template-columns: 40px minmax(0, 1fr) 40px;
-    grid-template-rows: auto auto;
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
+    grid-template-rows: auto;
+    gap: 10px;
     align-items: center;
   }
 
   .speakers-carousel__nav {
     position: static;
     transform: none;
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     grid-row: 1;
   }
 
@@ -830,11 +1105,7 @@ onUnmounted(() => {
 
   .speakers-carousel__nav:hover,
   .speakers-carousel__nav:active {
-    transform: scale(1.05);
-  }
-
-  .speakers-carousel__nav:active {
-    transform: scale(0.98);
+    transform: scale(1.04);
   }
 
   .speakers-carousel__viewport {
@@ -842,81 +1113,62 @@ onUnmounted(() => {
     grid-row: 1;
     width: 100%;
     min-width: 0;
-    scroll-snap-type: x mandatory;
-  }
-}
-
-@media (max-width: 600px) {
-  .speakers-section {
-    padding: 70px 12px 84px;
-  }
-
-  .speakers-heading {
-    margin-bottom: 28px;
-    padding: 26px clamp(20px, 6vw, 44px) 32px;
-    max-width: 100%;
-  }
-
-  .speakers-heading h2 {
-    font-size: clamp(38px, 13vw, 58px);
-    line-height: 0.92;
-    letter-spacing: -0.065em;
-  }
-
-  .speakers-carousel__nav {
-    width: 40px;
-    height: 40px;
-  }
-
-  .speakers-carousel__nav :deep(svg) {
-    width: 20px;
-    height: 20px;
-  }
-
-  .speakers-carousel__viewport {
-    border-radius: 22px;
+    padding: 4px;
+    border-radius: 26px;
   }
 
   .speaker-card {
-    --speakers-card-radius: 20px;
-    --speakers-card-media-radius: 14px;
+    --speakers-card-radius: 24px;
+    --speakers-card-media-radius: 18px;
     padding: 12px;
     gap: 12px;
   }
 
+  .speaker-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .speaker-card__photo-wrap {
+    aspect-ratio: 4 / 4.85;
+  }
+
+  .speaker-card__info {
+    gap: 8px;
+  }
+
   .speaker-card__info h3 {
-    line-height: 1.18;
+    font-size: clamp(18px, 5.2vw, 22px);
+    line-height: 1.1;
   }
 
   .speaker-card__info p {
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.36;
   }
 
   .speakers-carousel__dots {
-    gap: 5px;
-    margin-top: 12px;
-    padding-inline: 2px;
+    gap: 6px;
+    margin-top: 16px;
   }
 
   .speakers-carousel__dot {
     width: 7px;
     height: 7px;
   }
+
+  .speakers-carousel__dot[aria-selected='true'] {
+    width: 24px;
+  }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 420px) {
   .speakers-section {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 66px var(--layout-gutter, 16px) 78px;
   }
 
-  .speakers-heading {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-
-  .speakers-heading h2 {
-    font-size: clamp(34px, 13vw, 46px);
+  .speakers-carousel {
+    grid-template-columns: 36px minmax(0, 1fr) 36px;
+    gap: 8px;
   }
 
   .speakers-carousel__nav {
@@ -929,8 +1181,82 @@ onUnmounted(() => {
     height: 18px;
   }
 
+  .speakers-carousel__viewport {
+    border-radius: 24px;
+  }
+
+  .speaker-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .speaker-card__photo-wrap {
+    aspect-ratio: 4 / 4.7;
+  }
+
+  .speaker-card__info {
+    padding-inline: 3px;
+  }
+
   .speaker-card__info h3 {
-    font-size: clamp(17px, 5.2vw, 20px);
+    font-size: clamp(17px, 5.4vw, 20px);
+  }
+
+  .speaker-card__info p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 320px) {
+  .speakers-section {
+    padding: 58px 12px 70px;
+  }
+
+  .speakers-heading {
+    margin-bottom: 24px;
+  }
+
+  .speakers-lead {
+    font-size: 14px;
+  }
+
+  .speakers-carousel {
+    grid-template-columns: 32px minmax(0, 1fr) 32px;
+    gap: 6px;
+  }
+
+  .speakers-carousel__nav {
+    width: 32px;
+    height: 32px;
+  }
+
+  .speakers-carousel__nav :deep(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .speaker-card {
+    --speakers-card-radius: 20px;
+    --speakers-card-media-radius: 15px;
+    padding: 9px;
+  }
+
+  .speaker-card__photo-wrap {
+    aspect-ratio: 4 / 4.6;
+  }
+
+  .speaker-card__info h3 {
+    font-size: 16px;
+  }
+
+  .speaker-card__info p {
+    font-size: 12px;
+    line-height: 1.34;
+  }
+
+  .speaker-card__veil span {
+    padding: 8px 11px 7px;
+    font-size: 11px;
   }
 }
 
@@ -940,7 +1266,10 @@ onUnmounted(() => {
   }
 
   .speakers-carousel__nav,
-  .speakers-carousel__dot {
+  .speakers-carousel__dot,
+  .speaker-card,
+  .speaker-card::after,
+  .speaker-card__photo {
     transition-duration: 0.01ms;
   }
 }
