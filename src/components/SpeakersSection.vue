@@ -8,7 +8,7 @@ const MIN_CARD_WIDTH_TABLET_PX = 240
 const SINGLE_COLUMN_MAX_WIDTH = 560
 const TWO_COLUMN_MAX_WIDTH = 920
 const THREE_COLUMN_MAX_WIDTH = 1200
-const MAX_COLUMNS_DESKTOP = 4
+const MAX_COLUMNS_DESKTOP = 3
 
 const getMinCardWidth = (layoutWidth) => {
   if (layoutWidth <= SINGLE_COLUMN_MAX_WIDTH) {
@@ -36,68 +36,18 @@ let scrollRaf = null
 const speakers = [
   {
     image: '/speaker_1.png',
-    name: 'Максим Орешкин',
-    role: 'Заместитель Руководителя Администрации Президента Российской Федерации',
+    name: 'Ирина Каск',
+    role: 'Уполномоченный по защите прав предпринимателей в ХМАО — Югре',
+  },
+  {
+    image: '/speaker_2.png',
+    name: 'Дмитрий Суханов',
+    role: '',
   },
   {
     image: '/speaker_3.png',
-    name: 'Алексей Репик',
-    role: 'Основатель фонда «Молодежная предпринимательская инициатива», председатель Общероссийской общественной организации «Деловая Россия»',
-  },
-  {
-    image: '/speaker_4.png',
-    name: 'Светлана Чупшева',
-    role: 'Генеральный директор АНО «Агентство стратегических инициатив по продвижению новых проектов»',
-  },
-  {
-    image: '/speaker_5.png',
-    name: 'Александр Исаевич',
-    role: 'Генеральный директор АО «Корпорация «МСП»',
-  },
-  {
-    image: '/speaker_7.png',
-    name: 'Кристина Кострома',
-    role: 'Руководитель Департамента предпринимательства и инновационного развития города Москвы',
-  },
-  {
-    image: '/speaker_6.png',
-    name: 'Юрий Максимов',
-    role: 'Основатель фонда Сайберус и компании Positive Technologies',
-  },
-  {
-    image: '/speaker_8.png',
-    name: 'Мария Папук',
-    role: 'Основатель коммуникационной группы Vinci Agency с международной экспертизой, совладелец журнала Инк',
-  },
-  {
-    image: '/speaker_9.png',
-    name: 'Михаил Каптюг',
-    role: 'Основатель проекта Sciencely, эксперт в сфере научно-просветительских и образовательных продуктов для детей',
-  },
-  {
-    image: '/speaker_10.png',
-    name: 'Анна Давыдова',
-    role: 'Основатель и сооснователь компании 5YES! — производителя растительного молока для бариста и ритейла',
-  },
-  {
-    image: '/speaker_11.png',
-    name: 'Александр Мутовин',
-    role: 'Основатель сервиса доставки еды «Много Лосося»',
-  },
-  {
-    image: '/speaker_12.png',
-    name: 'Кирилл Токарев',
-    role: 'Телеведущий, шеф-редактор телеканала РБК-ТВ по экономической аналитике',
-  },
-  {
-    image: '/speaker_14.png',
-    name: 'Самира Мустафаева',
-    role: 'Основатель сети студий растяжки и фитнеса SM Stretching; мастер спорта международного класса по художественной гимнастике; многократный призер чемпионатов России и Европы',
-  },
-  {
-    image: '/speaker_15.png',
-    name: 'Глеб Белявский',
-    role: 'Руководитель направления инвестиций акселераторов Сбера и сообщества инвесторов SberUnity',
+    name: 'Эльмира Ибрагимова',
+    role: '',
   },
 ]
 
@@ -319,6 +269,10 @@ const stopAutoplay = () => {
 const startAutoplay = () => {
   stopAutoplay()
 
+  if (pageCount.value <= 1) {
+    return
+  }
+
   if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return
   }
@@ -337,6 +291,7 @@ const onManualNav = (direction) => {
   } else {
     prev()
   }
+
   restartAutoplay()
 }
 
@@ -424,6 +379,7 @@ onUnmounted(() => {
         @focusout="startAutoplay"
       >
         <button
+          v-if="pageCount > 1"
           class="speakers-carousel__nav speakers-carousel__nav--prev"
           type="button"
           aria-label="Предыдущий спикер"
@@ -459,13 +415,14 @@ onUnmounted(() => {
 
               <div class="speaker-card__info">
                 <h3>{{ speaker.name }}</h3>
-                <p>{{ speaker.role }}</p>
+                <p v-if="speaker.role">{{ speaker.role }}</p>
               </div>
             </article>
           </div>
         </div>
 
         <button
+          v-if="pageCount > 1"
           class="speakers-carousel__nav speakers-carousel__nav--next"
           type="button"
           aria-label="Следующий спикер"
@@ -487,7 +444,12 @@ onUnmounted(() => {
         {{ visibleSpeakerLabel }}
       </p>
 
-      <div class="speakers-carousel__dots" role="tablist" aria-label="Страницы спикеров">
+      <div
+        v-if="pageCount > 1"
+        class="speakers-carousel__dots"
+        role="tablist"
+        aria-label="Страницы спикеров"
+      >
         <button
           v-for="page in pageIndices"
           :key="`page-${page}`"
@@ -541,9 +503,8 @@ onUnmounted(() => {
 
 .speakers-heading {
   position: relative;
-  width: fit-content;
   margin: 0 auto 48px;
-  padding: 34px 86px 42px;
+  padding: 34px clamp(16px, 5vw, 86px) 42px;
   isolation: isolate;
 }
 
@@ -552,12 +513,27 @@ onUnmounted(() => {
   z-index: 3;
   margin: 0;
   color: var(--speakers-heading);
-  font-size: clamp(44px, 6.6vw, 92px);
   line-height: 0.9;
   font-weight: 950;
   text-align: center;
   text-transform: lowercase;
   letter-spacing: -0.075em;
+}
+
+.speakers-heading .phrase-marker {
+  --phrase-marker-pad-x: 0.64em;
+  --phrase-marker-pad-y-top: 0.4em;
+  --phrase-marker-pad-y-bottom: 0.44em;
+  --phrase-marker-ring-x: 1.34em;
+  --phrase-marker-ring-y: 1.12em;
+}
+
+@container (max-width: 420px) {
+  .speakers-heading .phrase-marker {
+    --phrase-marker-ring-x: 1.1em;
+    --phrase-marker-ring-y: 1.02em;
+    --phrase-marker-pad-x: 0.58em;
+  }
 }
 
 .speakers-carousel {
@@ -783,9 +759,64 @@ onUnmounted(() => {
   word-wrap: break-word;
 }
 
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .speakers-section {
+    padding: 92px var(--layout-gutter-wide) 104px;
+  }
+
+  .speakers-container {
+    width: min(1200px, 100%);
+  }
+
+  .speakers-heading {
+    padding: 30px 64px 38px;
+    margin-bottom: 42px;
+  }
+
+  .speakers-carousel {
+    padding-inline: 48px;
+  }
+
+  .speakers-carousel__nav {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .speakers-container {
+    width: min(1360px, 100%);
+  }
+
+}
+
 @media (min-width: 1920px) {
   .speakers-section {
     padding: 120px var(--layout-gutter-wide, 80px) 132px;
+  }
+
+  .speakers-container {
+    width: min(1480px, 100%);
+  }
+
+}
+
+@media (max-width: 1024px) and (min-width: 761px) {
+  .speakers-section {
+    padding: 84px var(--layout-gutter-wide) 96px;
+  }
+
+  .speakers-heading {
+    margin-bottom: 32px;
+    padding: 28px 44px 34px;
+  }
+
+  .speakers-carousel {
+    padding-inline: clamp(8px, 2vw, 24px);
+  }
+
+  .speaker-card__info h3 {
+    font-size: clamp(18px, 2vw, 21px);
   }
 }
 
@@ -796,7 +827,7 @@ onUnmounted(() => {
 
   .speakers-heading {
     margin-bottom: 36px;
-    padding: 26px 56px 32px;
+    padding: 26px clamp(20px, 5vw, 56px) 32px;
   }
 }
 
@@ -848,7 +879,7 @@ onUnmounted(() => {
 
 @media (max-width: 600px) {
   .speakers-section {
-    padding: 70px 12px 84px;
+    padding: 70px var(--layout-gutter) 84px;
   }
 
   .speakers-heading {
@@ -858,7 +889,6 @@ onUnmounted(() => {
   }
 
   .speakers-heading h2 {
-    font-size: clamp(38px, 13vw, 58px);
     line-height: 0.92;
     letter-spacing: -0.065em;
   }
@@ -904,33 +934,67 @@ onUnmounted(() => {
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 480px) {
   .speakers-section {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 64px var(--layout-gutter) 76px;
   }
 
   .speakers-heading {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding: 22px var(--layout-gutter) 28px;
+    margin-bottom: 24px;
   }
 
   .speakers-heading h2 {
-    font-size: clamp(34px, 13vw, 46px);
+    font-size: clamp(36px, 12vw, 50px);
+  }
+}
+
+@media (max-width: 380px) {
+  .speakers-section {
+    padding-inline: var(--layout-gutter);
+  }
+
+  .speakers-heading {
+    padding-inline: var(--layout-gutter);
+  }
+
+  .speakers-carousel {
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    gap: 8px;
   }
 
   .speakers-carousel__nav {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   .speakers-carousel__nav :deep(svg) {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
+  }
+
+  .speaker-card {
+    padding: 10px;
+    gap: 10px;
   }
 
   .speaker-card__info h3 {
-    font-size: clamp(17px, 5.2vw, 20px);
+    font-size: clamp(16px, 5vw, 19px);
+  }
+
+  .speaker-card__info p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  .speakers-carousel {
+    grid-template-columns: 32px minmax(0, 1fr) 32px;
+  }
+
+  .speakers-carousel__nav {
+    width: 32px;
+    height: 32px;
   }
 }
 

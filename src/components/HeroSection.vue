@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import RegistrationModal from './RegistrationModal.vue'
-import { useTheme } from '../composables/useTheme'
 import sielomEmblemUrl from '../assets/sielom.svg'
 
-const { isDark } = useTheme()
 const isRegistrationOpen = ref(false)
 
 const openRegistration = () => {
@@ -14,28 +12,20 @@ const openRegistration = () => {
 const closeRegistration = () => {
   isRegistrationOpen.value = false
 }
-
-const handleRegistrationSubmit = (data) => {
-  console.log('Данные регистрации:', data)
-}
 </script>
 
 <template>
-  <section
-    class="hero-section"
-    :class="isDark ? 'hero-section--dark' : 'hero-section--light'"
-  >
+  <section class="hero-section">
     <div class="hero-bg" aria-hidden="true">
       <span class="hero-bg__shape hero-bg__shape--one"></span>
       <span class="hero-bg__shape hero-bg__shape--two"></span>
       <span class="hero-bg__shape hero-bg__shape--three"></span>
-      <span class="hero-bg__shape hero-bg__shape--four"></span>
       <span class="hero-bg__glow hero-bg__glow--one"></span>
-      <span class="hero-bg__glow hero-bg__glow--two"></span>
       <span class="hero-bg__glow hero-bg__glow--three"></span>
     </div>
 
     <div class="hero-container">
+      <div class="hero-column">
       <div class="hero-top">
         <div class="hero-organizers" aria-label="Организатор форума">
           <div class="hero-organizers__head">
@@ -44,14 +34,16 @@ const handleRegistrationSubmit = (data) => {
           </div>
 
           <div class="hero-organizers__body">
-            <img
-              class="hero-organizers__logo"
-              :src="sielomEmblemUrl"
-              alt="Логотип организатора"
-              width="120"
-              height="120"
-              decoding="async"
-            >
+            <div class="hero-organizers__logo-mark">
+              <img
+                class="hero-organizers__logo"
+                :src="sielomEmblemUrl"
+                alt="Логотип организатора"
+                width="120"
+                height="120"
+                decoding="async"
+              >
+            </div>
 
             <p class="hero-organizers__name">
               Сургутский институт<br>
@@ -61,37 +53,58 @@ const handleRegistrationSubmit = (data) => {
         </div>
       </div>
 
+      <p class="hero-location">ХМАО-Югра · Сургут</p>
+
       <div class="hero-main">
         <div class="hero-title-block">
-          <p class="hero-location">ХМАО-Югра · Сургут</p>
-
           <h1 class="hero-title" aria-label="форум молодежного предпринимательства ВОЛНА 2026">
             <span class="hero-title__line">форум</span>
             <span class="hero-title__line">молодежного</span>
-            <span class="hero-title__line">предпринимательства</span>
+            <span class="hero-title__line hero-title__line--long">предпринимательства</span>
 
-            <span class="hero-title__bottom">
+          </h1>
+
+          <div class="hero-title__footer">
+            <div class="hero-title__bottom">
               <span class="hero-title__brand">волна</span>
               <span class="hero-title__year">2026</span>
-            </span>
-          </h1>
+            </div>
+
+            <div class="hero-actions">
+              <button
+                class="hero-button"
+                type="button"
+                aria-haspopup="dialog"
+                @click="openRegistration"
+              >
+                <span>зарегистрироваться</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="hero-bottom">
           <div class="hero-date">
             <span>29 мая 2026</span>
           </div>
+        </div>
+      </div>
+      </div>
+    </div>
 
-          <div class="hero-actions">
-            <button
-              class="hero-button"
-              type="button"
-              aria-haspopup="dialog"
-              @click="openRegistration"
-            >
-              <span>зарегистрироваться</span>
-            </button>
-          </div>
+    <div class="hero-marquee" aria-hidden="true">
+      <div class="hero-marquee__track">
+        <div class="hero-marquee__group">
+          <span>волна</span>
+          <span>форум молодежного предпринимательства</span>
+          <span>волна</span>
+          <span>форум молодежного предпринимательства</span>
+        </div>
+        <div class="hero-marquee__group">
+          <span>волна</span>
+          <span>форум молодежного предпринимательства</span>
+          <span>волна</span>
+          <span>форум молодежного предпринимательства</span>
         </div>
       </div>
     </div>
@@ -99,157 +112,90 @@ const handleRegistrationSubmit = (data) => {
     <RegistrationModal
       :is-open="isRegistrationOpen"
       @close="closeRegistration"
-      @submit="handleRegistrationSubmit"
     />
   </section>
 </template>
 
 <style scoped>
 .hero-section {
-  --site-header-offset: 96px;
+  width: 100%;
+  max-width: 100%;
+  --hero-title-size-max: clamp(42px, 5.2vw, 96px);
+  --hero-title-fit-divisor: 11.6;
+  --hero-title-fit-divisor-long: 14.2;
+  --hero-marquee-h: clamp(68px, 7.5vh, 80px);
+  --hero-button-bg: var(--volna-brand-gradient);
+  --hero-button-shadow: 0 8px 24px rgba(255, 111, 145, 0.28);
+  --hero-button-shadow-hover: 0 12px 32px rgba(255, 111, 145, 0.36);
 
   position: relative;
   min-height: 100svh;
   padding:
     calc(var(--site-header-offset) + env(safe-area-inset-top, 0px) + clamp(12px, 2vh, 28px))
     clamp(18px, 4vw, 58px)
-    clamp(26px, 4.5vh, 64px);
+    calc(var(--hero-marquee-h) + clamp(20px, 3vh, 36px) + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--hero-text);
   background: var(--hero-bg);
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   isolation: isolate;
   box-sizing: border-box;
   transition:
     background 0.35s ease,
     color 0.35s ease;
-}
 
-.hero-section--light {
-  --hero-text: #111827;
-  --hero-muted: rgba(17, 24, 39, 0.72);
-  --hero-accent: #fc526c;
-  --hero-location-text: rgba(17, 24, 39, 0.76);
-
-  --hero-title-text-gradient: linear-gradient(
-    92deg,
-    #101827 0%,
-    #241c43 38%,
-    #6b2d6f 70%,
-    #b23655 100%
-  );
-
-  --hero-sunset-gradient: linear-gradient(
-    92deg,
-    #7a2f00 0%,
-    #b64b00 28%,
-    #e96d00 56%,
-    #ff9f43 78%,
-    #ffd6a5 100%
-  );
-
-  --hero-button-bg: linear-gradient(
-    92deg,
-    #8a3600 0%,
-    #c45800 34%,
-    #f47b00 62%,
-    #ff9f43 82%,
-    #ffd6a5 100%
-  );
-
-  --hero-button-shadow: rgba(230, 106, 0, 0.34);
-  --hero-button-glow: rgba(255, 159, 67, 0.32);
-
-  --hero-organizers-label: rgba(17, 24, 39, 0.72);
-  --hero-organizers-line: linear-gradient(90deg, rgba(252, 82, 108, 0.95), rgba(255, 146, 77, 0.95));
-  --hero-logo-filter: brightness(0);
-  --hero-name-text: #4b5563;
-
-  --hero-bg:
-    radial-gradient(circle at 10% 9%, rgba(255, 195, 116, 0.82), transparent 32%),
-    radial-gradient(circle at 86% 16%, rgba(252, 82, 108, 0.34), transparent 36%),
-    radial-gradient(circle at 50% 92%, rgba(255, 132, 43, 0.3), transparent 36%),
-    radial-gradient(circle at 28% 72%, rgba(109, 91, 166, 0.22), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #ffffff 48%, #fff4f1 100%);
-
-  --hero-shape-bg: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.96),
-    rgba(238, 231, 247, 0.72)
-  );
-  --hero-shape-border: rgba(109, 91, 166, 0.08);
-  --hero-shape-shadow:
-    28px 34px 80px rgba(13, 27, 42, 0.08),
-    inset 14px 14px 32px rgba(255, 255, 255, 0.86),
-    inset -16px -16px 30px rgba(109, 91, 166, 0.08);
-
-  --hero-glow-one: rgba(252, 82, 108, 0.44);
-  --hero-glow-two: rgba(255, 132, 43, 0.36);
-  --hero-glow-three: rgba(109, 91, 166, 0.3);
-}
-
-.hero-section--dark {
   --hero-text: #fff4f1;
   --hero-muted: rgba(255, 244, 241, 0.86);
   --hero-accent: #ffb56a;
-  --hero-location-text: rgba(255, 244, 241, 0.78);
-
-  --hero-title-text-gradient: linear-gradient(
-    92deg,
-    #ffffff 0%,
-    #fff4f1 34%,
-    #ffbfd0 68%,
-    #ffd1a8 100%
+  --hero-location-text: #ffffff;
+  --hero-title-text-base: #ffffff;
+  /* Бренд справа → белый ровно в середине (50%), левая половина — белая */
+  --hero-title-fill: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--volna-brand-end) 44%, var(--hero-title-text-base)) 0%,
+    color-mix(in srgb, var(--volna-brand-start) 34%, var(--hero-title-text-base)) 20%,
+    color-mix(in srgb, var(--volna-brand-start) 20%, var(--hero-title-text-base)) 36%,
+    color-mix(in srgb, var(--volna-brand-start) 8%, var(--hero-title-text-base)) 48%,
+    var(--hero-title-text-base) 50%,
+    var(--hero-title-text-base) 100%
+  );
+  /* Длинное слово — градиент шире, белый ближе к 70% */
+  --hero-title-fill-long: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--volna-brand-end) 44%, var(--hero-title-text-base)) 0%,
+    color-mix(in srgb, var(--volna-brand-start) 34%, var(--hero-title-text-base)) 28%,
+    color-mix(in srgb, var(--volna-brand-start) 20%, var(--hero-title-text-base)) 48%,
+    color-mix(in srgb, var(--volna-brand-start) 8%, var(--hero-title-text-base)) 66%,
+    var(--hero-title-text-base) 70%,
+    var(--hero-title-text-base) 100%
   );
 
-  --hero-sunset-gradient: linear-gradient(
-    92deg,
-    #ffd6a5 0%,
-    #ffbd7a 28%,
-    #ff9f43 58%,
-    #ff7b00 82%,
-    #d85a00 100%
-  );
-
-  --hero-button-bg: linear-gradient(
-    92deg,
-    #ffd6a5 0%,
-    #ffb56a 28%,
-    #ff9f43 56%,
-    #ff7b00 78%,
-    #d85a00 100%
-  );
-
-  --hero-button-shadow: rgba(255, 138, 36, 0.42);
-  --hero-button-glow: rgba(255, 183, 106, 0.34);
-
-  --hero-organizers-label: rgba(255, 244, 241, 0.76);
+  --hero-organizers-label: rgba(255, 255, 255, 0.94);
   --hero-organizers-line: linear-gradient(90deg, #ff7fa5, #ff9f43, #b7a5ff);
-  --hero-logo-filter: brightness(0) invert(1);
-  --hero-name-text: rgba(255, 244, 241, 0.8);
+  --hero-logo-filter: brightness(0) invert(1) brightness(1.08);
+  --hero-name-text: #ffffff;
 
   --hero-bg:
-    radial-gradient(circle at 8% 9%, rgba(109, 91, 166, 0.6), transparent 32%),
-    radial-gradient(circle at 87% 14%, rgba(255, 111, 145, 0.42), transparent 36%),
-    radial-gradient(circle at 52% 88%, rgba(255, 159, 67, 0.34), transparent 37%),
-    linear-gradient(180deg, #25134f 0%, #141f3d 48%, #071126 100%);
+    radial-gradient(circle at 8% 9%, rgba(var(--palette-purple-rgb), 0.32), transparent 34%),
+    radial-gradient(circle at 87% 14%, rgba(var(--palette-pink-rgb), 0.22), transparent 38%),
+    linear-gradient(180deg, #25134f 0%, #141f3d 52%, var(--hero-bridge-bg) 100%);
+  --hero-bridge-bg: var(--palette-navy-mid);
+  --hero-marquee-bg: var(--hero-bridge-bg);
+  --hero-marquee-text: #ffffff;
 
-  --hero-shape-bg: linear-gradient(
-    145deg,
-    rgba(109, 91, 166, 0.44),
-    rgba(255, 111, 145, 0.18)
-  );
-  --hero-shape-border: rgba(255, 244, 241, 0.14);
+  --hero-shape-opacity: 0.34;
+  --hero-shape-border: rgba(var(--palette-peach-rgb), 0.1);
   --hero-shape-shadow:
-    28px 34px 90px rgba(0, 0, 0, 0.28),
-    inset 14px 14px 34px rgba(255, 255, 255, 0.09),
-    inset -18px -18px 34px rgba(0, 0, 0, 0.2);
+    18px 22px 56px rgba(0, 0, 0, 0.2),
+    inset 8px 8px 20px rgba(var(--palette-peach-rgb), 0.06),
+    inset -10px -10px 22px rgba(0, 0, 0, 0.14);
 
-  --hero-glow-one: rgba(255, 111, 145, 0.58);
-  --hero-glow-two: rgba(255, 159, 67, 0.44);
-  --hero-glow-three: rgba(109, 91, 166, 0.58);
+  --hero-glow-opacity: 0.38;
+  --hero-glow-one: rgba(var(--palette-orange-rgb), 0.2);
+  --hero-glow-three: rgba(var(--palette-peach-rgb), 0.18);
 }
 
 .hero-bg {
@@ -277,6 +223,11 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-bg__shape--one {
   --shape-rotate: -28deg;
+  --hero-shape-bg: linear-gradient(
+    145deg,
+    rgba(var(--palette-peach-rgb), 0.2),
+    rgba(var(--palette-orange-rgb), 0.1)
+  );
   left: 5%;
   top: 9%;
   width: clamp(150px, 18vw, 320px);
@@ -287,6 +238,11 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-bg__shape--two {
   --shape-rotate: 18deg;
+  --hero-shape-bg: linear-gradient(
+    148deg,
+    rgba(var(--palette-pink-rgb), 0.14),
+    rgba(var(--palette-orange-rgb), 0.08)
+  );
   right: 6%;
   top: 11%;
   width: clamp(170px, 22vw, 390px);
@@ -295,24 +251,22 @@ const handleRegistrationSubmit = (data) => {
   animation-delay: 0.2s;
 }
 
+/* Не перекрывает «2026» и кнопку — акцент у даты внизу слева */
 .hero-bg__shape--three {
-  --shape-rotate: -14deg;
-  left: 48%;
-  bottom: 15%;
-  width: clamp(150px, 17vw, 280px);
-  height: clamp(120px, 14vw, 220px);
+  --shape-rotate: -22deg;
+  --hero-shape-bg: linear-gradient(
+    152deg,
+    rgba(var(--palette-orange-rgb), 0.12),
+    rgba(var(--palette-peach-rgb), 0.16)
+  );
+  left: clamp(-24px, -1vw, 0px);
+  right: auto;
+  top: auto;
+  bottom: clamp(108px, 16vh, 200px);
+  width: clamp(130px, 15vw, 250px);
+  height: clamp(100px, 12vw, 190px);
   clip-path: polygon(10% 0, 100% 16%, 86% 88%, 22% 100%, 0 34%);
   animation-delay: 0.28s;
-}
-
-.hero-bg__shape--four {
-  --shape-rotate: 31deg;
-  right: 22%;
-  bottom: 5%;
-  width: clamp(90px, 10vw, 160px);
-  height: clamp(90px, 10vw, 160px);
-  border-radius: 24px;
-  animation-delay: 0.34s;
 }
 
 .hero-bg__glow {
@@ -336,36 +290,36 @@ const handleRegistrationSubmit = (data) => {
   animation-delay: 0.22s;
 }
 
-.hero-bg__glow--two {
-  right: 10%;
-  bottom: 16%;
-  width: 310px;
-  height: 310px;
-  background: var(--hero-glow-two);
-  animation-delay: 0.32s;
-}
-
 .hero-bg__glow--three {
-  left: 40%;
-  top: 12%;
-  width: 260px;
-  height: 260px;
+  left: clamp(4%, 8vw, 14%);
+  top: auto;
+  bottom: clamp(72px, 11vh, 150px);
+  width: clamp(200px, 22vw, 280px);
+  height: clamp(200px, 22vw, 280px);
   background: var(--hero-glow-three);
   animation-delay: 0.4s;
 }
 
 .hero-container {
+  container-type: inline-size;
   position: relative;
   z-index: 2;
+  display: grid;
+  align-content: center;
+  gap: 0;
   width: min(1260px, 100%);
   margin: 0 auto;
+}
+
+.hero-column {
+  display: contents;
 }
 
 .hero-top {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  margin-bottom: clamp(4px, 0.7vh, 10px);
+  margin-bottom: 0;
 }
 
 .hero-organizers {
@@ -406,26 +360,39 @@ const handleRegistrationSubmit = (data) => {
 .hero-organizers__body {
   display: flex;
   align-items: center;
-  gap: clamp(16px, 1.8vw, 24px);
+  gap: 6px;
+  font-size: clamp(11px, 0.9vw, 14px);
+}
+
+.hero-organizers__logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  align-self: center;
+  height: 3.1em;
 }
 
 .hero-organizers__logo {
   display: block;
-  width: clamp(42px, 4.5vw, 58px);
-  height: clamp(42px, 4.5vw, 58px);
+  width: auto;
+  height: 100%;
+  max-height: clamp(58px, 6.4vw, 80px);
+  max-width: clamp(64px, 7vw, 88px);
   object-fit: contain;
+  object-position: center;
   filter: var(--hero-logo-filter);
-  flex-shrink: 0;
   transition: filter 0.35s ease;
 }
 
 .hero-organizers__name {
   max-width: 270px;
   margin: 0;
+  align-self: center;
   color: var(--hero-name-text);
-  font-size: clamp(11px, 0.9vw, 14px);
+  font-size: inherit;
   font-weight: 350;
-  line-height: 1.22;
+  line-height: 1.16;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -437,15 +404,19 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-title-block {
+  container-type: inline-size;
   width: 100%;
+  max-width: 100%;
   overflow: visible;
 }
 
 .hero-location {
   width: fit-content;
-  margin: 0 0 clamp(6px, 0.8vh, 12px);
+  max-width: 100%;
+  margin: clamp(20px, 4.5vh, 52px) 0 clamp(14px, 2.4vh, 32px);
+  white-space: nowrap;
   color: var(--hero-location-text);
-  font-size: clamp(15px, 1.1vw, 20px);
+  font-size: min(clamp(15px, 1.1vw, 20px), max(11px, calc(100cqi / 21)));
   font-weight: 850;
   line-height: 1.25;
   letter-spacing: 0.055em;
@@ -455,15 +426,20 @@ const handleRegistrationSubmit = (data) => {
   animation: heroFadeUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) 0.32s forwards;
 }
 
+.hero-title,
+.hero-title__bottom {
+  font-size: min(var(--hero-title-size-max), max(12px, calc(100cqi / var(--hero-title-fit-divisor))));
+}
+
 .hero-title {
   display: grid;
+  justify-items: start;
   gap: clamp(1px, 0.22vh, 4px);
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 0.1em 0.24em 0.12em 0;
+  padding: 0.1em 0 0.12em;
   color: var(--hero-text);
-  font-size: clamp(42px, 5.2vw, 96px);
   font-weight: 950;
   line-height: 1.08;
   letter-spacing: -0.01em;
@@ -478,17 +454,32 @@ const handleRegistrationSubmit = (data) => {
   width: fit-content;
   max-width: 100%;
   min-height: 1.08em;
-  padding: 0.03em 0.1em 0.05em 0;
+  padding: 0.03em 0 0.05em;
+  color: transparent;
+  background-image: var(--hero-title-fill);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: 0 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: inherit;
   line-height: 1.08;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  background: var(--hero-title-text-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  overflow-wrap: normal;
+  word-break: keep-all;
   opacity: 0;
   transform: translateY(30px);
   animation: heroTitleIn 0.9s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.hero-title__line--long {
+  background-image: var(--hero-title-fill-long);
+  font-size: min(
+    var(--hero-title-size-max),
+    max(12px, calc(100cqi / var(--hero-title-fit-divisor-long)))
+  );
 }
 
 .hero-title__line:nth-child(1) {
@@ -503,16 +494,32 @@ const handleRegistrationSubmit = (data) => {
   animation-delay: 0.62s;
 }
 
+.hero-title__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: clamp(10px, 1.4vw, 20px);
+  width: 100%;
+  max-width: 100%;
+  margin-top: clamp(2px, 0.4vh, 8px);
+  overflow: visible;
+}
+
 .hero-title__bottom {
   display: flex;
   align-items: baseline;
   flex-wrap: nowrap;
+  flex-shrink: 0;
   gap: clamp(18px, 3.2vw, 54px);
-  width: 100%;
-  max-width: 100%;
-  margin-top: clamp(0px, 0.3vh, 5px);
-  padding-right: 0.3em;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding-right: 0;
   overflow: visible;
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 .hero-title__brand {
@@ -521,19 +528,13 @@ const handleRegistrationSubmit = (data) => {
 
 .hero-title__year {
   padding-right: 0.3em;
-  background: var(--hero-sunset-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
   letter-spacing: 0;
   animation-delay: 0.82s;
 }
 
 .hero-bottom {
-  display: grid;
-  grid-template-columns: minmax(220px, 340px) minmax(260px, 1fr);
-  align-items: center;
-  gap: clamp(20px, 4vw, 60px);
   width: 100%;
+  margin-top: clamp(12px, 2vh, 24px);
 }
 
 .hero-date {
@@ -545,6 +546,7 @@ const handleRegistrationSubmit = (data) => {
 }
 
 .hero-date span {
+  white-space: nowrap;
   font-size: clamp(24px, 2.1vw, 38px);
   font-weight: 900;
   line-height: 1.18;
@@ -555,50 +557,63 @@ const handleRegistrationSubmit = (data) => {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex: 0 0 auto;
+  flex-shrink: 0;
 }
 
 .hero-button {
   position: relative;
-  min-width: clamp(250px, 22vw, 380px);
-  min-height: clamp(66px, 5.4vw, 82px);
-  padding: 0 clamp(34px, 5vw, 68px);
-  border: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: clamp(220px, 17vw, 320px);
+  min-height: clamp(54px, 4.6vw, 70px);
+  padding: 0 clamp(28px, 4vw, 52px);
+  border: none;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
   background: var(--hero-button-bg);
-  box-shadow:
-    0 22px 48px var(--hero-button-shadow),
-    0 0 44px var(--hero-button-glow);
+  background-clip: padding-box;
+  box-shadow: var(--hero-button-shadow);
+  outline: none;
+  filter: saturate(1.06);
+  -webkit-appearance: none;
+  appearance: none;
   font-family: inherit;
-  font-size: clamp(18px, 1.55vw, 26px);
-  font-weight: 900;
+  font-size: clamp(17px, 1.35vw, 22px);
+  font-weight: 650;
   line-height: 1;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   text-decoration: none;
   text-align: center;
   cursor: pointer;
   opacity: 0;
-  transform: translateY(24px) scale(0.96);
+  transform: translateY(24px) scale(0.98);
   animation: heroButtonIn 0.86s cubic-bezier(0.19, 1, 0.22, 1) 1.04s forwards;
   transition:
     transform 0.22s ease,
     box-shadow 0.22s ease,
     filter 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-button::before,
+.hero-button::after {
+  content: none;
+  display: none;
 }
 
 .hero-button span {
   color: #ffffff;
+  font-weight: inherit;
 }
 
 .hero-button:hover {
-  transform: translateY(-4px) scale(1.015);
-  box-shadow:
-    0 28px 58px var(--hero-button-shadow),
-    0 0 54px var(--hero-button-glow);
-  filter: saturate(1.08);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--hero-button-shadow-hover);
+  filter: saturate(1.1);
 }
 
 .hero-button:active {
@@ -639,14 +654,12 @@ const handleRegistrationSubmit = (data) => {
 @keyframes heroButtonIn {
   from {
     opacity: 0;
-    transform: translateY(24px) scale(0.96);
-    filter: blur(8px);
+    transform: translateY(24px) scale(0.98);
   }
 
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -657,7 +670,7 @@ const handleRegistrationSubmit = (data) => {
   }
 
   to {
-    opacity: 1;
+    opacity: var(--hero-shape-opacity, 0.34);
     transform: translateY(0) rotate(var(--shape-rotate, 0deg)) scale(1);
   }
 }
@@ -669,7 +682,7 @@ const handleRegistrationSubmit = (data) => {
   }
 
   to {
-    opacity: 1;
+    opacity: var(--hero-glow-opacity, 0.38);
     transform: scale(1);
   }
 }
@@ -684,17 +697,72 @@ const handleRegistrationSubmit = (data) => {
   }
 }
 
+@keyframes heroMarqueeMove {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.hero-marquee {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  height: var(--hero-marquee-h);
+  background: var(--hero-marquee-bg);
+  color: var(--hero-marquee-text);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: heroMarqueeMove 24s linear infinite;
+  will-change: transform;
+}
+
+.hero-marquee__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: clamp(28px, 3.5vw, 44px);
+  padding-right: clamp(28px, 3.5vw, 44px);
+}
+
+.hero-marquee__group span {
+  flex-shrink: 0;
+  font-size: clamp(24px, 2.2vw, 30px);
+  line-height: 1;
+  font-weight: 950;
+  text-transform: lowercase;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.hero-marquee__group span::after {
+  content: '•';
+  margin-left: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+}
+
 @media (min-width: 1920px) {
   .hero-container {
     width: min(1360px, 100%);
   }
 
-  .hero-title {
-    font-size: clamp(84px, 4.8vw, 102px);
+  .hero-section {
+    --hero-title-size-max: clamp(84px, 4.8vw, 102px);
   }
 
-  .hero-top {
-    margin-bottom: clamp(4px, 1vh, 12px);
+  .hero-location {
+    margin-top: clamp(24px, 5vh, 56px);
   }
 
   .hero-main {
@@ -707,90 +775,395 @@ const handleRegistrationSubmit = (data) => {
     width: min(1480px, 100%);
   }
 
-  .hero-title {
-    font-size: clamp(92px, 4.3vw, 110px);
-  }
-
   .hero-section {
+    --hero-title-size-max: clamp(92px, 4.3vw, 110px);
     padding-top: calc(var(--site-header-offset) + env(safe-area-inset-top, 0px) + 28px);
-    padding-bottom: 66px;
+    padding-bottom: calc(var(--hero-marquee-h) + 36px + env(safe-area-inset-bottom, 0px));
   }
 }
 
 @media (max-width: 1180px) {
-  .hero-title {
-    font-size: clamp(38px, 6.2vw, 76px);
+  .hero-section {
+    --hero-title-size-max: clamp(34px, 5.4vw, 68px);
+    --hero-title-fit-divisor: 12.4;
+    --hero-title-fit-divisor-long: 15.8;
   }
 
-  .hero-bottom {
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 28px;
-  }
-
-  .hero-actions {
-    justify-content: center;
+  .hero-button {
+    min-width: clamp(200px, 16vw, 300px);
+    min-height: clamp(52px, 4.2vw, 64px);
+    padding-inline: clamp(26px, 3.5vw, 48px);
+    font-size: clamp(16px, 1.2vw, 20px);
+    font-weight: 500;
   }
 }
 
-@media (max-width: 860px) {
+@media (min-width: 1025px) and (max-width: 1439px) {
   .hero-section {
+    padding-inline: var(--layout-gutter-wide);
+    --hero-title-size-max: clamp(54px, 4.6vw, 76px);
+    --hero-title-fit-divisor: 11.4;
+    --hero-title-fit-divisor-long: 14;
+  }
+
+  .hero-title__line--long {
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    text-wrap: balance;
+  }
+
+  .hero-location {
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  .hero-container {
+    width: min(1180px, 100%);
+  }
+
+  .hero-title__footer {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .hero-title__bottom {
+    gap: clamp(16px, 2.4vw, 40px);
+  }
+
+  .hero-button {
+    min-width: clamp(220px, 15vw, 300px);
+    min-height: clamp(52px, 4vw, 66px);
+    font-size: clamp(17px, 1.15vw, 21px);
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .hero-section {
+    padding-inline: var(--layout-gutter-wide);
+    --hero-title-size-max: clamp(62px, 4.4vw, 88px);
+    --hero-title-fit-divisor: 11.2;
+    --hero-title-fit-divisor-long: 13.6;
+  }
+
+  .hero-container {
+    width: min(1280px, 100%);
+  }
+
+  .hero-organizers__name {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-section {
+    --hero-marquee-h: clamp(56px, 8vw, 64px);
     min-height: auto;
-    padding-top: calc(var(--site-header-offset) + 42px);
+    padding-inline: var(--layout-gutter-wide);
+    padding-top: calc(var(--site-header-offset) + 20px);
+    --hero-title-size-max: clamp(28px, 6.2vw, 52px);
+    --hero-title-fit-divisor: 13;
+    --hero-title-fit-divisor-long: 17.2;
+  }
+
+  .hero-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
   }
 
   .hero-top {
     justify-content: center;
-    margin-bottom: 18px;
+    width: 100%;
+    margin-bottom: 0;
   }
 
   .hero-organizers {
     justify-items: center;
+    width: 100%;
+    max-width: 100%;
     gap: 10px;
+  }
+
+  .hero-organizers__head {
+    justify-content: center;
+  }
+
+  .hero-organizers__head i {
+    transform-origin: center center;
   }
 
   .hero-organizers__body {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    gap: 12px;
+    gap: 10px;
+  }
+
+  .hero-organizers__name {
+    max-width: min(100%, 360px);
   }
 
   .hero-location {
-    margin-inline: auto;
+    margin: 22px auto 16px;
     text-align: center;
   }
 
-  .hero-title {
+  .hero-main {
     width: 100%;
+    justify-items: center;
+  }
+
+  .hero-title-block {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-title {
+    justify-items: center;
     text-align: center;
-    font-size: clamp(34px, 8.6vw, 64px);
+    padding-inline: 0;
   }
 
   .hero-title__line,
   .hero-title__brand,
   .hero-title__year {
-    width: 100%;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    padding-inline: 0;
+  }
+
+  .hero-title__footer {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
   }
 
   .hero-title__bottom {
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-right: 0;
+    gap: clamp(12px, 3vw, 24px);
+  }
+
+  .hero-actions {
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   .hero-date {
     justify-items: center;
     text-align: center;
   }
+
+  .hero-button {
+    width: auto;
+    min-width: clamp(196px, 36vw, 284px);
+    max-width: min(100%, 320px);
+    margin-inline: auto;
+    min-height: 48px;
+    padding-inline: clamp(24px, 5.5vw, 44px);
+    font-size: clamp(15px, 3vw, 19px);
+    min-height: clamp(46px, 7vw, 54px);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .hero-marquee__group span {
+    font-size: clamp(17px, 2.2vw, 22px);
+  }
+
+  .hero-marquee__group {
+    gap: 20px;
+    padding-right: 20px;
+  }
+
+  .hero-marquee__group span::after {
+    margin-left: 20px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .hero-section {
+    padding-bottom: calc(var(--hero-marquee-h) + 22px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .hero-title-block {
+    max-width: min(680px, 100%);
+  }
+
+  .hero-organizers__body {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    max-width: min(100%, 440px);
+  }
+
+  .hero-organizers__name {
+    text-align: left;
+  }
+
+  .hero-title__footer {
+    gap: clamp(14px, 2.5vh, 20px);
+  }
+}
+
+@media (max-width: 920px) {
+  .hero-section {
+    padding-top: calc(var(--site-header-offset) + 16px);
+    --hero-title-size-max: clamp(26px, 6.8vw, 48px);
+    --hero-title-fit-divisor: 13.4;
+    --hero-title-fit-divisor-long: 17.8;
+  }
+
+  .hero-bg__shape--three {
+    bottom: clamp(96px, 14vh, 168px);
+    width: clamp(110px, 22vw, 180px);
+    height: clamp(88px, 18vw, 150px);
+  }
+
+  .hero-bg__glow--three {
+    left: 2%;
+    bottom: clamp(64px, 10vh, 120px);
+    width: clamp(160px, 36vw, 220px);
+    height: clamp(160px, 36vw, 220px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    align-items: flex-start;
+    min-height: auto;
+    padding-inline: var(--layout-gutter);
+    padding-top: calc(var(--site-header-offset) + 12px);
+    padding-bottom: calc(var(--hero-marquee-h) + 14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .hero-section {
+    --hero-bg: linear-gradient(180deg, #25134f 0%, #141f3d 52%, var(--hero-bridge-bg) 100%);
+    --hero-button-shadow: 0 6px 20px rgba(255, 111, 145, 0.24);
+    --hero-button-shadow-hover: 0 10px 26px rgba(255, 111, 145, 0.3);
+  }
+
+  .hero-main {
+    gap: 12px;
+  }
+
+  .hero-bg__shape,
+  .hero-bg__glow {
+    display: none;
+  }
+
+  .hero-location {
+    margin: 14px auto 12px;
+    white-space: normal;
+    text-wrap: balance;
+    max-width: 22em;
+  }
+
+  .hero-organizers__logo {
+    max-height: 52px;
+    max-width: 56px;
+  }
+
+  .hero-organizers__head i {
+    width: clamp(36px, 12vw, 56px);
+  }
+
+  .hero-organizers__body {
+    gap: 8px;
+  }
+
+  .hero-title-block {
+    width: 100%;
+  }
+
+  .hero-title__footer {
+    width: 100%;
+    align-items: stretch;
+    gap: clamp(12px, 2.8vh, 18px);
+    margin-top: clamp(6px, 1.5vh, 12px);
+  }
+
+  .hero-title__bottom {
+    justify-content: center;
+    gap: clamp(10px, 3.2vw, 18px);
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-button {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    min-height: 48px;
+    padding: 14px clamp(22px, 5.5vw, 30px);
+    font-size: clamp(17px, 5vw, 19px);
+    font-weight: 550;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-bottom {
+    margin-top: 10px;
+  }
+
+  .hero-date span {
+    font-size: clamp(20px, 5.4vw, 24px);
+    font-weight: 850;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding-top: calc(var(--site-header-offset) + 10px);
+  }
+
+  .hero-organizers__name {
+    max-width: min(100%, 280px);
+    font-size: 11px;
+  }
+
+  .hero-organizers__logo {
+    max-height: 46px;
+    max-width: 50px;
+  }
+
+  .hero-title__brand,
+  .hero-title__year {
+    font-size: min(var(--hero-title-size-max), max(12px, calc(100cqi / 11.8)));
+  }
 }
 
 @media (max-width: 620px) {
   .hero-section {
-    padding-inline: 16px;
-    padding-bottom: 52px;
+    --hero-marquee-h: 52px;
+    padding-bottom: calc(var(--hero-marquee-h) + 12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .hero-marquee__group span {
+    font-size: 18px;
+  }
+
+  .hero-marquee__group {
+    gap: 18px;
+    padding-right: 18px;
+  }
+
+  .hero-marquee__group span::after {
+    margin-left: 18px;
   }
 
   .hero-organizers__name {
@@ -802,75 +1175,122 @@ const handleRegistrationSubmit = (data) => {
     letter-spacing: 0.04em;
   }
 
+  .hero-section {
+    --hero-title-size-max: clamp(26px, 8.8vw, 44px);
+    --hero-title-fit-divisor: 13.2;
+    --hero-title-fit-divisor-long: 17.6;
+  }
+
   .hero-title {
     gap: 4px;
-    font-size: clamp(30px, 10vw, 48px);
-    letter-spacing: 0;
+    letter-spacing: -0.02em;
   }
 
   .hero-title__line,
   .hero-title__brand,
   .hero-title__year {
-    line-height: 1.1;
-    min-height: 1.1em;
-    letter-spacing: 0;
+    line-height: 1.08;
+    min-height: 1.08em;
+    letter-spacing: -0.02em;
   }
 
   .hero-date span {
-    font-size: 24px;
-  }
-
-  .hero-actions {
-    width: 100%;
+    font-size: clamp(19px, 5.8vw, 23px);
   }
 
   .hero-button {
-    width: 100%;
-    min-width: 0;
-    min-height: 64px;
-    padding-inline: 28px;
+    min-height: 48px;
+    padding-block: 14px;
     font-size: 18px;
-  }
-
-  .hero-bg__shape--one {
-    left: -34%;
-    top: 8%;
-  }
-
-  .hero-bg__shape--two {
-    right: -42%;
-    top: 14%;
-  }
-
-  .hero-bg__shape--three {
-    left: 22%;
-    bottom: 24%;
   }
 }
 
 @media (max-width: 420px) {
-  .hero-title {
-    font-size: clamp(27px, 9.4vw, 40px);
+  .hero-section {
+    --hero-marquee-h: 48px;
+    --hero-title-size-max: clamp(22px, 8.2vw, 36px);
+    --hero-title-fit-divisor: 13.6;
+    --hero-title-fit-divisor-long: 18.2;
+    padding-top: calc(var(--site-header-offset) + 16px);
+  }
+
+  .hero-title__footer {
+    gap: 10px;
   }
 
   .hero-title__bottom {
-    gap: 6px;
-  }
-
-  .hero-date span {
-    font-size: 22px;
+    gap: 8px;
   }
 
   .hero-button {
-    min-height: 60px;
+    min-height: 46px;
+    padding: 12px 24px;
     font-size: 17px;
+    line-height: 1.2;
+  }
+
+  .hero-date span {
+    font-size: 19px;
+  }
+
+  .hero-marquee__group span {
+    font-size: 15px;
+  }
+
+  .hero-marquee__group {
+    gap: 14px;
+    padding-right: 14px;
+  }
+
+  .hero-marquee__group span::after {
+    margin-left: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-section {
+    --hero-title-size-max: clamp(20px, 7.4vw, 32px);
+    padding-top: calc(var(--site-header-offset) + 8px);
+  }
+
+  .hero-organizers__name {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .hero-location {
+    font-size: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .hero-button {
+    font-size: 16px;
+    padding: 12px 18px;
+    min-height: 44px;
+  }
+
+  .hero-date span {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 320px) {
+  .hero-section {
+    --hero-marquee-h: 44px;
+    --hero-title-fit-divisor: 14;
+    --hero-title-fit-divisor-long: 19;
+  }
+
+  .hero-marquee__group span {
+    font-size: 14px;
   }
 }
 
 @media (max-height: 860px) and (min-width: 900px) {
   .hero-section {
+    --hero-marquee-h: 60px;
     padding-top: calc(var(--site-header-offset) + 10px);
-    padding-bottom: 24px;
+    padding-bottom: calc(var(--hero-marquee-h) + 16px + env(safe-area-inset-bottom, 0px));
   }
 
   .hero-top {
@@ -882,17 +1302,17 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-organizers__body {
-    gap: 16px;
+    gap: 6px;
+    font-size: 11px;
   }
 
   .hero-organizers__logo {
-    width: 42px;
-    height: 42px;
+    max-height: 56px;
+    max-width: 62px;
   }
 
   .hero-organizers__name {
-    font-size: 11px;
-    line-height: 1.18;
+    line-height: 1.16;
   }
 
   .hero-main {
@@ -900,13 +1320,17 @@ const handleRegistrationSubmit = (data) => {
   }
 
   .hero-location {
-    margin-bottom: 6px;
+    margin: 14px 0 10px;
     font-size: 15px;
+  }
+
+  .hero-section {
+    --hero-title-size-max: clamp(38px, 4.7vw, 78px);
+    --hero-title-fit-divisor: 11.6;
   }
 
   .hero-title {
     gap: 2px;
-    font-size: clamp(38px, 4.7vw, 78px);
     line-height: 1.08;
   }
 
@@ -917,16 +1341,13 @@ const handleRegistrationSubmit = (data) => {
     line-height: 1.08;
   }
 
-  .hero-title__bottom {
-    margin-top: 0;
-  }
-
   .hero-date span {
     font-size: clamp(22px, 1.8vw, 30px);
   }
 
   .hero-button {
-    min-height: 64px;
+    min-height: 58px;
+    font-size: clamp(18px, 1.2vw, 23px);
   }
 }
 
@@ -941,7 +1362,8 @@ const handleRegistrationSubmit = (data) => {
   .hero-title__brand,
   .hero-title__year,
   .hero-date,
-  .hero-button {
+  .hero-button,
+  .hero-marquee__track {
     animation: none;
     opacity: 1;
     transform: none;

@@ -9,16 +9,17 @@ import SiteFooter from './components/SiteFooter.vue'
 import LocationSection from './components/LocationSection.vue'
 import SpeakersSection from './components/SpeakersSection.vue'
 import PartnersSection from './components/PartnersSection.vue'
+import SectionGapDecor from './components/SectionGapDecor.vue'
 </script>
 
 <template>
   <div class="site">
     <SiteHeader />
-
     <HeroSection />
     <CountdownSection />
     <AudienceSection />
     <InProgramSection />
+    <SectionGapDecor />
     <SpeakersSection />
     <ProgramSection />
     <LocationSection />

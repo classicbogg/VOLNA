@@ -26,123 +26,63 @@
           </span>
         </h2>
         <p class="directions__lead">
-          Семь островов на одной карте — выбери свой маршрут и погрузись в тему, которая тебе
-          откликается
+          Семь направлений форума — выбери тему, которая тебе откликается
         </p>
       </header>
 
-      <div class="directions-route" aria-label="Как выбрать маршрут">
-        <p class="directions-route__title">твой маршрут — твой выбор</p>
-        <ol class="directions-route__steps">
-          <li v-for="(step, index) in routeSteps" :key="step.label">
-            <span class="directions-route__num" aria-hidden="true">{{ index + 1 }}</span>
-            <span class="directions-route__copy">
-              <span class="directions-route__label">{{ step.label }}</span>
-              <span class="directions-route__hint">{{ step.hint }}</span>
-            </span>
-          </li>
-        </ol>
-      </div>
-
-      <div class="directions-map" role="group" aria-label="Карта семи островов">
-        <svg
-          class="directions-map__sea"
-          viewBox="0 0 1200 280"
-          preserveAspectRatio="none"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M40 180 C160 80 280 220 420 140 C560 60 700 200 860 120 C980 60 1080 140 1160 100"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-dasharray="8 16"
-            stroke-linecap="round"
-            opacity="0.4"
-          />
-        </svg>
-        <button
-          v-for="direction in directions"
-          :key="`spot-${direction.key}`"
-          type="button"
-          class="directions-map__spot"
-          :class="{ 'directions-map__spot--active': activeKey === direction.key }"
-          :style="{
-            '--spot-x': `${direction.map.x}%`,
-            '--spot-y': `${direction.map.y}%`,
-            '--spot-color': direction.accent,
-            '--spot-rgb': direction.accentRgb,
-          }"
-          :aria-label="`${direction.num} — ${direction.shortName}`"
-          :aria-pressed="activeKey === direction.key"
-          @mouseenter="setActive(direction.key)"
-          @mouseleave="clearActive"
-          @focus="setActive(direction.key)"
-          @blur="clearActive"
-        >
-          <span class="directions-map__spot-ring" aria-hidden="true" />
-          <span class="directions-map__spot-num">{{ direction.num }}</span>
-        </button>
-      </div>
-
       <ul
-        class="directions-grid"
-        :class="{ 'directions-grid--visible': sectionVisible }"
+        class="directions-list"
+        :class="{ 'directions-list--visible': sectionVisible }"
       >
         <li
           v-for="(direction, index) in directions"
           :key="direction.key"
-          class="directions-grid__item"
-          :class="[
-            `directions-grid__item--${direction.key}`,
-            { 'directions-grid__item--featured': direction.featured },
-          ]"
-          :style="{ '--enter-delay': `${index * 90}ms` }"
+          class="directions-list__item"
+          :style="{ '--enter-delay': `${index * 60}ms` }"
         >
           <article
-            class="directions-card"
-            :class="[
-              `directions-card--${direction.key}`,
-              {
-                'directions-card--featured': direction.featured,
-                'directions-card--active': activeKey === direction.key,
-              },
-            ]"
+            class="directions-row"
+            :class="{ 'directions-row--active': activeKey === direction.key }"
             :style="{
-              '--card-accent': direction.accent,
-              '--card-accent-rgb': direction.accentRgb,
-              '--card-bg': direction.cardBg,
-              '--card-bg-soft': direction.cardBgSoft,
-              '--card-rotate': direction.cardRotate,
-              '--hover-tilt': direction.hoverTilt,
+              '--row-accent': direction.accent,
+              '--row-accent-rgb': direction.accentRgb,
             }"
+            tabindex="0"
             @mouseenter="setActive(direction.key)"
             @mouseleave="clearActive"
             @focusin="setActive(direction.key)"
             @focusout="clearActive"
           >
-            <div class="directions-card__texture" aria-hidden="true" />
-
-            <span class="directions-card__pill">{{ direction.num }}</span>
-
             <span
-              class="directions-card__icon"
+              class="directions-row__icon"
               role="img"
               :aria-label="direction.shortName"
             >
               <component :is="direction.icon" />
             </span>
 
-            <div class="directions-card__body">
-              <p class="directions-card__eyebrow">{{ direction.title }}</p>
-              <h3 class="directions-card__name">{{ direction.shortName }}</h3>
-              <p class="directions-card__lead">{{ direction.points[0] }}</p>
+            <div class="directions-row__main">
+              <h3 class="directions-row__name">{{ direction.shortName }}</h3>
+              <p class="directions-row__lead">{{ direction.points[0] }}</p>
+            </div>
+
+            <div
+              class="directions-row__tags-wrap"
+              :data-direction-key="direction.key"
+            >
               <ul
-                class="directions-card__tags"
+                class="directions-row__tags directions-row__tags--measure"
+                aria-hidden="true"
+              >
+                <li v-for="tag in direction.tags" :key="`measure-${direction.key}-${tag}`">
+                  {{ tag }}
+                </li>
+              </ul>
+              <ul
+                class="directions-row__tags"
                 :aria-label="`Темы: ${direction.shortName}`"
               >
-                <li v-for="tag in direction.tags" :key="tag">{{ tag }}</li>
+                <li v-for="tag in visibleTagsFor(direction)" :key="tag">{{ tag }}</li>
               </ul>
             </div>
           </article>
@@ -153,14 +93,20 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import WaveDecor from './WaveDecor.vue'
-import { directions, routeSteps } from '../data/directions.js'
+import { directions } from '../data/directions.js'
+
+const TAGS_COMPACT_MQ = '(max-width: 1024px)'
+const TAG_GAP_PX = 9
 
 const sectionRef = ref(null)
 const sectionVisible = ref(false)
 const activeKey = ref(null)
+const tagFitCounts = ref({})
 let observer = null
+let tagsMq = null
+let tagsResizeObserver = null
 
 const setActive = (key) => {
   activeKey.value = key
@@ -170,9 +116,112 @@ const clearActive = () => {
   activeKey.value = null
 }
 
+const visibleTagsFor = (direction) => {
+  if (!tagsMq?.matches) {
+    return direction.tags
+  }
+
+  const count = tagFitCounts.value[direction.key] ?? direction.tags.length
+  return direction.tags.slice(0, count)
+}
+
+const remeasureDirectionTags = () => {
+  if (!sectionRef.value) {
+    return
+  }
+
+  if (!tagsMq?.matches) {
+    tagFitCounts.value = {}
+    return
+  }
+
+  const wraps = sectionRef.value.querySelectorAll('.directions-row__tags-wrap[data-direction-key]')
+  const next = {}
+
+  wraps.forEach((wrap) => {
+    const key = wrap.dataset.directionKey
+    const direction = directions.find((item) => item.key === key)
+
+    if (!direction?.tags.length) {
+      return
+    }
+
+    const measureList = wrap.querySelector('.directions-row__tags--measure')
+    const items = measureList ? [...measureList.children] : []
+    const width = wrap.clientWidth
+
+    if (!width || !items.length) {
+      next[key] = direction.tags.length
+      return
+    }
+
+    let used = 0
+    let count = 0
+
+    for (const item of items) {
+      const chipWidth = item.offsetWidth
+
+      if (count === 0) {
+        count = 1
+        used = chipWidth
+        continue
+      }
+
+      if (used + TAG_GAP_PX + chipWidth <= width + 1) {
+        used += TAG_GAP_PX + chipWidth
+        count += 1
+      } else {
+        break
+      }
+    }
+
+    next[key] = Math.min(direction.tags.length, Math.max(1, count))
+  })
+
+  tagFitCounts.value = next
+}
+
+const setupTagsLayout = () => {
+  tagsMq = window.matchMedia(TAGS_COMPACT_MQ)
+  const onTagsLayoutChange = () => {
+    nextTick(() => remeasureDirectionTags())
+  }
+
+  tagsMq.addEventListener('change', onTagsLayoutChange)
+  onTagsLayoutChange()
+
+  const attachResizeObserver = () => {
+    if (!sectionRef.value) {
+      return
+    }
+
+    if ('ResizeObserver' in window) {
+      tagsResizeObserver = new ResizeObserver(() => {
+        remeasureDirectionTags()
+      })
+      tagsResizeObserver.observe(sectionRef.value)
+    } else {
+      window.addEventListener('resize', remeasureDirectionTags)
+    }
+  }
+
+  nextTick(attachResizeObserver)
+
+  return () => {
+    tagsMq?.removeEventListener('change', onTagsLayoutChange)
+    tagsResizeObserver?.disconnect()
+    window.removeEventListener('resize', remeasureDirectionTags)
+  }
+}
+
+let teardownTagsLayout = null
+
 onMounted(() => {
+  teardownTagsLayout = setupTagsLayout()
+
   if (!('IntersectionObserver' in window)) {
     sectionVisible.value = true
+    nextTick(() => remeasureDirectionTags())
     return
   }
 
@@ -180,6 +229,7 @@ onMounted(() => {
     (entries) => {
       if (entries[0]?.isIntersecting) {
         sectionVisible.value = true
+        nextTick(() => remeasureDirectionTags())
         observer?.disconnect()
       }
     },
@@ -191,49 +241,24 @@ onMounted(() => {
   }
 })
 
+watch(sectionVisible, (visible) => {
+  if (visible) {
+    nextTick(() => remeasureDirectionTags())
+  }
+})
+
 onUnmounted(() => {
   observer?.disconnect()
+  teardownTagsLayout?.()
 })
 </script>
 
 <style scoped>
 .directions {
-  --dir-text: var(--palette-cream);
-  --dir-muted: rgba(var(--palette-cream-rgb), 0.8);
-  --dir-heading: var(--palette-cream);
-  --dir-atlas: rgba(var(--palette-peach-rgb), 0.35);
-  --dir-journey-line: rgba(var(--palette-peach-rgb), 0.55);
-  --dir-card-text: var(--palette-navy);
-  --dir-card-muted: rgba(var(--palette-navy-rgb), 0.82);
-  --dir-card-border: rgba(var(--palette-navy-rgb), 0.88);
-
   position: relative;
   width: 100%;
   padding: clamp(80px, 9vw, 112px) var(--layout-gutter-wide, 40px) clamp(96px, 11vw, 128px);
-  color: var(--dir-text);
-  background: linear-gradient(
-    168deg,
-    var(--palette-navy-mid) 0%,
-    var(--palette-navy) 42%,
-    var(--palette-navy) 100%
-  );
   overflow: hidden;
-}
-
-:global(html[data-theme='light']) .directions,
-:global([data-theme='light']) .directions {
-  --dir-text: var(--palette-navy);
-  --dir-muted: rgba(var(--palette-navy-rgb), 0.72);
-  --dir-heading: var(--palette-navy);
-  --dir-atlas: rgba(var(--palette-purple-rgb), 0.2);
-  --dir-journey-line: rgba(var(--palette-purple-rgb), 0.35);
-
-  background: linear-gradient(
-    168deg,
-    var(--palette-white) 0%,
-    var(--palette-cream) 55%,
-    var(--palette-cream) 100%
-  );
 }
 
 .directions__inner {
@@ -245,7 +270,7 @@ onUnmounted(() => {
 
 .directions__header {
   position: relative;
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto clamp(40px, 5vw, 56px);
   padding: 0 clamp(20px, 4vw, 80px);
@@ -254,8 +279,7 @@ onUnmounted(() => {
 
 .directions__header h2 {
   margin: 0;
-  color: var(--dir-heading);
-  font-size: clamp(48px, 6.8vw, 92px);
+  color: var(--color-directions-heading, var(--palette-cream));
   font-weight: 950;
   line-height: 0.9;
   letter-spacing: -0.08em;
@@ -267,437 +291,219 @@ onUnmounted(() => {
   z-index: 2;
   max-width: 780px;
   margin: clamp(18px, 2.5vw, 28px) auto 0;
-  color: var(--dir-muted);
+  color: var(--color-directions-muted, rgba(var(--palette-cream-rgb), 0.8));
   font-size: clamp(18px, 1.85vw, 28px);
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.04em;
 }
 
-.directions-route {
-  margin: 0 auto clamp(28px, 4vw, 40px);
-  padding: 0 clamp(8px, 2vw, 20px);
-}
-
-.directions-route__title {
-  margin: 0 0 clamp(14px, 2vw, 18px);
-  color: var(--dir-heading);
-  font-size: clamp(17px, 1.6vw, 22px);
-  font-weight: 900;
-  letter-spacing: -0.05em;
-  text-align: center;
-  text-transform: lowercase;
-}
-
-.directions-route__steps {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(10px, 2vw, 18px) clamp(16px, 3vw, 32px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.directions-route__steps li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  max-width: 220px;
-}
-
-.directions-route__num {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 2px solid var(--palette-navy);
-  border-radius: 50%;
-  background: var(--palette-peach);
-  color: var(--palette-navy);
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1;
-  box-shadow: 3px 3px 0 rgba(var(--palette-navy-rgb), 0.12);
-}
-
-:global(html[data-theme='dark']) .directions-route__num {
-  border-color: var(--palette-peach);
-  color: var(--palette-peach);
-  background: rgba(var(--palette-navy-rgb), 0.5);
-}
-
-.directions-route__label {
-  display: block;
-  color: var(--dir-heading);
-  font-size: clamp(14px, 1.2vw, 16px);
-  font-weight: 900;
-  line-height: 1.2;
-  letter-spacing: -0.04em;
-  text-transform: lowercase;
-}
-
-.directions-route__hint {
-  display: block;
-  margin-top: 2px;
-  color: var(--dir-muted);
-  font-size: clamp(11px, 0.95vw, 13px);
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.directions-map {
+.directions-list {
   position: relative;
   z-index: 1;
-  height: clamp(120px, 18vw, 200px);
-  margin: 0 auto clamp(32px, 4vw, 48px);
-  border-radius: 28px;
-  background: rgba(var(--palette-navy-rgb), 0.22);
-  border: 2px dashed rgba(var(--palette-peach-rgb), 0.28);
-  overflow: hidden;
-}
-
-:global(html[data-theme='light']) .directions-map {
-  background: rgba(var(--palette-purple-rgb), 0.06);
-  border-color: rgba(var(--palette-purple-rgb), 0.22);
-}
-
-.directions-map__sea {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  color: var(--dir-atlas);
-}
-
-.directions-map__spot {
-  position: absolute;
-  left: var(--spot-x);
-  top: var(--spot-y);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(44px, 5vw, 56px);
-  height: clamp(44px, 5vw, 56px);
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.directions-map__spot-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: rgba(var(--spot-rgb), 0.35);
-  border: 2px solid var(--spot-color);
-  box-shadow: 0 0 0 6px rgba(var(--spot-rgb), 0.12);
-  transition:
-    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 280ms ease,
-    background 280ms ease;
-}
-
-.directions-map__spot-num {
-  position: relative;
-  z-index: 1;
-  color: var(--palette-navy);
-  font-size: clamp(12px, 1.1vw, 14px);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-:global(html[data-theme='dark']) .directions-map__spot-num {
-  color: var(--palette-cream);
-}
-
-.directions-map__spot:hover .directions-map__spot-ring,
-.directions-map__spot--active .directions-map__spot-ring {
-  transform: scale(1.12);
-  background: var(--spot-color);
-  box-shadow:
-    0 0 0 8px rgba(var(--spot-rgb), 0.2),
-    0 12px 24px rgba(var(--spot-rgb), 0.35);
-}
-
-.directions-map__spot--active,
-.directions-map__spot:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-}
-
-.directions-grid {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(16px, 2vw, 24px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.directions-grid__item--tech {
-  grid-column: span 6;
-}
-
-.directions-grid__item--social,
-.directions-grid__item--wellness {
-  grid-column: span 3;
-}
-
-.directions-grid__item--business,
-.directions-grid__item--fashion,
-.directions-grid__item--craft {
-  grid-column: span 3;
-}
-
-.directions-grid__item--media {
-  grid-column: span 6;
-}
-
-.directions-card {
-  --hover-x: var(--hover-tilt, 0deg);
-
-  position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  padding: clamp(22px, 2.4vw, 30px);
-  border: 2px solid var(--dir-card-border);
-  border-radius: 34px;
-  color: var(--dir-card-text);
-  background: var(--card-bg);
-  overflow: hidden;
+  align-items: stretch;
+  gap: 12px;
+  width: min(100%, 720px);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.directions-list__item {
+  width: 100%;
+}
+
+.directions-row {
+  --row-border: var(--color-directions-row-border, rgba(var(--palette-navy-rgb), 0.14));
+
+  width: 100%;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: start;
+  gap: 10px 16px;
+  padding: clamp(16px, 1.8vw, 20px) clamp(18px, 2vw, 24px);
+  border: 2px solid var(--row-border);
+  border-left: 4px solid var(--row-accent);
+  border-radius: 20px;
+  color: var(--color-directions-row-text, var(--palette-navy));
+  background: var(--color-directions-row-bg, var(--palette-cream));
   opacity: 0;
-  translate: 0 48px;
-  scale: 0.96;
-  filter: blur(8px);
-  transform: rotate(var(--card-rotate));
-  transform-style: preserve-3d;
-  box-shadow:
-    10px 10px 0 rgba(var(--palette-navy-rgb), 0.12),
-    0 22px 40px rgba(var(--palette-navy-rgb), 0.14);
+  translate: 0 16px;
+  box-shadow: 0 10px 28px var(--color-directions-row-shadow, rgba(var(--palette-navy-rgb), 0.12));
   transition:
-    transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 360ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 280ms ease;
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    translate 220ms ease;
+  outline: none;
 }
 
-.directions-card--featured {
-  min-height: clamp(260px, 28vw, 320px);
-}
-
-.directions-card--active {
-  border-color: var(--card-accent);
-  box-shadow:
-    12px 12px 0 rgba(var(--card-accent-rgb), 0.22),
-    0 0 0 3px rgba(var(--card-accent-rgb), 0.18),
-    0 28px 48px rgba(var(--card-accent-rgb), 0.2);
-}
-
-.directions-card__texture {
-  position: absolute;
-  right: -18%;
-  top: -22%;
-  z-index: 0;
-  width: 58%;
-  aspect-ratio: 1;
-  background: url('/wave-mark.svg') center / contain no-repeat;
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-.directions-grid--visible .directions-card {
-  animation: directionsCardEnter 920ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.directions-list--visible .directions-row {
+  animation: directionsRowEnter 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: var(--enter-delay, 0ms);
 }
 
-.directions-card:hover {
-  transform:
-    translateY(-10px)
-    rotate(var(--card-rotate))
-    rotateX(4deg)
-    rotateY(var(--hover-x))
-    scale(1.02);
-  box-shadow:
-    14px 14px 0 rgba(var(--palette-navy-rgb), 0.16),
-    0 32px 52px rgba(var(--card-accent-rgb), 0.22);
+.directions-row:hover,
+.directions-row--active,
+.directions-row:focus-visible {
+  --row-border: rgba(var(--row-accent-rgb), 0.35);
+  border-left-color: var(--row-accent);
+  box-shadow: 0 14px 32px rgba(var(--row-accent-rgb), 0.16);
+  translate: 0 0;
 }
 
-.directions-card__pill {
-  position: relative;
-  z-index: 3;
-  width: fit-content;
-  min-width: 48px;
-  height: 34px;
-  margin: 0 0 14px;
-  padding: 0 12px;
-  border: 2px solid rgba(var(--palette-navy-rgb), 0.88);
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--palette-navy);
-  background: var(--palette-peach);
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  box-shadow: 3px 3px 0 rgba(var(--palette-navy-rgb), 0.12);
-}
-
-.directions-card__icon {
-  position: absolute;
-  z-index: 4;
-  right: clamp(18px, 2vw, 24px);
-  top: clamp(18px, 2vw, 24px);
+.directions-row__icon {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(52px, 5.5vw, 64px);
-  height: clamp(52px, 5.5vw, 64px);
-  border-radius: 20px;
-  color: var(--card-accent);
-  background: rgba(255, 255, 255, 0.5);
-  border: 2px solid rgba(var(--card-accent-rgb), 0.35);
-  box-shadow: 0 8px 20px rgba(var(--card-accent-rgb), 0.18);
-  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  border: 2px solid rgba(var(--row-accent-rgb), 0.55);
+  background: var(--color-directions-row-badge-bg, var(--palette-white));
+  color: var(--color-directions-row-badge-fg, var(--row-accent));
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
 }
 
-.directions-card--featured .directions-card__icon {
-  width: clamp(58px, 6vw, 72px);
-  height: clamp(58px, 6vw, 72px);
-}
-
-.directions-card:hover .directions-card__icon,
-.directions-card--active .directions-card__icon {
-  transform: translateY(-4px) scale(1.06);
-}
-
-.directions-card__icon :deep(svg) {
+.directions-row__icon :deep(svg) {
   display: block;
-  width: clamp(28px, 3vw, 34px);
-  height: clamp(28px, 3vw, 34px);
+  width: 34px;
+  height: 34px;
 }
 
-.directions-card__body {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 10px;
-  padding-right: clamp(56px, 9vw, 76px);
+.directions-row__main {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
 }
 
-.directions-card__eyebrow {
+.directions-row__name {
   margin: 0;
-  color: var(--dir-card-muted);
-  font-size: clamp(12px, 1vw, 14px);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.03em;
-  text-transform: lowercase;
-}
-
-.directions-card__name {
-  margin: 0;
-  color: var(--dir-card-text);
-  font-size: clamp(26px, 2.4vw, 40px);
+  color: var(--color-directions-row-text, var(--palette-navy));
+  font-size: clamp(20px, 1.8vw, 28px);
   font-weight: 950;
-  line-height: 0.95;
-  letter-spacing: -0.06em;
+  line-height: 1;
+  letter-spacing: -0.05em;
   text-transform: lowercase;
 }
 
-.directions-card--featured .directions-card__name {
-  font-size: clamp(30px, 3vw, 48px);
+.directions-row__lead {
+  margin: 8px 0 0;
+  color: var(--color-directions-row-lead, rgba(var(--palette-navy-rgb), 0.78));
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
 }
 
-.directions-card__lead {
-  margin: 0;
-  color: var(--dir-card-text);
-  font-size: clamp(15px, 1.2vw, 18px);
-  font-weight: 800;
-  line-height: 1.32;
-  letter-spacing: -0.03em;
+.directions-row__tags-wrap {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  max-width: 100%;
+  margin: 2px 0 0;
 }
 
-.directions-card__tags {
+.directions-row__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 6px 0 0;
+  justify-content: flex-start;
+  align-content: flex-start;
+  gap: 9px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.directions-card__tags li {
-  padding: 6px 12px;
+.directions-row__tags--measure {
+  position: absolute;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  height: 0;
+  margin: 0;
+}
+
+.directions-row__tags li {
+  flex-shrink: 0;
+  padding: 6px 13px;
   border-radius: 999px;
-  color: var(--dir-card-text);
-  background: rgba(255, 255, 255, 0.45);
-  border: 1px solid rgba(var(--card-accent-rgb), 0.35);
-  font-size: clamp(11px, 0.95vw, 13px);
+  color: var(--color-directions-row-text, var(--palette-navy));
+  background: rgba(var(--row-accent-rgb), 0.08);
+  border: none;
+  box-shadow: none;
+  outline: none;
+  font-size: clamp(12px, 1.15vw, 14px);
   font-weight: 800;
   line-height: 1.2;
-  letter-spacing: -0.02em;
-  text-transform: lowercase;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
 }
 
-:global(html[data-theme='dark']) .directions-card--business {
-  --dir-card-text: var(--palette-cream);
-  --dir-card-muted: rgba(var(--palette-cream-rgb), 0.84);
-  --dir-card-border: rgba(var(--palette-purple-rgb), 0.7);
+.directions-row:hover .directions-row__tags li,
+.directions-row--active .directions-row__tags li {
+  background: rgba(var(--row-accent-rgb), 0.16);
 }
 
-:global(html[data-theme='dark']) .directions-card--business {
-  background: var(--palette-navy-mid);
-}
-
-:global(html[data-theme='dark']) .directions-card--business .directions-card__tags li {
-  background: rgba(var(--palette-cream-rgb), 0.08);
-  border-color: rgba(var(--palette-peach-rgb), 0.2);
-}
-
-@keyframes directionsCardEnter {
+@keyframes directionsRowEnter {
   0% {
     opacity: 0;
-    translate: 0 48px;
-    scale: 0.96;
-    filter: blur(8px);
+    translate: 0 20px;
   }
   100% {
     opacity: 1;
     translate: 0 0;
-    scale: 1;
-    filter: blur(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .directions-card,
-  .directions-map__spot {
-    animation: none !important;
-    transition: none;
-  }
-
-  .directions-grid--visible .directions-card {
+  .directions-row,
+  .directions-list--visible .directions-row {
     opacity: 1;
     translate: 0;
-    scale: 1;
-    filter: none;
   }
 
-  .directions-card:hover {
-    transform: rotate(var(--card-rotate));
+  .directions-row:hover,
+  .directions-row--active {
+    translate: 0;
+  }
+}
+
+@media (min-width: 1025px) {
+  .directions-row__tags--measure {
+    display: none;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .directions__inner {
+    width: min(1200px, 100%);
+  }
+
+  .directions__lead {
+    font-size: clamp(18px, 1.5vw, 24px);
+  }
+
+  .directions-list {
+    width: min(100%, 680px);
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .directions__inner {
+    width: min(1400px, 100%);
+  }
+
+  .directions-list {
+    width: min(100%, 720px);
   }
 }
 
@@ -705,73 +511,136 @@ onUnmounted(() => {
   .directions {
     padding-inline: var(--layout-gutter-wide, 80px);
   }
+
+  .directions__inner {
+    width: min(1540px, 100%);
+  }
+
 }
 
 @media (max-width: 1024px) {
-  .directions-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .directions {
+    padding:
+      clamp(72px, 8vw, 88px)
+      var(--layout-gutter-wide)
+      clamp(80px, 9vw, 96px);
   }
 
-  .directions-grid__item--tech,
-  .directions-grid__item--social,
-  .directions-grid__item--wellness,
-  .directions-grid__item--business,
-  .directions-grid__item--fashion,
-  .directions-grid__item--craft,
-  .directions-grid__item--media {
-    grid-column: span 1;
+  .directions__header {
+    padding-inline: clamp(12px, 3vw, 40px);
+    margin-bottom: clamp(32px, 4vw, 44px);
   }
 
-  .directions-grid__item--featured {
-    grid-column: 1 / -1;
+  .directions__lead {
+    font-size: clamp(17px, 1.8vw, 21px);
+    max-width: 36em;
+    margin-inline: auto;
+  }
+
+  .directions-row__tags-wrap {
+    position: relative;
+  }
+
+  .directions-row__tags:not(.directions-row__tags--measure) {
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .directions-row__tags li {
+    font-size: clamp(12px, 1.35vw, 14px);
+    padding: 6px 12px;
   }
 }
 
 @media (max-width: 900px) {
   .directions {
-    padding-inline: var(--layout-gutter, 24px);
-  }
-
-  .directions-route__steps {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .directions-route__steps li {
-    max-width: 100%;
-    width: min(100%, 320px);
+    padding-inline: var(--layout-gutter);
   }
 }
 
 @media (max-width: 680px) {
-  .directions-grid {
-    grid-template-columns: 1fr;
+  .directions-list__item,
+  .directions-row {
+    width: 100%;
+    max-width: 100%;
   }
 
-  .directions-grid__item--featured {
-    grid-column: auto;
+  .directions-row__main {
+    min-width: 0;
+    max-width: none;
   }
 
   .directions__header {
     padding-inline: 8px;
   }
 
-  .directions-card__body {
-    padding-right: 0;
-    padding-top: 4px;
+  .directions-row__icon {
+    width: 52px;
+    height: 52px;
   }
 
-  .directions-card__icon {
-    position: relative;
-    right: auto;
-    top: auto;
-    margin: 0 0 12px;
+  .directions-row__icon :deep(svg) {
+    width: 30px;
+    height: 30px;
+  }
+
+  .directions-row__name {
+    font-size: clamp(18px, 5.2vw, 24px);
+    line-height: 1.05;
+  }
+
+  .directions-row__tags li {
+    font-size: clamp(12px, 3.4vw, 14px);
+    padding: 6px 12px;
   }
 }
 
 @media (max-width: 480px) {
   .directions {
-    padding-inline: 16px;
+    padding:
+      clamp(56px, 10vw, 72px)
+      var(--layout-gutter)
+      clamp(64px, 12vw, 80px);
+  }
+
+  .directions__header {
+    margin-bottom: 28px;
+    padding-inline: 0;
+  }
+
+  .directions__lead {
+    font-size: clamp(16px, 4.2vw, 20px);
+  }
+
+  .directions-row {
+    padding: 16px 14px;
+    gap: 12px;
+  }
+
+  .directions-row__icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+  }
+
+  .directions-row__tags li {
+    font-size: clamp(13px, 3.6vw, 14px);
+    padding: 6px 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .directions-row__name {
+    font-size: clamp(16px, 4.8vw, 20px);
+  }
+
+  .directions-row__lead {
+    font-size: 14px;
+  }
+
+  .directions-row__tags li {
+    font-size: 12px;
+    padding: 5px 10px;
   }
 }
 </style>

@@ -25,6 +25,8 @@ defineProps({
 
 <style scoped>
 .wave-decor {
+  --wave-edge-inset: max(16px, min(52px, 6vw));
+  --wave-edge-inset-wide: max(24px, min(72px, 5.5vw));
   position: absolute;
   z-index: 1;
   pointer-events: none;
@@ -51,29 +53,29 @@ defineProps({
 }
 
 .wave-decor--left {
-  left: -12px;
+  left: var(--wave-edge-inset);
   top: 24%;
   transform: rotate(-12deg);
   animation: waveFloatLeft 8s ease-in-out infinite;
 }
 
 .wave-decor--right {
-  right: -16px;
+  right: var(--wave-edge-inset);
   bottom: 18%;
   transform: rotate(10deg);
   animation: waveFloatRight 10s ease-in-out infinite;
 }
 
 .wave-decor--top {
-  right: 12%;
-  top: 72px;
+  right: clamp(16%, 14vw, 22%);
+  top: clamp(56px, 9vh, 96px);
   transform: rotate(8deg);
   animation: waveFloatTop 7s ease-in-out infinite;
 }
 
 .wave-decor--bottom {
-  left: 10%;
-  bottom: 48px;
+  left: clamp(16%, 14vw, 24%);
+  bottom: clamp(40px, 6vh, 64px);
   transform: rotate(-6deg);
   animation: waveFloatBottom 9s ease-in-out infinite;
 }
@@ -122,6 +124,21 @@ defineProps({
   }
 }
 
+@media (min-width: 1025px) {
+  .wave-decor--left,
+  .wave-decor--right {
+    --wave-edge-inset: var(--wave-edge-inset-wide);
+  }
+
+  .wave-decor--top {
+    right: clamp(20%, 16vw, 26%);
+  }
+
+  .wave-decor--bottom {
+    left: clamp(20%, 16vw, 28%);
+  }
+}
+
 /* Планшет: без верхних/нижних, чтобы не заходить на карточки */
 @media (max-width: 1100px) {
   .wave-decor--top,
@@ -134,15 +151,15 @@ defineProps({
   }
 
   .wave-decor--left {
-    left: max(-32px, -3vw);
+    left: max(12px, min(40px, 4.5vw));
   }
 
   .wave-decor--right {
-    right: max(-32px, -3vw);
+    right: max(12px, min(40px, 4.5vw));
   }
 }
 
-/* ~820px: компактнее, ближе к краю (hero/footer переопределяют при необходимости) */
+/* ~820px: компактнее */
 @media (max-width: 980px) and (min-width: 761px) {
   .wave-decor--lg .wave-decor__icon {
     width: clamp(56px, 7.5vw, 72px);
@@ -151,10 +168,18 @@ defineProps({
   .wave-decor--md .wave-decor__icon {
     width: clamp(48px, 6.5vw, 64px);
   }
+
+  .wave-decor--left {
+    left: max(10px, min(32px, 3.8vw));
+  }
+
+  .wave-decor--right {
+    right: max(10px, min(32px, 3.8vw));
+  }
 }
 
-/* Телефон: одна иконка у края, слабее */
-@media (max-width: 760px) {
+/* Телефон: одна иконка, ближе к центру, но у края */
+@media (max-width: 768px) {
   .wave-decor {
     opacity: 0.42;
   }
@@ -164,9 +189,9 @@ defineProps({
   }
 
   .wave-decor--left {
-    left: max(-36px, -5vw);
+    left: max(14px, min(28px, 5vw));
     top: auto;
-    bottom: 10%;
+    bottom: 12%;
     transform: rotate(-10deg);
   }
 }

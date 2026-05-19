@@ -408,6 +408,7 @@ onUnmounted(() => {
   position: fixed;
   inset: 0;
   z-index: 999;
+  overflow: clip;
   background: transparent;
   opacity: 0;
   visibility: hidden;
@@ -514,6 +515,43 @@ onUnmounted(() => {
   color: var(--palette-peach);
 }
 
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .site-header__wrap {
+    max-width: 1400px;
+    padding-inline: var(--layout-gutter-wide);
+  }
+
+  .site-header__bar {
+    min-height: 80px;
+    padding-inline: clamp(20px, 2.4vw, 36px);
+  }
+
+  .site-header__nav {
+    gap: clamp(18px, 1.8vw, 32px);
+  }
+
+  .site-header__nav a {
+    font-size: clamp(14px, 0.95vw, 16px);
+  }
+
+  .site-header__logo {
+    max-width: min(188px, 22vw);
+    max-height: 50px;
+  }
+
+  .site-header__theme {
+    width: 72px;
+    min-height: 72px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .site-header__wrap {
+    max-width: 1720px;
+    padding-inline: var(--layout-gutter-wide);
+  }
+}
+
 @media (max-width: 1360px) {
   .site-header__nav {
     gap: clamp(20px, 2.5vw, 40px);
@@ -547,6 +585,38 @@ onUnmounted(() => {
   }
 }
 
+@media (max-width: 1024px) {
+  .site-header__wrap {
+    padding-inline: var(--layout-gutter-wide);
+  }
+
+  .site-header__bar {
+    justify-content: space-between;
+  }
+
+  .site-header__end {
+    flex: 0 0 auto;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .site-header__logo {
+    max-width: min(168px, 26vw);
+    max-height: 44px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 641px) {
+  .site-header__cluster {
+    gap: 10px;
+  }
+
+  .site-header__theme {
+    width: 68px;
+    min-height: 68px;
+  }
+}
+
 @media (max-width: 960px) {
   .site-header__nav {
     display: none;
@@ -557,7 +627,6 @@ onUnmounted(() => {
   }
 
   .site-header__end {
-    flex: 0 0 auto;
     gap: 4px;
   }
 }
@@ -638,9 +707,25 @@ onUnmounted(() => {
   }
 }
 
+@media (max-width: 480px) {
+  .site-header__bar {
+    min-height: 60px;
+  }
+
+  .site-header__theme {
+    width: 60px;
+    min-height: 60px;
+  }
+
+  .site-header__burger {
+    width: 50px;
+    height: 50px;
+  }
+}
+
 @media (max-width: 380px) {
   .site-header__wrap {
-    padding: 6px 8px 0;
+    padding: 6px var(--layout-gutter) 0;
     padding-top: max(6px, env(safe-area-inset-top, 0px));
   }
 

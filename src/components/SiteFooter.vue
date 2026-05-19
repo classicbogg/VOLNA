@@ -236,7 +236,7 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   }
 
   .footer :deep(.wave-decor--left) {
-    left: max(-44px, -5.5vw);
+    left: max(12px, min(32px, 3.8vw));
     top: auto;
     bottom: 12%;
     transform: rotate(-8deg);
@@ -248,6 +248,16 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
   .footer-container {
     padding: 64px var(--layout-gutter, 28px) 36px;
+  }
+
+  .footer-tagline {
+    font-size: clamp(17px, 1.8vw, 20px);
+    line-height: 1.4;
+  }
+
+  .footer-contacts__list a,
+  .footer-contacts__address {
+    font-size: clamp(15px, 1.5vw, 17px);
   }
 
   .footer-main {
@@ -266,13 +276,34 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   }
 }
 
-@media (max-width: 1180px) {
+@media (min-width: 1025px) and (max-width: 1439px) {
   .footer-container {
-    padding: 64px 34px 36px;
+    width: min(1040px, 100%);
+    padding: 68px var(--layout-gutter-wide) 38px;
   }
 }
 
-@media (max-width: 760px) {
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .footer-container {
+    width: min(1200px, 100%);
+    padding: 72px var(--layout-gutter-wide) 40px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .footer-container {
+    width: min(1280px, 100%);
+    padding: 80px var(--layout-gutter-wide) 44px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .footer-container {
+    padding: 64px var(--layout-gutter-wide) 36px;
+  }
+}
+
+@media (max-width: 768px) {
   .footer :deep(.wave-decor) {
     display: none;
   }
@@ -294,7 +325,7 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
 @media (max-width: 680px) {
   .footer-container {
-    padding: 56px 18px 32px;
+    padding: 56px var(--layout-gutter) 32px;
   }
 
   .footer-main {
@@ -308,9 +339,20 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   }
 }
 
+@media (max-width: 480px) {
+  .footer-logo {
+    max-height: clamp(44px, 11vw, 60px);
+  }
+
+  .footer-tagline {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+}
+
 @media (max-width: 420px) {
   .footer-container {
-    padding: 48px 14px 28px;
+    padding: 48px var(--layout-gutter) 28px;
   }
 
   .footer-contacts__list a,
@@ -334,7 +376,7 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
 @media (max-width: 360px) {
   .footer-container {
-    padding: 44px 12px 24px;
+    padding: 44px var(--layout-gutter) 24px;
   }
 
   .footer-tagline {

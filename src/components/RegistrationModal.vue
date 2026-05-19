@@ -288,7 +288,7 @@ onUnmounted(() => {
   border-radius: 24px;
   background: var(--color-registration-modal-bg);
   color: var(--color-registration-modal-text);
-  box-shadow: 10px 10px 0 rgba(var(--palette-purple-rgb), 0.2);
+  box-shadow: 8px 8px 0 var(--color-registration-modal-shadow);
   box-sizing: border-box;
 }
 
@@ -345,7 +345,7 @@ onUnmounted(() => {
 }
 
 .registration-close:hover {
-  background: var(--color-registration-head-bg);
+  background: var(--color-registration-close-hover-bg);
   transform: rotate(8deg);
 }
 
@@ -412,7 +412,7 @@ onUnmounted(() => {
 }
 
 .registration-field input::placeholder {
-  color: rgba(var(--palette-navy-rgb), 0.42);
+  color: var(--color-registration-modal-field-placeholder);
   font-weight: 600;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -445,7 +445,7 @@ onUnmounted(() => {
 .registration-field input:not(:placeholder-shown) {
   border-color: var(--color-registration-modal-border);
   background: var(--color-registration-modal-field-bg-focus);
-  box-shadow: 0 0 0 3px rgba(var(--palette-purple-rgb), 0.28);
+  box-shadow: 0 0 0 3px var(--color-registration-modal-focus-ring);
 }
 
 .registration-field input:focus + span,
@@ -496,8 +496,9 @@ onUnmounted(() => {
 }
 
 .registration-checkbox input:checked + .registration-checkbox__box {
-  background: var(--color-registration-head-bg);
-  box-shadow: inset 0 0 0 5px var(--color-registration-modal-bg);
+  background: var(--color-registration-checkbox-checked);
+  border-color: var(--color-registration-checkbox-checked);
+  box-shadow: inset 0 0 0 5px var(--color-registration-checkbox-inset);
 }
 
 .registration-checkbox__text {
@@ -519,17 +520,19 @@ onUnmounted(() => {
   line-height: 1;
   font-weight: 900;
   letter-spacing: -0.06em;
+  box-shadow: var(--color-registration-submit-shadow);
+  filter: saturate(1.05);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
-    background-color 0.2s ease;
+    filter 0.2s ease;
 }
 
 .registration-submit:hover:not(:disabled) {
-  background: var(--color-registration-submit-hover);
-  color: var(--color-registration-submit-text, var(--palette-white));
-  transform: translateY(-4px);
-  box-shadow: 6px 6px 0 rgba(var(--palette-purple-rgb), 0.24);
+  color: var(--color-registration-submit-text);
+  transform: translateY(-3px);
+  box-shadow: var(--color-registration-submit-shadow-hover);
+  filter: saturate(1.1) brightness(1.04);
 }
 
 .registration-submit:disabled {
@@ -581,6 +584,52 @@ onUnmounted(() => {
   transform: translateY(24px) scale(0.96);
 }
 
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .registration-modal {
+    width: min(920px, calc(100vw - 56px));
+  }
+
+  .registration-head h2 {
+    font-size: clamp(44px, 3.6vw, 56px);
+  }
+
+  .registration-form {
+    padding: 28px 32px 36px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .registration-modal {
+    width: min(1120px, calc(100vw - 64px));
+  }
+
+  .registration-head h2 {
+    font-size: clamp(48px, 3.2vw, 64px);
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 821px) {
+  .registration-overlay {
+    padding: 24px var(--layout-gutter-wide);
+  }
+
+  .registration-modal {
+    width: min(640px, calc(100vw - 48px));
+    max-height: min(90dvh, 880px);
+    margin: auto;
+    border-radius: 28px;
+  }
+
+  .registration-head h2 {
+    font-size: clamp(36px, 4.2vw, 48px);
+    white-space: normal;
+  }
+
+  .registration-form {
+    padding: 28px 28px 36px;
+  }
+}
+
 @media (max-width: 820px) {
   .registration-overlay {
     align-items: stretch;
@@ -623,7 +672,7 @@ onUnmounted(() => {
     background: linear-gradient(
       180deg,
       var(--color-registration-modal-bg) 68%,
-      rgba(var(--palette-navy-rgb), 0)
+      color-mix(in srgb, var(--color-registration-modal-bg) 0%, transparent)
     );
   }
 
