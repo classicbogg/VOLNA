@@ -543,7 +543,7 @@
 
 [data-theme='light'] {
   --color-audience-marker: var(--palette-navy-mid);
-  --color-audience-card-start-bg: var(--palette-orange);
+  --color-audience-card-start-bg: #ffe6ef;
   --color-audience-card-scale-bg: var(--palette-navy-mid);
   --color-audience-card-opportunities-bg: var(--palette-peach);
   --color-audience-card-opportunities-text: var(--palette-navy);
@@ -554,7 +554,7 @@
 [data-theme='dark'] {
   --color-audience-marker: var(--palette-peach);
   --color-audience-section-text: var(--palette-cream);
-  --color-audience-card-start-bg: var(--palette-orange);
+  --color-audience-card-start-bg: rgba(var(--palette-pink-rgb), 0.24);
   --color-audience-card-scale-bg: var(--palette-navy-mid);
   --color-audience-card-opportunities-bg: rgba(var(--palette-purple-rgb), 0.55);
   --color-audience-card-opportunities-text: var(--palette-white);
@@ -693,6 +693,7 @@ img {
 }
 
 .program-heading .phrase-marker__text,
+.directions-heading .phrase-marker__text,
 .route-heading .phrase-marker__text,
 .speakers-heading .phrase-marker__text,
 .partners-heading .phrase-marker__text {
@@ -700,6 +701,10 @@ img {
 }
 
 .program-heading .phrase-marker__svg {
+  color: var(--color-program-marker, var(--palette-peach));
+}
+
+.directions-heading .phrase-marker__svg {
   color: var(--color-program-marker, var(--palette-peach));
 }
 

@@ -448,19 +448,29 @@ onUnmounted(() => {
 }
 
 .audience-card--start {
-  --card-bg: var(--color-audience-card-start-bg, var(--palette-orange));
-  --card-bg-soft: rgba(255, 255, 255, 0.18);
+  --card-bg: var(--color-audience-card-start-bg, #ffe6ef);
+  --card-bg-soft: rgba(var(--palette-pink-rgb), 0.14);
   --card-text: var(--palette-navy);
-  --card-muted: rgba(var(--palette-navy-rgb), 0.88);
-  --card-border: rgba(var(--palette-navy-rgb), 0.86);
-  --card-accent: var(--palette-navy);
-  --card-word: rgba(var(--palette-navy-rgb), 0.12);
-  --card-shine: rgba(255, 255, 255, 0.4);
-  --card-panel-bg: rgba(var(--palette-cream-rgb), 0.28);
-  --card-panel-border: rgba(var(--palette-navy-rgb), 0.12);
+  --card-muted: rgba(var(--palette-navy-rgb), 0.82);
+  --card-border: rgba(var(--palette-purple-rgb), 0.22);
+  --card-accent: var(--palette-purple);
+  --card-word: rgba(var(--palette-pink-rgb), 0.14);
+  --card-shine: rgba(255, 255, 255, 0.55);
+  --card-panel-bg: rgba(255, 255, 255, 0.42);
+  --card-panel-border: rgba(var(--palette-purple-rgb), 0.1);
   --card-rotate: -1.6deg;
   --card-y: 0px;
   --hover-x: -4deg;
+}
+
+:global(html[data-theme='dark']) .audience-card--start {
+  --card-text: var(--palette-cream);
+  --card-muted: rgba(var(--palette-cream-rgb), 0.86);
+  --card-border: rgba(var(--palette-pink-rgb), 0.38);
+  --card-accent: var(--palette-peach);
+  --card-word: rgba(var(--palette-pink-rgb), 0.18);
+  --card-panel-bg: rgba(var(--palette-navy-rgb), 0.22);
+  --card-panel-border: rgba(var(--palette-pink-rgb), 0.2);
 }
 
 .audience-card--scale {

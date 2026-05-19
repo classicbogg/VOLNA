@@ -125,10 +125,7 @@ onUnmounted(() => {
     </div>
 
     <div class="countdown-container">
-      <div class="countdown-label">
-        29 мая 10:00
-      </div>
-      <p class="countdown-caption">до начала форума</p>
+      <p class="countdown-meta countdown-meta--top">регистрация в 9:30</p>
 
       <div class="countdown-grid">
         <div class="countdown-item">
@@ -157,6 +154,7 @@ onUnmounted(() => {
           <span class="countdown-text">секунд</span>
         </div>
       </div>
+
     </div>
   </section>
 </template>
@@ -231,36 +229,37 @@ onUnmounted(() => {
 .countdown-container {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3.2vw, 36px);
   width: min(1440px, 100%);
   margin: 0 auto;
 }
 
-.countdown-label {
-  width: fit-content;
-  margin: 0 auto 12px;
-  padding: 16px 30px 14px;
-  border-radius: 999px;
-  background: var(--color-countdown-label-bg, var(--color-yellow));
-  color: var(--color-countdown-label-text, var(--color-purple));
-  font-size: clamp(22px, 3vw, 44px);
-  line-height: 0.9;
+.countdown-meta {
+  margin: 0;
+  width: 100%;
+  color: var(--color-countdown-text, var(--palette-pink));
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1;
   font-weight: 900;
+  text-align: center;
   text-transform: lowercase;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.05em;
 }
 
-.countdown-caption {
-  width: fit-content;
-  margin: 0 auto 40px;
-  color: var(--color-countdown-text, var(--palette-pink));
-  font-size: clamp(16px, 2.2vw, 22px);
-  line-height: 1.1;
-  font-weight: 800;
-  text-transform: lowercase;
-  letter-spacing: -0.04em;
+.countdown-meta--top {
+  order: 0;
+  margin-top: clamp(-24px, -2.8vw, -10px);
+  margin-bottom: clamp(6px, 1.2vw, 14px);
+  font-size: clamp(24px, 3vw, 40px);
+  letter-spacing: -0.055em;
 }
 
 .countdown-grid {
+  order: 1;
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
   align-items: start;
@@ -355,14 +354,6 @@ onUnmounted(() => {
     right: 18px;
   }
 
-  .countdown-label {
-    margin-bottom: 10px;
-  }
-
-  .countdown-caption {
-    margin-bottom: 32px;
-  }
-
   .countdown-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 44px 24px;
@@ -383,18 +374,13 @@ onUnmounted(() => {
     display: none;
   }
 
-  .countdown-label {
-    padding: 14px 22px 12px;
-    margin-bottom: 8px;
-  }
-
-  .countdown-caption {
-    margin-bottom: 28px;
-    font-size: 15px;
-  }
-
   .countdown-grid {
     gap: 34px 16px;
+  }
+
+  .countdown-meta--top {
+    margin-top: -16px;
+    font-size: 20px;
   }
 
   .countdown-number {
@@ -412,20 +398,16 @@ onUnmounted(() => {
     padding: 40px 12px 48px;
   }
 
-  .countdown-label {
-    width: 100%;
-    max-width: 100%;
-    padding: 12px 16px 10px;
-    font-size: clamp(18px, 5.5vw, 24px);
-    text-align: center;
-  }
-
   .countdown-number {
     font-size: clamp(48px, 20vw, 72px);
   }
 
   .countdown-text {
     font-size: 14px;
+  }
+
+  .countdown-meta--top {
+    font-size: 18px;
   }
 }
 </style>

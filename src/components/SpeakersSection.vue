@@ -394,7 +394,7 @@ onUnmounted(() => {
       <div class="speakers-heading">
         <h2>
           <span class="phrase-marker">
-            <span class="phrase-marker__text">кто выступит?</span>
+            <span class="phrase-marker__text">эксперты</span>
             <svg
               class="phrase-marker__svg"
               viewBox="0 0 760 190"

@@ -9,50 +9,42 @@
     <div ref="headerShellRef" class="site-header__wrap">
       <div class="site-header__cluster">
         <div class="site-header__bar">
-        <a class="site-header__brand" href="#" :aria-label="logoAlt" @click="closeMenu">
-          <img
-            class="site-header__logo"
-            :src="logoSrc"
-            :alt="logoAlt"
-            width="605"
-            height="219"
-            decoding="async"
-            @error="onLogoError"
-          />
-          <img
-            class="site-header__emblem"
-            :src="sielomEmblemUrl"
-            alt="Символ СиелоМ"
-            width="120"
-            height="120"
-            decoding="async"
-          />
-        </a>
+          <a class="site-header__brand" href="#" :aria-label="logoAlt" @click="closeMenu">
+            <img
+              class="site-header__logo"
+              :src="logoSrc"
+              :alt="logoAlt"
+              width="605"
+              height="219"
+              decoding="async"
+              @error="onLogoError"
+            />
+          </a>
 
-        <div class="site-header__end">
-          <nav class="site-header__nav" aria-label="Главная навигация">
-            <a href="#program" @click="closeMenu">В программе</a>
-            <a href="#speakers" @click="closeMenu">Спикеры</a>
-            <a href="#schedule" @click="closeMenu">Программа</a>
-            <a href="#partners" @click="closeMenu">Партнёры</a>
-            <a href="#contacts" @click="closeMenu">Как добраться</a>
-          </nav>
+          <div class="site-header__end">
+            <nav class="site-header__nav" aria-label="Главная навигация">
+              <a href="#program" @click="closeMenu">В программе</a>
+              <a href="#speakers" @click="closeMenu">Спикеры</a>
+              <a href="#schedule" @click="closeMenu">Программа</a>
+              <a href="#partners" @click="closeMenu">Партнёры</a>
+              <a href="#contacts" @click="closeMenu">Как добраться</a>
+            </nav>
 
-          <div class="site-header__tools">
-            <button
-              class="site-header__burger"
-            :class="{ 'site-header__burger--active': menuOpen }"
-            type="button"
-            aria-label="Открыть меню"
-            :aria-expanded="menuOpen"
-            @click="toggleMenu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-            </button>
+            <div class="site-header__tools">
+              <button
+                class="site-header__burger"
+                :class="{ 'site-header__burger--active': menuOpen }"
+                type="button"
+                aria-label="Открыть меню"
+                :aria-expanded="menuOpen"
+                @click="toggleMenu"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            </div>
           </div>
-        </div>
         </div>
 
         <button
@@ -86,7 +78,7 @@
         </nav>
 
         <div class="site-header__mobile-bottom">
-          <span>ЦДП, Москва</span>
+          <span>Сургут, проспект Пролетарский, 3</span>
         </div>
       </div>
     </div>
@@ -97,7 +89,6 @@
 import { h, onMounted, onUnmounted, ref } from 'vue'
 import { useTheme } from '../composables/useTheme'
 import { useVolnaLogo } from '../composables/useVolnaLogo'
-import sielomEmblemUrl from '../assets/sielom.svg'
 
 const ThemeIcon = (props) => {
   if (props.isDark) {
@@ -271,51 +262,29 @@ onUnmounted(() => {
   max-height: clamp(40px, 5.2vw, 48px);
 }
 
-.site-header__emblem {
-  display: block;
-  flex-shrink: 0;
-  width: auto;
-  height: clamp(48px, 5vw, 64px);
-  max-width: min(64px, 12vw);
-  object-fit: contain;
-  object-position: center;
-}
-
-[data-theme='light'] .site-header__emblem {
-  filter: brightness(0);
-}
-
-[data-theme='dark'] .site-header__emblem {
-  filter: brightness(0) invert(1);
-}
-
-.site-header--scrolled .site-header__emblem {
-  height: clamp(40px, 4.2vw, 50px);
-}
-
 .site-header__end {
   flex: 1;
   min-width: 0;
   margin-left: clamp(8px, 1.2vw, 16px);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: clamp(12px, 2vw, 28px);
+  justify-content: center;
+  gap: clamp(12px, 1.8vw, 24px);
 }
 
 .site-header__nav {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: nowrap;
-  gap: clamp(4px, 0.6vw, 10px);
-  padding-inline: clamp(4px, 1vw, 16px);
+  gap: clamp(26px, 3.1vw, 54px);
+  padding-inline: clamp(8px, 1.4vw, 20px);
 }
 
 .site-header__nav a {
-  flex: 1 1 0;
+  flex: 0 0 auto;
   min-width: 0;
   text-align: center;
   color: var(--header-nav-link);
@@ -325,11 +294,15 @@ onUnmounted(() => {
   font-weight: 600;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .site-header__nav a:hover {
   color: var(--header-nav-link-hover);
+  transform: translateY(-1px);
 }
 
 .site-header__tools {
@@ -431,7 +404,6 @@ onUnmounted(() => {
   transform: rotate(-45deg);
 }
 
-/* Mobile menu */
 .site-header__mobile {
   position: fixed;
   inset: 0;
@@ -542,10 +514,26 @@ onUnmounted(() => {
   color: var(--palette-peach);
 }
 
+@media (max-width: 1360px) {
+  .site-header__nav {
+    gap: clamp(20px, 2.5vw, 40px);
+  }
+}
+
 @media (max-width: 1200px) {
   .site-header__bar {
     padding-inline: clamp(12px, 2vw, 28px);
     gap: 10px;
+  }
+
+  .site-header__end {
+    margin-left: 6px;
+    gap: 10px;
+  }
+
+  .site-header__nav {
+    gap: clamp(16px, 2vw, 30px);
+    padding-inline: 6px;
   }
 
   .site-header__nav a {
@@ -600,11 +588,6 @@ onUnmounted(() => {
   .site-header__logo {
     max-width: min(128px, 36vw);
     max-height: 40px;
-  }
-
-  .site-header__emblem {
-    height: 38px;
-    max-width: 38px;
   }
 
   .site-header__theme {
@@ -675,11 +658,6 @@ onUnmounted(() => {
   .site-header__logo {
     max-width: min(108px, 34vw);
     max-height: 36px;
-  }
-
-  .site-header__emblem {
-    height: 32px;
-    max-width: 32px;
   }
 
   .site-header__theme {

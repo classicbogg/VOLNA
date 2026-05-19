@@ -8,7 +8,7 @@
       <div class="route-heading">
         <h2>
           <span class="phrase-marker">
-            <span class="phrase-marker__text">как добраться до корпуса</span>
+            <span class="phrase-marker__text">место проведения</span>
             <svg
               class="phrase-marker__svg"
               viewBox="0 0 760 190"
@@ -32,7 +32,7 @@
 
           <iframe
             class="route-map"
-            title="Карта: СИЭУиП институт, проспект Пролетарский, 3, Сургут"
+            title="Карта: институт экономики, управления и права, проспект Пролетарский, 3, Сургут"
             src="https://www.openstreetmap.org/export/embed.html?bbox=73.435845%2C61.250863%2C73.439845%2C61.254863&layer=mapnik&marker=61.252863%2C73.437845"
             loading="lazy"
           ></iframe>
@@ -42,8 +42,8 @@
           <div class="route-badge">Локация</div>
 
           <h3 class="route-info-card__title">
-            <span class="route-info-card__title-abbr">СИЭУиП</span>
-            <span class="route-info-card__title-name">институт</span>
+            Сургутский институт экономики,
+            управления и права
           </h3>
 
           <p>
@@ -52,7 +52,7 @@
 
           <p>
             Доберитесь на общественном транспорте или такси до здания с адресом
-            проспект Пролетарский, 3. Ориентир — СИЭУиП институт на карте.
+            проспект Пролетарский, 3. Ориентир — институт экономики, управления и права на карте.
           </p>
 
           <div class="route-actions">
@@ -63,15 +63,6 @@
               rel="noopener noreferrer"
             >
               открыть в картах
-            </a>
-
-            <a
-              class="route-button route-button--ghost"
-              href="https://www.openstreetmap.org/?mlat=61.252863&mlon=73.437845#map=19/61.252863/73.437845"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              маршрут
             </a>
           </div>
         </article>
@@ -332,29 +323,14 @@ import WaveDecor from './WaveDecor.vue'
 .route-info-card__title {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.22em;
   margin: 0 0 26px;
-  padding-right: clamp(56px, 14vw, 84px);
+  padding-right: 0;
+  max-width: 20ch;
   color: var(--color-text);
-  font-size: clamp(40px, 4.6vw, 68px);
-  line-height: 0.95;
+  font-size: clamp(22px, 2.8vw, 36px);
+  line-height: 1.1;
   font-weight: 900;
   text-transform: none;
-  letter-spacing: -0.06em;
-}
-
-.route-info-card__title-abbr {
-  font-size: 1em;
-  line-height: 0.92;
-}
-
-.route-info-card__title-name {
-  font-size: 0.58em;
-  line-height: 1.1;
-  font-weight: 850;
   letter-spacing: -0.04em;
 }
 
@@ -405,20 +381,9 @@ import WaveDecor from './WaveDecor.vue'
   border: 2px solid var(--color-yellow);
 }
 
-.route-button--ghost {
-  background: transparent;
-  color: var(--color-text);
-  border: 2px solid rgba(var(--color-accent-rgb), 0.75);
-}
-
 .route-button:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 30px rgba(var(--color-accent-rgb), 0.12);
-}
-
-.route-button--ghost:hover {
-  background: var(--color-yellow);
-  color: var(--color-purple);
 }
 
 @media (min-width: 1920px) {
@@ -491,8 +456,8 @@ import WaveDecor from './WaveDecor.vue'
   }
 
   .route-info-card__title {
-    font-size: clamp(36px, 11vw, 52px);
-    padding-right: clamp(48px, 12vw, 72px);
+    max-width: 100%;
+    font-size: clamp(20px, 5.2vw, 30px);
   }
 
   .route-info-card p {
@@ -536,7 +501,7 @@ import WaveDecor from './WaveDecor.vue'
   }
 
   .route-info-card__title {
-    font-size: clamp(32px, 10vw, 44px);
+    font-size: clamp(18px, 4.8vw, 26px);
   }
 
   .route-button {
