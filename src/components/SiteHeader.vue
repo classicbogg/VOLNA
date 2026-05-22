@@ -25,7 +25,7 @@
             <nav class="site-header__nav" aria-label="Главная навигация">
               <a href="#program" @click="closeMenu">В программе</a>
               <a href="#speakers" @click="closeMenu">Спикеры</a>
-              <a href="#schedule" @click="closeMenu">Программа</a>
+              <a href="#directions" @click="closeMenu">Направления</a>
               <a href="#partners" @click="closeMenu">Партнёры</a>
               <a href="#contacts" @click="closeMenu">Как добраться</a>
             </nav>
@@ -72,7 +72,7 @@
         <nav class="site-header__mobile-nav" aria-label="Мобильная навигация">
           <a href="#program" @click="closeMenu">В программе</a>
           <a href="#speakers" @click="closeMenu">Спикеры</a>
-          <a href="#schedule" @click="closeMenu">Программа форума</a>
+          <a href="#directions" @click="closeMenu">Направления</a>
           <a href="#partners" @click="closeMenu">Партнёры</a>
           <a href="#contacts" @click="closeMenu">Как добраться</a>
         </nav>
@@ -512,7 +512,7 @@ onUnmounted(() => {
 .site-header__mobile-bottom > span {
   font-size: 18px;
   font-weight: 800;
-  color: var(--palette-peach);
+  color: var(--header-nav-link);
 }
 
 @media (min-width: 1025px) and (max-width: 1439px) {

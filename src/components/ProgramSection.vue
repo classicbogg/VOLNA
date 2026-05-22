@@ -26,7 +26,7 @@
           </span>
         </h2>
         <p class="directions__lead">
-          Семь направлений форума — выбери тему, которая тебе откликается
+          Восемь направлений форума — выбери тему, которая тебе откликается
         </p>
       </header>
 
@@ -63,21 +63,12 @@
 
             <div class="directions-row__main">
               <h3 class="directions-row__name">{{ direction.shortName }}</h3>
-              <p class="directions-row__lead">{{ direction.points[0] }}</p>
+              <p v-if="direction.points[0]" class="directions-row__lead">{{ direction.points[0] }}</p>
             </div>
 
             <div
               class="directions-row__tags-wrap"
-              :data-direction-key="direction.key"
             >
-              <ul
-                class="directions-row__tags directions-row__tags--measure"
-                aria-hidden="true"
-              >
-                <li v-for="tag in direction.tags" :key="`measure-${direction.key}-${tag}`">
-                  {{ tag }}
-                </li>
-              </ul>
               <ul
                 class="directions-row__tags"
                 :aria-label="`Темы: ${direction.shortName}`"
@@ -93,20 +84,40 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import WaveDecor from './WaveDecor.vue'
 import { directions } from '../data/directions.js'
 
+/** До 1024px — компактные плашки; до 560px — 2 шт., от 560px — 3 шт. */
 const TAGS_COMPACT_MQ = '(max-width: 1024px)'
-const TAG_GAP_PX = 9
+const TAGS_TWO_MAX_MQ = '(max-width: 559px)'
 
 const sectionRef = ref(null)
 const sectionVisible = ref(false)
 const activeKey = ref(null)
-const tagFitCounts = ref({})
+/** Сбрасывается при смене брейкпоинта плашек — перерисовка списка тегов */
+const tagsLayoutVersion = ref(0)
 let observer = null
-let tagsMq = null
-let tagsResizeObserver = null
+let tagsCompactMq = null
+let tagsTwoMaxMq = null
+let teardownTagsLayout = null
+
+const isCompactTagsViewport = () => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  return (tagsCompactMq ?? window.matchMedia(TAGS_COMPACT_MQ)).matches
+}
+
+const maxVisibleTags = () => {
+  if (!isCompactTagsViewport()) {
+    return Number.POSITIVE_INFINITY
+  }
+  if ((tagsTwoMaxMq ?? window.matchMedia(TAGS_TWO_MAX_MQ)).matches) {
+    return 2
+  }
+  return 3
+}
 
 const setActive = (key) => {
   activeKey.value = key
@@ -117,111 +128,38 @@ const clearActive = () => {
 }
 
 const visibleTagsFor = (direction) => {
-  if (!tagsMq?.matches) {
+  void tagsLayoutVersion.value
+
+  const limit = maxVisibleTags()
+  if (!Number.isFinite(limit)) {
     return direction.tags
   }
 
-  const count = tagFitCounts.value[direction.key] ?? direction.tags.length
-  return direction.tags.slice(0, count)
-}
-
-const remeasureDirectionTags = () => {
-  if (!sectionRef.value) {
-    return
-  }
-
-  if (!tagsMq?.matches) {
-    tagFitCounts.value = {}
-    return
-  }
-
-  const wraps = sectionRef.value.querySelectorAll('.directions-row__tags-wrap[data-direction-key]')
-  const next = {}
-
-  wraps.forEach((wrap) => {
-    const key = wrap.dataset.directionKey
-    const direction = directions.find((item) => item.key === key)
-
-    if (!direction?.tags.length) {
-      return
-    }
-
-    const measureList = wrap.querySelector('.directions-row__tags--measure')
-    const items = measureList ? [...measureList.children] : []
-    const width = wrap.clientWidth
-
-    if (!width || !items.length) {
-      next[key] = direction.tags.length
-      return
-    }
-
-    let used = 0
-    let count = 0
-
-    for (const item of items) {
-      const chipWidth = item.offsetWidth
-
-      if (count === 0) {
-        count = 1
-        used = chipWidth
-        continue
-      }
-
-      if (used + TAG_GAP_PX + chipWidth <= width + 1) {
-        used += TAG_GAP_PX + chipWidth
-        count += 1
-      } else {
-        break
-      }
-    }
-
-    next[key] = Math.min(direction.tags.length, Math.max(1, count))
-  })
-
-  tagFitCounts.value = next
+  return direction.tags.slice(0, Math.min(limit, direction.tags.length))
 }
 
 const setupTagsLayout = () => {
-  tagsMq = window.matchMedia(TAGS_COMPACT_MQ)
+  tagsCompactMq = window.matchMedia(TAGS_COMPACT_MQ)
+  tagsTwoMaxMq = window.matchMedia(TAGS_TWO_MAX_MQ)
+
   const onTagsLayoutChange = () => {
-    nextTick(() => remeasureDirectionTags())
+    tagsLayoutVersion.value += 1
   }
 
-  tagsMq.addEventListener('change', onTagsLayoutChange)
-  onTagsLayoutChange()
-
-  const attachResizeObserver = () => {
-    if (!sectionRef.value) {
-      return
-    }
-
-    if ('ResizeObserver' in window) {
-      tagsResizeObserver = new ResizeObserver(() => {
-        remeasureDirectionTags()
-      })
-      tagsResizeObserver.observe(sectionRef.value)
-    } else {
-      window.addEventListener('resize', remeasureDirectionTags)
-    }
-  }
-
-  nextTick(attachResizeObserver)
+  tagsCompactMq.addEventListener('change', onTagsLayoutChange)
+  tagsTwoMaxMq.addEventListener('change', onTagsLayoutChange)
 
   return () => {
-    tagsMq?.removeEventListener('change', onTagsLayoutChange)
-    tagsResizeObserver?.disconnect()
-    window.removeEventListener('resize', remeasureDirectionTags)
+    tagsCompactMq?.removeEventListener('change', onTagsLayoutChange)
+    tagsTwoMaxMq?.removeEventListener('change', onTagsLayoutChange)
   }
 }
-
-let teardownTagsLayout = null
 
 onMounted(() => {
   teardownTagsLayout = setupTagsLayout()
 
   if (!('IntersectionObserver' in window)) {
     sectionVisible.value = true
-    nextTick(() => remeasureDirectionTags())
     return
   }
 
@@ -229,7 +167,6 @@ onMounted(() => {
     (entries) => {
       if (entries[0]?.isIntersecting) {
         sectionVisible.value = true
-        nextTick(() => remeasureDirectionTags())
         observer?.disconnect()
       }
     },
@@ -238,12 +175,6 @@ onMounted(() => {
 
   if (sectionRef.value) {
     observer.observe(sectionRef.value)
-  }
-})
-
-watch(sectionVisible, (visible) => {
-  if (visible) {
-    nextTick(() => remeasureDirectionTags())
   }
 })
 
@@ -319,6 +250,9 @@ onUnmounted(() => {
   --row-border: var(--color-directions-row-border, rgba(var(--palette-navy-rgb), 0.14));
 
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
   display: grid;
   grid-template-columns: 56px minmax(0, 1fr);
   grid-template-rows: auto auto;
@@ -387,70 +321,100 @@ onUnmounted(() => {
   color: var(--color-directions-row-text, var(--palette-navy));
   font-size: clamp(20px, 1.8vw, 28px);
   font-weight: 950;
-  line-height: 1;
+  line-height: 1.08;
   letter-spacing: -0.05em;
-  text-transform: lowercase;
+  text-transform: none;
+  text-wrap: balance;
 }
 
 .directions-row__lead {
   margin: 8px 0 0;
   color: var(--color-directions-row-lead, rgba(var(--palette-navy-rgb), 0.78));
-  font-size: clamp(13px, 1.05vw, 15px);
+  font-size: clamp(14px, 1.2vw, 16px);
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.45;
   letter-spacing: -0.02em;
+  text-wrap: pretty;
 }
 
 .directions-row__tags-wrap {
+  position: relative;
   grid-column: 2;
   grid-row: 2;
   min-width: 0;
   max-width: 100%;
-  margin: 2px 0 0;
+  margin: 6px 0 0;
+  overflow: hidden;
 }
 
 .directions-row__tags {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: flex-start;
-  gap: 9px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.directions-row__tags--measure {
-  position: absolute;
-  width: 100%;
-  visibility: hidden;
-  pointer-events: none;
-  flex-wrap: nowrap;
   overflow: hidden;
-  height: 0;
-  margin: 0;
 }
 
 .directions-row__tags li {
   flex-shrink: 0;
-  padding: 6px 13px;
+}
+
+.directions-row__tags li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: fit-content;
+  padding: 6px 16px;
   border-radius: 999px;
   color: var(--color-directions-row-text, var(--palette-navy));
-  background: rgba(var(--row-accent-rgb), 0.08);
-  border: none;
+  background: var(--color-directions-row-chip-bg, transparent);
+  border: 2px solid rgba(var(--row-accent-rgb), 0.52);
   box-shadow: none;
   outline: none;
   font-size: clamp(12px, 1.15vw, 14px);
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
   white-space: nowrap;
   -webkit-font-smoothing: antialiased;
 }
 
+@media (min-width: 1025px) {
+  .directions-row__tags-wrap {
+    overflow: visible;
+  }
+
+  .directions-row__tags {
+    overflow: visible;
+  }
+
+  .directions-row__tags {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+    overflow: visible;
+  }
+
+  .directions-row__tags li {
+    width: 100%;
+    padding-inline: 10px;
+    text-align: center;
+  }
+}
+
 .directions-row:hover .directions-row__tags li,
 .directions-row--active .directions-row__tags li {
-  background: rgba(var(--row-accent-rgb), 0.16);
+  background: transparent;
+  border-color: var(--row-accent);
 }
 
 @keyframes directionsRowEnter {
@@ -474,12 +438,6 @@ onUnmounted(() => {
   .directions-row:hover,
   .directions-row--active {
     translate: 0;
-  }
-}
-
-@media (min-width: 1025px) {
-  .directions-row__tags--measure {
-    display: none;
   }
 }
 
@@ -518,6 +476,19 @@ onUnmounted(() => {
 
 }
 
+@media (max-width: 559px) {
+  .directions-row__tags {
+    gap: 6px;
+  }
+
+  .directions-row__tags li {
+    padding: 6px 10px;
+    font-size: clamp(11px, 3.25vw, 12px);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+}
+
 @media (max-width: 1024px) {
   .directions {
     padding:
@@ -538,23 +509,43 @@ onUnmounted(() => {
   }
 
   .directions-row__tags-wrap {
-    position: relative;
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 8px;
+    padding-top: 2px;
   }
 
-  .directions-row__tags:not(.directions-row__tags--measure) {
-    flex-wrap: nowrap;
-    overflow: hidden;
+  .directions-row__tags {
+    gap: 6px;
+    justify-content: flex-end;
   }
 
   .directions-row__tags li {
-    font-size: clamp(12px, 1.35vw, 14px);
-    padding: 6px 12px;
+    font-size: clamp(11px, 2.1vw, 13px);
+    padding: 6px 11px;
+  }
+
+  .directions-row__lead {
+    font-size: clamp(14px, 1.45vw, 16px);
   }
 }
 
 @media (max-width: 900px) {
   .directions {
     padding-inline: var(--layout-gutter);
+  }
+}
+
+@media (max-width: 720px) and (min-width: 560px) {
+  .directions-row__tags {
+    gap: 6px;
+  }
+
+  .directions-row__tags li {
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
   }
 }
 
@@ -586,12 +577,12 @@ onUnmounted(() => {
 
   .directions-row__name {
     font-size: clamp(18px, 5.2vw, 24px);
-    line-height: 1.05;
+    line-height: 1.1;
   }
 
-  .directions-row__tags li {
-    font-size: clamp(12px, 3.4vw, 14px);
-    padding: 6px 12px;
+  .directions-row__lead {
+    font-size: clamp(14px, 3.6vw, 16px);
+    line-height: 1.5;
   }
 }
 
@@ -613,8 +604,12 @@ onUnmounted(() => {
   }
 
   .directions-row {
-    padding: 16px 14px;
-    gap: 12px;
+    padding: 16px 12px;
+    gap: 10px 12px;
+  }
+
+  .directions-row__lead {
+    margin-top: 6px;
   }
 
   .directions-row__icon {
@@ -623,10 +618,6 @@ onUnmounted(() => {
     flex-shrink: 0;
   }
 
-  .directions-row__tags li {
-    font-size: clamp(13px, 3.6vw, 14px);
-    padding: 6px 11px;
-  }
 }
 
 @media (max-width: 360px) {
@@ -636,11 +627,12 @@ onUnmounted(() => {
 
   .directions-row__lead {
     font-size: 14px;
+    line-height: 1.5;
   }
 
   .directions-row__tags li {
-    font-size: 12px;
-    padding: 5px 10px;
+    padding: 6px 9px;
+    font-size: 11px;
   }
 }
 </style>

@@ -5,13 +5,14 @@
  *
  * Тело запроса (snake_case):
  * {
- *   first_name, last_name, patronymic?, company, phone, email,
+ *   last_name, first_name, patronymic?,
+ *   organization, study_or_position, phone, vk_url,
+ *   forum_direction, forum_direction_label,
  *   info_consent, personal_data_consent
  * }
- *
- * Успех: 201 + { id, ... } или 200
- * Ошибка: 4xx/5xx + { detail?: string, errors?: Record<string, string[]> }
  */
+
+import { getForumDirectionLabel } from '@/data/forumDirections.js'
 
 const DEFAULT_PATH = '/api/registrations/'
 
@@ -22,26 +23,16 @@ function getApiBaseUrl() {
 
 /**
  * @typedef {Object} RegistrationFormData
- * @property {string} firstName
  * @property {string} lastName
+ * @property {string} firstName
  * @property {string} [patronymic]
- * @property {string} company
+ * @property {string} organization
+ * @property {string} studyOrPosition
  * @property {string} phone
- * @property {string} email
+ * @property {string} vkUrl
+ * @property {string} forumDirection
  * @property {boolean} infoConsent
  * @property {boolean} personalDataConsent
- */
-
-/**
- * @typedef {Object} RegistrationPayload
- * @property {string} first_name
- * @property {string} last_name
- * @property {string} patronymic
- * @property {string} company
- * @property {string} phone
- * @property {string} email
- * @property {boolean} info_consent
- * @property {boolean} personal_data_consent
  */
 
 /**
@@ -50,11 +41,13 @@ function getApiBaseUrl() {
  */
 export function validateRegistrationForm(form) {
   const required = [
-    ['firstName', 'Имя'],
     ['lastName', 'Фамилия'],
-    ['company', 'Компания / учебное заведение'],
+    ['firstName', 'Имя'],
+    ['organization', 'Учебное заведение / организация'],
+    ['studyOrPosition', 'Направления обучения / должность'],
     ['phone', 'Номер телефона'],
-    ['email', 'Электронная почта'],
+    ['vkUrl', 'Ссылка в ВК'],
+    ['forumDirection', 'Направление форума'],
   ]
 
   for (const [key, label] of required) {
@@ -67,9 +60,15 @@ export function validateRegistrationForm(form) {
     return { valid: false, message: 'Нужно дать согласие на обработку данных' }
   }
 
-  const email = String(form.email).trim()
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { valid: false, message: 'Укажите корректный адрес электронной почты' }
+  const vk = String(form.vkUrl).trim()
+  const vkOk = /(?:^https?:\/\/)?(?:www\.)?vk\.com\//i.test(vk)
+
+  if (!vkOk) {
+    return { valid: false, message: 'Укажите корректную ссылку на профиль ВКонтакте' }
+  }
+
+  if (!getForumDirectionLabel(form.forumDirection)) {
+    return { valid: false, message: 'Выберите направление форума' }
   }
 
   return { valid: true }
@@ -77,16 +76,20 @@ export function validateRegistrationForm(form) {
 
 /**
  * @param {RegistrationFormData} form
- * @returns {RegistrationPayload}
  */
 export function toRegistrationPayload(form) {
+  const forumDirection = form.forumDirection.trim()
+
   return {
-    first_name: form.firstName.trim(),
     last_name: form.lastName.trim(),
+    first_name: form.firstName.trim(),
     patronymic: String(form.patronymic ?? '').trim(),
-    company: form.company.trim(),
+    organization: form.organization.trim(),
+    study_or_position: form.studyOrPosition.trim(),
     phone: form.phone.trim(),
-    email: form.email.trim(),
+    vk_url: form.vkUrl.trim(),
+    forum_direction: forumDirection,
+    forum_direction_label: getForumDirectionLabel(forumDirection),
     info_consent: Boolean(form.infoConsent),
     personal_data_consent: Boolean(form.personalDataConsent),
   }
@@ -131,8 +134,6 @@ function parseApiError(body) {
 }
 
 /**
- * Отправка заявки на регистрацию на бэкенд.
- *
  * @param {RegistrationFormData} form
  * @param {{ signal?: AbortSignal }} [options]
  * @returns {Promise<{ ok: true, data: unknown } | { ok: false, message: string }>}

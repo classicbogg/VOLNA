@@ -27,10 +27,10 @@
           <h4 class="footer-contacts__heading">Контакты</h4>
           <ul class="footer-contacts__list">
             <li>
-              <a href="mailto:info@sozdainashe.ru">info@sozdainashe.ru</a>
+              <a href="mailto:sielom@yandex.ru">sielom@yandex.ru</a>
             </li>
             <li>
-              <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+              <a href="tel:+79935230421">+7 993 523 0421</a>
             </li>
             <li class="footer-contacts__address">
               г. Сургут,

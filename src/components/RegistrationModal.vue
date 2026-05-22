@@ -1,6 +1,7 @@
 <script setup>
-import { reactive, ref, watch, onUnmounted } from 'vue'
+import { computed, reactive, ref, watch, onMounted, onUnmounted } from 'vue'
 import { submitRegistration } from '@/api/registration'
+import { forumDirectionOptions, getForumDirectionLabel } from '@/data/forumDirections'
 
 const props = defineProps({
   isOpen: {
@@ -12,12 +13,14 @@ const props = defineProps({
 const emit = defineEmits(['close', 'success'])
 
 const form = reactive({
-  firstName: '',
   lastName: '',
+  firstName: '',
   patronymic: '',
-  company: '',
+  organization: '',
+  studyOrPosition: '',
   phone: '',
-  email: '',
+  vkUrl: '',
+  forumDirection: '',
   infoConsent: false,
   personalDataConsent: false,
 })
@@ -25,16 +28,32 @@ const form = reactive({
 const isSubmitting = ref(false)
 const submitError = ref('')
 const submitSuccess = ref(false)
+const directionOpen = ref(false)
+const directionRoot = ref(null)
+
+const selectedDirectionLabel = computed(() => getForumDirectionLabel(form.forumDirection))
+
+const toggleDirectionList = () => {
+  directionOpen.value = !directionOpen.value
+}
+
+const selectDirection = (option) => {
+  form.forumDirection = option.value
+  directionOpen.value = false
+}
 
 const resetForm = () => {
-  form.firstName = ''
   form.lastName = ''
+  form.firstName = ''
   form.patronymic = ''
-  form.company = ''
+  form.organization = ''
+  form.studyOrPosition = ''
   form.phone = ''
-  form.email = ''
+  form.vkUrl = ''
+  form.forumDirection = ''
   form.infoConsent = false
   form.personalDataConsent = false
+  directionOpen.value = false
 }
 
 const closeModal = () => {
@@ -51,12 +70,14 @@ const submitForm = async () => {
   isSubmitting.value = true
 
   const payload = {
-    firstName: form.firstName,
     lastName: form.lastName,
+    firstName: form.firstName,
     patronymic: form.patronymic,
-    company: form.company,
+    organization: form.organization,
+    studyOrPosition: form.studyOrPosition,
     phone: form.phone,
-    email: form.email,
+    vkUrl: form.vkUrl,
+    forumDirection: form.forumDirection,
     infoConsent: form.infoConsent,
     personalDataConsent: form.personalDataConsent,
   }
@@ -93,11 +114,23 @@ watch(
     if (!open) {
       submitError.value = ''
       submitSuccess.value = false
+      directionOpen.value = false
     }
   },
 )
 
+const onDocumentClick = (event) => {
+  if (!directionRoot.value?.contains(event.target)) {
+    directionOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', onDocumentClick)
+})
+
 onUnmounted(() => {
+  document.removeEventListener('click', onDocumentClick)
   setModalOpenState(false)
 })
 </script>
@@ -126,8 +159,6 @@ onUnmounted(() => {
           </div>
 
           <div class="registration-modal__scroll" tabindex="-1">
-            <p class="registration-scroll-hint" aria-hidden="true">листайте вниз</p>
-
             <form class="registration-form" @submit.prevent="submitForm">
             <p
               v-if="submitError"
@@ -145,12 +176,19 @@ onUnmounted(() => {
               Заявка отправлена. Спасибо!
             </p>
 
-            <p class="registration-note">
-              Регистрация необходима для посетителей форума, онлайн-трансляция
-              будет доступна на сайте без регистрации.
-            </p>
-
             <div class="registration-grid">
+              <label class="registration-field">
+                <input
+                  v-model="form.lastName"
+                  type="text"
+                  name="lastName"
+                  autocomplete="family-name"
+                  placeholder="Иванов"
+                  required
+                />
+                <span>Фамилия *</span>
+              </label>
+
               <label class="registration-field">
                 <input
                   v-model="form.firstName"
@@ -165,26 +203,37 @@ onUnmounted(() => {
 
               <label class="registration-field">
                 <input
-                  v-model="form.company"
+                  v-model="form.patronymic"
                   type="text"
-                  name="company"
-                  autocomplete="organization"
-                  placeholder="ООО «ВОЛНА»"
-                  required
+                  name="patronymic"
+                  autocomplete="additional-name"
+                  placeholder="Иванович"
                 />
-                <span>Компания / Учебное заведение *</span>
+                <span>Отчество</span>
               </label>
 
               <label class="registration-field">
                 <input
-                  v-model="form.lastName"
+                  v-model="form.organization"
                   type="text"
-                  name="lastName"
-                  autocomplete="family-name"
-                  placeholder="Иванов"
+                  name="organization"
+                  autocomplete="organization"
+                  placeholder="СИЭУиП"
                   required
                 />
-                <span>Фамилия *</span>
+                <span>Учебное заведение / организация *</span>
+              </label>
+
+              <label class="registration-field">
+                <input
+                  v-model="form.studyOrPosition"
+                  type="text"
+                  name="studyOrPosition"
+                  autocomplete="organization-title"
+                  placeholder="Менеджмент"
+                  required
+                />
+                <span>Направления обучения / должность *</span>
               </label>
 
               <label class="registration-field">
@@ -202,27 +251,75 @@ onUnmounted(() => {
 
               <label class="registration-field">
                 <input
-                  v-model="form.patronymic"
-                  type="text"
-                  name="patronymic"
-                  autocomplete="additional-name"
-                  placeholder="Иванович"
-                />
-                <span>Отчество</span>
-              </label>
-
-              <label class="registration-field">
-                <input
-                  v-model="form.email"
-                  type="email"
-                  name="email"
-                  autocomplete="email"
-                  inputmode="email"
-                  placeholder="ivanov@mail.ru"
+                  v-model="form.vkUrl"
+                  type="url"
+                  name="vkUrl"
+                  autocomplete="url"
+                  inputmode="url"
+                  placeholder="https://vk.com/username"
                   required
                 />
-                <span>Электронная почта *</span>
+                <span>Ссылка в ВК *</span>
               </label>
+
+              <div
+                ref="directionRoot"
+                class="registration-field registration-field--custom-select"
+                :class="{
+                  'registration-field--filled': form.forumDirection,
+                  'registration-field--open': directionOpen,
+                }"
+              >
+                <button
+                  type="button"
+                  class="registration-custom-select__trigger"
+                  :aria-expanded="directionOpen"
+                  aria-haspopup="listbox"
+                  @click.stop="toggleDirectionList"
+                >
+                  <span class="registration-custom-select__value">
+                    {{ selectedDirectionLabel || ' ' }}
+                  </span>
+                </button>
+                <span>Направление форума *</span>
+                <ul
+                  v-show="directionOpen"
+                  class="registration-custom-select__list"
+                  role="listbox"
+                >
+                  <li
+                    v-for="option in forumDirectionOptions"
+                    :key="option.value"
+                    role="option"
+                    class="registration-custom-select__option"
+                    :class="{
+                      'registration-custom-select__option--active':
+                        form.forumDirection === option.value,
+                    }"
+                    :aria-selected="form.forumDirection === option.value"
+                    @click.stop="selectDirection(option)"
+                  >
+                    {{ option.label }}
+                  </li>
+                </ul>
+                <select
+                  v-model="form.forumDirection"
+                  name="forumDirection"
+                  class="registration-custom-select__native"
+                  required
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                  <option value="" disabled></option>
+                  <option
+                    v-for="option in forumDirectionOptions"
+                    :key="`native-${option.value}`"
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
             </div>
 
             <div class="registration-bottom">
@@ -303,10 +400,6 @@ onUnmounted(() => {
   outline: none;
 }
 
-.registration-scroll-hint {
-  display: none;
-}
-
 .registration-head {
   flex-shrink: 0;
   width: min(560px, calc(100% - 140px));
@@ -371,15 +464,6 @@ onUnmounted(() => {
   padding: 30px 28px max(46px, env(safe-area-inset-bottom, 0px));
 }
 
-.registration-note {
-  max-width: min(520px, 100%);
-  margin: 0 0 18px;
-  color: var(--color-registration-modal-muted, var(--color-text-muted));
-  font-size: clamp(13px, 1.8vw, 14px);
-  line-height: 1.4;
-  font-weight: 600;
-}
-
 .registration-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -411,6 +495,105 @@ onUnmounted(() => {
     box-shadow 0.2s ease;
 }
 
+.registration-field--custom-select {
+  z-index: 1;
+}
+
+.registration-field--custom-select.registration-field--open {
+  z-index: 6;
+}
+
+.registration-custom-select__trigger {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  min-height: 74px;
+  height: 74px;
+  padding: 26px 48px 12px 28px;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background-color: var(--color-registration-modal-field-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10' fill='none'%3E%3Cpath d='M1.5 1.5L8 8l6.5-6.5' stroke='%23f5f0e8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 22px center;
+  background-size: 14px 9px;
+  color: var(--color-registration-modal-field-text, var(--palette-navy));
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.registration-custom-select__value {
+  position: static;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(16px, 2.2vw, 18px);
+  line-height: 1.15;
+  font-weight: 800;
+  color: inherit;
+  transform: none;
+  pointer-events: none;
+}
+
+.registration-field--custom-select:not(.registration-field--filled):not(.registration-field--open)
+  .registration-custom-select__value {
+  color: transparent;
+}
+
+.registration-custom-select__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.registration-custom-select__list {
+  position: absolute;
+  z-index: 8;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: min(280px, 42vh);
+  margin: 0;
+  padding: 8px;
+  overflow-y: auto;
+  list-style: none;
+  border: 2px solid var(--color-registration-modal-border);
+  border-radius: 16px;
+  background: var(--color-registration-modal-option-bg, var(--color-registration-modal-field-bg-focus));
+  box-shadow: 0 14px 36px var(--color-registration-modal-shadow);
+}
+
+.registration-custom-select__option {
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: var(--color-registration-modal-option-text, var(--color-registration-modal-field-text));
+  font-size: clamp(14px, 1.8vw, 16px);
+  line-height: 1.35;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.registration-custom-select__option:hover,
+.registration-custom-select__option--active {
+  background: var(--color-registration-modal-focus-ring);
+}
+
 .registration-field input::placeholder {
   color: var(--color-registration-modal-field-placeholder);
   font-weight: 600;
@@ -426,15 +609,20 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-.registration-field span {
+.registration-field > span {
   position: absolute;
+  z-index: 2;
   left: 28px;
+  right: 48px;
   top: 50%;
   color: var(--color-registration-modal-field-label, rgba(var(--palette-navy-rgb), 0.62));
   font-size: 14px;
   font-weight: 700;
   transform: translateY(-50%);
   pointer-events: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition:
     top 0.2s ease,
     font-size 0.2s ease,
@@ -442,18 +630,26 @@ onUnmounted(() => {
 }
 
 .registration-field input:focus,
-.registration-field input:not(:placeholder-shown) {
+.registration-field input:not(:placeholder-shown),
+.registration-field--custom-select.registration-field--open .registration-custom-select__trigger,
+.registration-field--custom-select.registration-field--filled .registration-custom-select__trigger {
   border-color: var(--color-registration-modal-border);
-  background: var(--color-registration-modal-field-bg-focus);
+  background-color: var(--color-registration-modal-field-bg-focus);
   box-shadow: 0 0 0 3px var(--color-registration-modal-focus-ring);
 }
 
 .registration-field input:focus + span,
-.registration-field input:not(:placeholder-shown) + span {
+.registration-field input:not(:placeholder-shown) + span,
+.registration-field--custom-select.registration-field--open > span,
+.registration-field--custom-select.registration-field--filled > span {
   top: 18px;
   font-size: 12px;
   color: var(--color-registration-modal-field-label, rgba(var(--palette-navy-rgb), 0.72));
   transform: translateY(0);
+}
+
+:global([data-theme='light']) .registration-field--custom-select .registration-custom-select__trigger {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10' fill='none'%3E%3Cpath d='M1.5 1.5L8 8l6.5-6.5' stroke='%231a2b4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 .registration-bottom {
@@ -655,27 +851,6 @@ onUnmounted(() => {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  .registration-scroll-hint {
-    display: block;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    margin: 0;
-    padding: 8px 16px 6px;
-    color: var(--color-registration-modal-muted, var(--color-text-muted));
-    font-size: 12px;
-    line-height: 1.2;
-    font-weight: 700;
-    text-align: center;
-    text-transform: lowercase;
-    letter-spacing: 0.04em;
-    background: linear-gradient(
-      180deg,
-      var(--color-registration-modal-bg) 68%,
-      color-mix(in srgb, var(--color-registration-modal-bg) 0%, transparent)
-    );
-  }
-
   .registration-head {
     width: calc(100% - 88px);
     min-height: 96px;
@@ -700,11 +875,6 @@ onUnmounted(() => {
 
   .registration-form {
     padding: 24px 20px 32px;
-  }
-
-  .registration-note {
-    max-width: 100%;
-    margin-bottom: 16px;
   }
 
   .registration-grid,
@@ -754,20 +924,28 @@ onUnmounted(() => {
     padding: 20px 16px 28px;
   }
 
-  .registration-field input {
+  .registration-field input,
+  .registration-custom-select__trigger {
     min-height: 66px;
     height: 66px;
-    padding: 24px 20px 10px;
+    padding: 24px 42px 10px 20px;
     font-size: 16px;
   }
 
-  .registration-field span {
+  .registration-custom-select__trigger {
+    background-position: right 16px center;
+  }
+
+  .registration-field > span {
     left: 20px;
+    right: 42px;
     font-size: 13px;
   }
 
   .registration-field input:focus + span,
-  .registration-field input:not(:placeholder-shown) + span {
+  .registration-field input:not(:placeholder-shown) + span,
+  .registration-field--custom-select.registration-field--open > span,
+  .registration-field--custom-select.registration-field--filled > span {
     top: 16px;
     font-size: 11px;
   }

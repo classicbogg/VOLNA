@@ -239,32 +239,49 @@ onUnmounted(() => {
   --phrase-marker-pad-x: 0.76em;
   --phrase-marker-pad-y-top: 0.5em;
   --phrase-marker-pad-y-bottom: 0.54em;
-  --phrase-marker-ring-x: 1.52em;
-  --phrase-marker-ring-y: 1.24em;
+  --phrase-marker-ring-x: 2.35em;
+  --phrase-marker-ring-y: 1.92em;
+}
+
+/* Планшет и мобилка — крупный овал, воздух вокруг букв */
+@media (max-width: 1024px) {
+  .audience-heading .phrase-marker {
+    --phrase-marker-pad-x: 0.8em;
+    --phrase-marker-pad-y-top: 0.56em;
+    --phrase-marker-pad-y-bottom: 0.6em;
+    --phrase-marker-ring-x: 2.95em;
+    --phrase-marker-ring-y: 2.42em;
+  }
+
+  .audience-heading .phrase-marker__svg {
+    transform: translate(-50%, -50%) rotate(-2.5deg) scale(1.1, 1.24);
+  }
 }
 
 @container (max-width: 680px) {
   .audience-heading .phrase-marker {
-    --phrase-marker-pad-x: 0.7em;
-    --phrase-marker-pad-y-top: 0.48em;
-    --phrase-marker-pad-y-bottom: 0.52em;
-    --phrase-marker-ring-x: 1.42em;
-    --phrase-marker-ring-y: 1.2em;
+    --phrase-marker-pad-x: 0.78em;
+    --phrase-marker-pad-y-top: 0.54em;
+    --phrase-marker-pad-y-bottom: 0.58em;
+    --phrase-marker-ring-x: 2.82em;
+    --phrase-marker-ring-y: 2.32em;
   }
 }
 
 @container (max-width: 420px) {
   .audience-heading .phrase-marker {
-    --phrase-marker-pad-x: 0.74em;
-    --phrase-marker-pad-y-top: 0.46em;
-    --phrase-marker-pad-y-bottom: 0.5em;
-    --phrase-marker-ring-x: 1.48em;
-    --phrase-marker-ring-y: 1.22em;
+    --phrase-marker-pad-x: 0.76em;
+    --phrase-marker-pad-y-top: 0.52em;
+    --phrase-marker-pad-y-bottom: 0.56em;
+    --phrase-marker-ring-x: 2.72em;
+    --phrase-marker-ring-y: 2.25em;
   }
 }
 
-.audience-heading .phrase-marker__svg {
-  transform: translate(-50%, -50%) rotate(-2.5deg);
+@media (min-width: 1025px) {
+  .audience-heading .phrase-marker__svg {
+    transform: translate(-50%, -50%) rotate(-2.5deg);
+  }
 }
 
 .audience-heading .phrase-marker__svg path {
@@ -918,9 +935,11 @@ onUnmounted(() => {
   }
 
   .audience-heading .phrase-marker {
-    --phrase-marker-pad-x: 0.72em;
-    --phrase-marker-ring-x: 1.46em;
-    --phrase-marker-ring-y: 1.2em;
+    --phrase-marker-pad-x: 0.76em;
+    --phrase-marker-pad-y-top: 0.54em;
+    --phrase-marker-pad-y-bottom: 0.58em;
+    --phrase-marker-ring-x: 2.78em;
+    --phrase-marker-ring-y: 2.28em;
   }
 
   .audience-intro {
@@ -1042,11 +1061,11 @@ onUnmounted(() => {
   }
 
   .audience-heading .phrase-marker {
-    --phrase-marker-pad-x: 0.68em;
-    --phrase-marker-pad-y-top: 0.44em;
-    --phrase-marker-pad-y-bottom: 0.48em;
-    --phrase-marker-ring-x: 1.44em;
-    --phrase-marker-ring-y: 1.18em;
+    --phrase-marker-pad-x: 0.74em;
+    --phrase-marker-pad-y-top: 0.52em;
+    --phrase-marker-pad-y-bottom: 0.56em;
+    --phrase-marker-ring-x: 2.68em;
+    --phrase-marker-ring-y: 2.2em;
   }
 
   .audience-intro,
@@ -1087,9 +1106,15 @@ onUnmounted(() => {
 
 @media (max-width: 320px) {
   .audience-heading .phrase-marker {
-    --phrase-marker-pad-x: 0.62em;
-    --phrase-marker-ring-x: 1.36em;
-    --phrase-marker-ring-y: 1.14em;
+    --phrase-marker-pad-x: 0.7em;
+    --phrase-marker-pad-y-top: 0.5em;
+    --phrase-marker-pad-y-bottom: 0.54em;
+    --phrase-marker-ring-x: 2.55em;
+    --phrase-marker-ring-y: 2.1em;
+  }
+
+  .audience-heading .phrase-marker__svg {
+    transform: translate(-50%, -50%) rotate(-2.5deg) scale(1.08, 1.2);
   }
 
   .audience-card__icon {

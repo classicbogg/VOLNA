@@ -73,3 +73,10 @@ export const IconMedia = icon([
     stroke: 'none',
   }),
 ])
+
+/** СВОя волна — волны */
+export const IconSvo = icon([
+  h('path', { d: 'M7 22c4-5 7-5 10 0s6 5 10 0 6 5 10 0' }),
+  h('path', { d: 'M7 30c4-5 7-5 10 0s6 5 10 0 6 5 10 0' }),
+  h('path', { d: 'M24 12v4M24 34v2M20 16l4-3 4 3' }),
+])

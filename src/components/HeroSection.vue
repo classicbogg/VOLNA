@@ -95,16 +95,20 @@ const closeRegistration = () => {
     <div class="hero-marquee" aria-hidden="true">
       <div class="hero-marquee__track">
         <div class="hero-marquee__group">
-          <span>волна</span>
-          <span>форум молодежного предпринимательства</span>
-          <span>волна</span>
-          <span>форум молодежного предпринимательства</span>
+          <span>лови свою волну</span>
+          <span>задавай движение</span>
+          <span>собирай сообщество</span>
+          <span>лови свою волну</span>
+          <span>задавай движение</span>
+          <span>собирай сообщество</span>
         </div>
         <div class="hero-marquee__group">
-          <span>волна</span>
-          <span>форум молодежного предпринимательства</span>
-          <span>волна</span>
-          <span>форум молодежного предпринимательства</span>
+          <span>лови свою волну</span>
+          <span>задавай движение</span>
+          <span>собирай сообщество</span>
+          <span>лови свою волну</span>
+          <span>задавай движение</span>
+          <span>собирай сообщество</span>
         </div>
       </div>
     </div>
@@ -455,7 +459,9 @@ const closeRegistration = () => {
   max-width: 100%;
   min-height: 1.08em;
   padding: 0.03em 0 0.05em;
-  color: transparent;
+  /* запасной цвет, если браузер ломает background-clip: text */
+  color: var(--hero-title-text-base);
+  forced-color-adjust: none;
   background-image: var(--hero-title-fill);
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -747,9 +753,10 @@ const closeRegistration = () => {
 }
 
 .hero-marquee__group span::after {
-  content: '•';
+  content: '|';
   margin-left: clamp(28px, 3.5vw, 44px);
-  font-weight: 900;
+  font-weight: 700;
+  opacity: 0.85;
 }
 
 @media (min-width: 1920px) {
