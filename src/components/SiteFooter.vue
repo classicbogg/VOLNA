@@ -46,9 +46,33 @@
         </p>
 
         <div class="footer-legal">
-          <a href="#privacy">Политика конфиденциальности</a>
+          <a
+            href="/Политика конфиденциальности и обработка данных.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Политика конфиденциальности
+          </a>
+
           <span class="footer-legal-separator" aria-hidden="true">|</span>
-          <a href="#terms">Условия использования</a>
+
+          <a
+            href="/Polzovatelskoe_soglashenie (1).pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Условия использования
+          </a>
+
+          <span class="footer-legal-separator" aria-hidden="true">|</span>
+
+          <a
+            href="/Soglasie_na_obrabotku_PD_dlya_saita_obshchee (1) (2).pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Согласие на обработку данных
+          </a>
         </div>
       </div>
     </div>
