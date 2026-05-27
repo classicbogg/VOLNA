@@ -41,9 +41,20 @@
       </div>
 
       <div class="footer-bottom">
-        <p class="footer-copyright">
-          © 2026 Форум ВОЛНА. Все права защищены.
-        </p>
+        <div class="footer-info">
+          <p class="footer-copyright">
+            © 2026 Форум ВОЛНА. Все права защищены.
+          </p>
+
+          <p class="footer-made-by">
+            <span class="footer-made-by__text">Сайт сделан сообществом</span>
+            <span
+              class="footer-made-by__logo"
+              role="img"
+              aria-label="SIELOM.WEB"
+            ></span>
+          </p>
+        </div>
 
         <div class="footer-legal">
           <a
@@ -213,7 +224,7 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 16px 24px;
+  gap: 18px 28px;
   width: 100%;
   color: var(--color-footer-bottom);
   font-size: 14px;
@@ -222,8 +233,46 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   letter-spacing: -0.025em;
 }
 
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
 .footer-copyright {
   margin: 0;
+}
+
+.footer-made-by {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: var(--color-footer-bottom);
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  opacity: 0.92;
+}
+
+.footer-made-by__text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.footer-made-by__logo {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 118px;
+  height: 18px;
+  color: currentColor;
+  background-color: currentColor;
+  mask: url('/SIELOMWEB.svg') center / contain no-repeat;
+  -webkit-mask: url('/SIELOMWEB.svg') center / contain no-repeat;
+  transform: translateY(1px);
 }
 
 .footer-legal {
@@ -292,7 +341,15 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-    gap: 14px;
+    gap: 16px;
+  }
+
+  .footer-info {
+    align-items: center;
+  }
+
+  .footer-made-by {
+    justify-content: center;
   }
 
   .footer-legal {
@@ -342,6 +399,14 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
     text-align: center;
   }
 
+  .footer-info {
+    align-items: center;
+  }
+
+  .footer-made-by {
+    justify-content: center;
+  }
+
   .footer-legal {
     justify-content: center;
   }
@@ -361,6 +426,15 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   .footer-tagline {
     font-size: 17px;
   }
+
+  .footer-made-by {
+    font-size: 12px;
+  }
+
+  .footer-made-by__logo {
+    width: 108px;
+    height: 17px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -371,6 +445,12 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   .footer-tagline {
     font-size: 16px;
     line-height: 1.35;
+  }
+
+  .footer-made-by {
+    flex-wrap: wrap;
+    row-gap: 7px;
+    max-width: 100%;
   }
 }
 
@@ -386,6 +466,15 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
 
   .footer-bottom {
     font-size: 12px;
+  }
+
+  .footer-made-by {
+    gap: 7px;
+  }
+
+  .footer-made-by__logo {
+    width: 98px;
+    height: 16px;
   }
 
   .footer-legal {
@@ -410,6 +499,15 @@ const { logoSrc, logoAlt, onLogoError } = useVolnaLogo({ variant: 'footer' })
   .footer-contacts__list a,
   .footer-contacts__address {
     font-size: 14px;
+  }
+
+  .footer-made-by {
+    flex-direction: column;
+  }
+
+  .footer-made-by__logo {
+    width: 108px;
+    height: 17px;
   }
 }
 </style>
