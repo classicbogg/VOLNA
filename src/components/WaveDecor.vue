@@ -1,4 +1,7 @@
 <script setup>
+import { computed } from 'vue'
+import { useTheme } from '../composables/useTheme'
+
 defineProps({
   placement: {
     type: String,
@@ -11,15 +14,18 @@ defineProps({
     validator: (value) => ['sm', 'md', 'lg'].includes(value),
   },
 })
+
+const { isDark } = useTheme()
+const waveIconSrc = computed(() => (isDark.value ? '/Волна.svg' : '/wave-mark.svg'))
 </script>
 
 <template>
   <div
     class="wave-decor"
-    :class="[`wave-decor--${placement}`, `wave-decor--${size}`]"
+    :class="[`wave-decor--${placement}`, `wave-decor--${size}`, isDark ? 'wave-decor--dark' : 'wave-decor--light']"
     aria-hidden="true"
   >
-    <img class="wave-decor__icon" src="/wave-mark.svg" alt="" loading="lazy" decoding="async" />
+    <img class="wave-decor__icon" :src="waveIconSrc" alt="" loading="lazy" decoding="async" />
   </div>
 </template>
 
@@ -41,15 +47,28 @@ defineProps({
 }
 
 .wave-decor--sm .wave-decor__icon {
-  width: clamp(52px, 8vw, 72px);
+  width: clamp(64px, 9vw, 88px);
 }
 
 .wave-decor--md .wave-decor__icon {
-  width: clamp(68px, 10vw, 96px);
+  width: clamp(84px, 11.5vw, 118px);
 }
 
 .wave-decor--lg .wave-decor__icon {
-  width: clamp(84px, 12vw, 118px);
+  width: clamp(104px, 14vw, 146px);
+}
+
+/* Темная тема: отдельный масштаб для нового SVG-элемента "Волна" */
+.wave-decor--dark.wave-decor--sm .wave-decor__icon {
+  width: clamp(92px, 12vw, 132px);
+}
+
+.wave-decor--dark.wave-decor--md .wave-decor__icon {
+  width: clamp(124px, 16vw, 182px);
+}
+
+.wave-decor--dark.wave-decor--lg .wave-decor__icon {
+  width: clamp(162px, 21vw, 236px);
 }
 
 .wave-decor--left {
@@ -125,6 +144,30 @@ defineProps({
 }
 
 @media (min-width: 1025px) {
+  .wave-decor--sm .wave-decor__icon {
+    width: clamp(80px, 6vw, 108px);
+  }
+
+  .wave-decor--md .wave-decor__icon {
+    width: clamp(104px, 7.5vw, 146px);
+  }
+
+  .wave-decor--lg .wave-decor__icon {
+    width: clamp(130px, 9vw, 184px);
+  }
+
+  .wave-decor--dark.wave-decor--sm .wave-decor__icon {
+    width: clamp(112px, 8.2vw, 162px);
+  }
+
+  .wave-decor--dark.wave-decor--md .wave-decor__icon {
+    width: clamp(146px, 10.5vw, 214px);
+  }
+
+  .wave-decor--dark.wave-decor--lg .wave-decor__icon {
+    width: clamp(186px, 13.2vw, 276px);
+  }
+
   .wave-decor--left,
   .wave-decor--right {
     --wave-edge-inset: var(--wave-edge-inset-wide);
@@ -167,6 +210,14 @@ defineProps({
 
   .wave-decor--md .wave-decor__icon {
     width: clamp(48px, 6.5vw, 64px);
+  }
+
+  .wave-decor--dark.wave-decor--lg .wave-decor__icon {
+    width: clamp(74px, 9.4vw, 104px);
+  }
+
+  .wave-decor--dark.wave-decor--md .wave-decor__icon {
+    width: clamp(64px, 8.2vw, 90px);
   }
 
   .wave-decor--left {

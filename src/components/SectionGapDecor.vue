@@ -44,7 +44,7 @@ import WaveDecor from './WaveDecor.vue'
 }
 
 .section-gap-decor :deep(.wave-decor--sm .wave-decor__icon) {
-  width: clamp(44px, 6.5vw, 64px);
+  width: clamp(64px, 8.8vw, 98px);
 }
 
 @keyframes sectionGapWaveFloatLeft {
